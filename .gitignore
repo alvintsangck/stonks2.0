@@ -1,0 +1,14 @@
+node_modules
+dataset
+.env
+.vscode
+.DS_Store
+venv
+uploads
+yarn.lock
+FT_draft
+*.ipynb
+cenv
+.prettierignore
+info.log
+Fin_RL

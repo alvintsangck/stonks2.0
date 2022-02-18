@@ -1,0 +1,32 @@
+body {
+	background-color: rgb(255, 255, 255);
+}
+
+body.dark {
+	background-color: #000000;
+	color: rgba(255, 255, 255, 0.9);
+}
+
+.dark .table {
+	color: rgba(255, 255, 255, 0.8);
+	--bs-table-striped-color: rgba(255, 255, 255, 0.8);
+	--bs-table-hover-color: #ffffff;
+	--bs-table-hover-bg: rgba(255, 255, 255, 0.075);
+}
+
+/* user */
+.non-user {
+	cursor: pointer;
+}
+
+.user-only {
+	display: none;
+}
+
+.user-role .user-only {
+	display: block;
+}
+
+.user-role .non-user {
+	display: none;
+}

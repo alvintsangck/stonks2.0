@@ -1,0 +1,203 @@
+body {
+	background-color: #ffffff;
+}
+
+a {
+	color: #0b56bf;
+	text-decoration: none;
+}
+
+textarea {
+	resize: none;
+}
+
+.dark .comment-input {
+	background-color: #000000 !important;
+    color: #ffffff !important;
+    border: 1px solid #ffffff !important;
+}
+
+/* popup */
+.modal-content > div:first-child {
+	text-align: right;
+	font-size: 30px;
+	cursor: pointer;
+}
+
+/* stock */
+.stock-info {
+	margin: 20px 0;
+}
+
+.stock-name span {
+	margin-right: 5px;
+}
+
+.stock-price {
+	font-size: 30px;
+}
+
+.stock-graph {
+	height: 60vh;
+}
+
+.col-lg-4 > div {
+	border-top: 1px solid rgb(224, 224, 224);
+	padding: 20px 0;
+	/* border-bottom: 1px solid rgb(224, 224, 224); */
+}
+
+/* Buttons */
+.button-container {
+	display: flex;
+	justify-content: center;
+}
+
+.button-container button {
+	margin: 0 5px;
+	padding: 5px 20px;
+	width: 100%;
+	border-radius: 5px;
+	text-align: center;
+}
+
+.buy-btn,
+.sell-btn {
+	border: none;
+	color: #ffffff;
+}
+
+.buy-btn {
+	background-color: #0b56bf;
+}
+
+.sell-btn {
+	background-color: #db1222;
+}
+
+.watchlist-btn,
+.noti-btn {
+	background-color: transparent;
+	border: 1px solid #0b56bf;
+	color: #0b56bf;
+}
+
+/* News Section */
+.news-container {
+	margin-bottom: 5px;
+}
+
+.news-section {
+	height: 300px;
+	overflow-x: hidden;
+}
+
+.news-wrap {
+	margin-top: 5px;
+}
+
+/* Comment Section */
+.comment-container {
+	margin-bottom: 20px;
+}
+
+.comment-section {
+	height: 80vh;
+	overflow-x: hidden;
+	margin-bottom: 10px;
+}
+
+.comment-wrap {
+	display: flex;
+	margin-bottom: 10px;
+	word-break: break-word;
+}
+
+.avatar {
+	margin-right: 10px;
+	margin-bottom: 10px;
+	width: 50px;
+	height: 50px;
+	border-radius: 100%;
+}
+
+.username {
+	text-decoration: underline;
+}
+
+.comment {
+	width: 100%;
+}
+
+.comment .content {
+	padding-right: 10px;
+}
+
+#comment-form div:last-child {
+	margin-top: 5px;
+	text-align: right;
+}
+
+#comment-form div:last-child button {
+	padding: 0;
+	border: none;
+	background-color: transparent;
+}
+
+.financial-overview {
+	height: 800px;
+	margin-bottom: 50px;
+}
+
+.watchlist-popup,
+.buy-popup,
+.sell-popup {
+	display: none;
+	position: fixed;
+	/* Stay in place */
+	z-index: 100000;
+	/* Sit on top */
+	padding-top: 100px;
+	/* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%;
+	/* Full width */
+	height: 100%;
+	/* Full height */
+	overflow: auto;
+	/* Enable scroll if needed */
+	background-color: rgb(0, 0, 0);
+	/* Fallback color */
+	background-color: rgba(0, 0, 0, 0.4);
+	/* Black w/ opacity */
+}
+
+.modal-content {
+	background-color: #fefefe;
+	margin: auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 60%;
+}
+
+.watchlist-popup .modal-content ul {
+	height: 50vh;
+	overflow-x: hidden;
+	cursor: pointer;
+}
+
+.watchlist-popup .modal-content li.active {
+	background-color: #0b56bf;
+}
+
+.watchlist-popup .modal-content button {
+	width: 20%;
+	margin: 15px auto 0px;
+	padding: 10px;
+	text-align: center;
+	background-color: #0b56bf;
+	color: #ffffff;
+	border-radius: 10px;
+	border: none;
+}
