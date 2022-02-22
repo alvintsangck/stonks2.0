@@ -45,6 +45,21 @@ const knexConfigs = {
 			tableName: "knex_migrations",
 		},
 	},
+	jest: {
+		client: "pg",
+		connection: {
+			database: env.POSTGRES_DB,
+			user: env.POSTGRES_USER,
+			password: env.POSTGRES_PASSWORD,
+		},
+		pool: {
+			min: 2,
+			max: 10,
+		},
+		migrations: {
+			tableName: "knex_migrations",
+		},
+	},
 };
 
 export default knexConfigs;
