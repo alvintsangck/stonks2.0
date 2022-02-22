@@ -5,7 +5,7 @@ export class StockService {
 	constructor(private knex: Knex) {}
 
 	async getStockInfo(ticker: string) {
-		let stockArr:any[] = camelCaseKeys(
+		let stockArr: any[] = camelCaseKeys(
 			await this.knex("stocks as s")
 				.select(
 					"s.id",
@@ -32,6 +32,6 @@ export class StockService {
 				industryName: stockArr[0].industryName,
 				sectorName: stockArr[0].sectorName,
 			};
-		} else return;
+		} else return null;
 	}
 }

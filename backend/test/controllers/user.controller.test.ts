@@ -1,27 +1,24 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { Knex } from "knex";
 import { UserService } from "../../services/user.service";
 import { checkPassword } from "../../util/hash";
-// import { validate } from "../../util/helper";
 import { User } from "../../util/models";
 import { UserController } from "../../controllers/user.controller";
 
 jest.mock("../../services/user.service");
 jest.mock("../../util/hash");
-// jest.mock("../../util/helper");
 
 describe("UserController", () => {
 	let controller: UserController;
 	let service: UserService;
 	let req: Request;
 	let res: Response;
-	let next: NextFunction;
-	let resStatusSpy: jest.SpyInstance;
+	// let resStatusSpy: jest.SpyInstance;
 	let resJsonSpy: jest.SpyInstance;
 	let resRedirectSpy: jest.SpyInstance;
 
 	beforeEach(function () {
-		let info: User = {
+		let user: User = {
 			id: 1,
 			username: "1",
 			password: "123",
@@ -31,10 +28,10 @@ describe("UserController", () => {
 			role: "user",
 		};
 		service = new UserService({} as Knex);
-		service.getUserByUsername = jest.fn((username) => Promise.resolve(info));
-		service.getUserByEmail = jest.fn((email) => Promise.resolve(info));
+		service.getUserByUsername = jest.fn((username) => Promise.resolve(user));
+		service.getUserByEmail = jest.fn((email) => Promise.resolve({ username:email, password: user.password }));
 		service.addUser = jest.fn((username, password, email) => Promise.resolve());
-		jest.spyOn(service, "getGoogleInfo").mockImplementation(async (accessToken) => info);
+		jest.spyOn(service, "getGoogleInfo").mockImplementation(async (accessToken) => user);
 
 		controller = new UserController(service);
 		req = {
@@ -47,7 +44,7 @@ describe("UserController", () => {
 			json: jest.fn(),
 			redirect: jest.fn(),
 		} as any as Response;
-		resStatusSpy = jest.spyOn(res, "status");
+		// resStatusSpy = jest.spyOn(res, "status");
 		resJsonSpy = jest.spyOn(res, "json");
 		resRedirectSpy = jest.spyOn(res, "redirect");
 	});
@@ -56,24 +53,12 @@ describe("UserController", () => {
 		test("get with user logged in", async () => {
 			req.session["user"] = { id: 1 };
 			controller.get(req, res);
-			expect(resJsonSpy).toBeCalled;
-			expect(resJsonSpy).toBeCalledWith({
-				info: { id: 1 },
-				theme: "light",
-			});
+			expect(resJsonSpy).toBeCalledWith({ user: { id: 1 } });
 		});
 
 		test("get without user logged in", async () => {
 			controller.get(req, res);
-			expect(resJsonSpy).toBeCalled;
-			expect(resJsonSpy).toBeCalledWith({ info: null, theme: "light" });
-		});
-
-		test("get with theme saved", async () => {
-			req.session["theme"] = "dark";
-			controller.get(req, res);
-			expect(resJsonSpy).toBeCalled;
-			expect(resJsonSpy).toBeCalledWith({ info: null, theme: "dark" });
+			expect(resJsonSpy).toBeCalledWith({ user: null });
 		});
 	});
 
@@ -89,33 +74,29 @@ describe("UserController", () => {
 		test("login with username", async () => {
 			(checkPassword as jest.Mock).mockReturnValue(true);
 			req.body = { username: "1", password: "123" };
-			await controller.login(req, res, next);
-			expect(service.getUserByUsername).toBeCalled();
+			const result = await controller.login(req);
 			expect(checkPassword).toBeCalledWith("123", "123");
-			expect(resJsonSpy).toBeCalledWith({ message: "User 1 logged in." });
+			expect(service.getUserByUsername).toBeCalled();
+			expect(result).toMatchObject({ message: "User 1 logged in." });
 		});
 
 		test("login with email", async () => {
 			(checkPassword as jest.Mock).mockReturnValue(true);
 			req.body = { username: "1@1.com", password: "123" };
-			await controller.login(req, res, next);
+			const result = await controller.login(req);
 			expect(service.getUserByEmail).toBeCalled();
 			expect(checkPassword).toBeCalledWith("123", "123");
-			expect(resJsonSpy).toBeCalledWith({ message: "User 1 logged in." });
+			expect(result).toMatchObject({ message: "User 1@1.com logged in." });
 		});
 
 		test("throw error with invalid username", async () => {
 			service.getUserByUsername = jest.fn(() => Promise.resolve(null));
-			await controller.login(req, res, next);
-			expect(resStatusSpy).toBeCalledWith(400);
-			expect(res.json).toBeCalledWith("Invalid username or password.");
+			await expect(controller.login(req)).rejects.toThrowError("Invalid username or password.");
 		});
 
 		test("throw error with invalid password", async () => {
 			(checkPassword as jest.Mock).mockReturnValue(false);
-			await controller.login(req, res, next);
-			expect(resStatusSpy).toBeCalledWith(400);
-			expect(res.json).toBeCalledWith("Invalid username or password.");
+			await expect(controller.login(req)).rejects.toThrowError("Invalid username or password.");
 		});
 	});
 

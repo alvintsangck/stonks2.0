@@ -42,6 +42,9 @@ https://codepen.io/Rh2o/pen/yLgxJoG
 alert box
 https://sweetalert2.github.io
 
+react-chartjs
+https://github.com/reactchartjs/react-chartjs-2#docs
+
 ----aws----
 How do I assign a static hostname to an Amazon EC2 instance running Ubuntu Linux?
 https://aws.amazon.com/premiumsupport/knowledge-center/linux-static-hostname/

@@ -22,7 +22,7 @@ export class WatchlistService {
 		return { message: "watchlist deleted" };
 	}
 
-	async getAllWatchlistsName(userId: number): Promise<string[]> {
+	async getAllWatchlistsName(userId: number): Promise<{ id: number; name: string }[]> {
 		return await this.knex("watchlists").select("id", "name").where("user_id", userId);
 	}
 
@@ -37,18 +37,6 @@ export class WatchlistService {
 			.where("ws.stock_id", stockId)
 			.where("ws.watchlist_id", watchlistId);
 		return { message: "stock deleted" };
-	}
-
-	async searchWatchlist(userId: number, watchlistId: number, stockId: number): Promise<any> {
-		return (
-			await this.knex("watchlist_stock as ws")
-				.select("ws.stock_id")
-				.join("watchlists as w", "w.id", "ws.watchlist_id")
-				.join("users as u", "w.user_id", "u.id")
-				.where("u.id", userId)
-				.where("ws.stock_id", stockId)
-				.where("w.id", watchlistId)
-		)[0];
 	}
 
 	async queryWatchlist(watchlistId: number): Promise<any> {

@@ -13,14 +13,20 @@ export class CommentController {
 
 	router = express.Router();
 
-	get = async (req: Request) => this.commentService.getComment(Number(req.params.stockId));
+	get = async (req: Request) => {
+		const stockId = Number(req.params.stockId);
+
+		if (Number.isNaN(stockId) || stockId <= 0) throw new HttpError(400, "Stock not exist");
+		return this.commentService.getComment(stockId);
+	};
 
 	post = async (req: Request) => {
 		const user: User = req.session["user"];
 		const userId: number = Number(user.id);
 		const stockId: number = Number(req.params.stockId);
-		const content: string = req.body.content.replace(/\s+/, "");
+		const content: string = req.body.content.replace(/\s+/g, "");
 
+		if (Number.isNaN(stockId) || stockId <= 0) throw new HttpError(400, "Stock not exist");
 		if (!content) throw new HttpError(400, "Comment cannot be empty");
 		if (content.length > 200) throw new HttpError(400, "Comment exceed maximum length");
 

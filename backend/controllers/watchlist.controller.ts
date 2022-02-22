@@ -23,31 +23,31 @@ export class WatchlistController {
 	get = async (req: Request) => {
 		const watchlistId = Number(req.params.watchlistId);
 
-		if (Number.isNaN(watchlistId)) throw new HttpError(400, "Watchlist not exist");
+		if (Number.isNaN(watchlistId) || watchlistId <= 0) throw new HttpError(400, "Watchlist not exist");
 		return await this.watchlistService.getWatchlist(watchlistId);
 	};
 
 	post = async (req: Request) => {
-		const name = String(req.body.name).replace(/s+/, "");
+		const name = String(req.body.name).replace(/\s+/g, "");
 		const userId = req.session["user"].id;
 
-		if (!name) throw new HttpError(400, "Watchlist name cannot be empty.");
+		if (name === "") throw new HttpError(400, "Watchlist name cannot be empty");
 		return await this.watchlistService.createWatchlist(userId, name);
 	};
 
 	put = async (req: Request): Promise<{ message: string }> => {
 		const watchlistId = Number(req.params.watchlistId);
-		const name = String(req.body.name).replace(/s+/, "");
+		const name = String(req.body.name).replace(/\s+/g, "");
 
-		if (Number.isNaN(watchlistId)) throw new HttpError(400, "Watchlist not exist");
-		if (!name) throw new HttpError(400, "Watchlist name cannot be empty.");
+		if (Number.isNaN(watchlistId) || watchlistId <= 0) throw new HttpError(400, "Watchlist not exist");
+		if (!name) throw new HttpError(400, "Watchlist name cannot be empty");
 		return await this.watchlistService.changeWatchlistName(watchlistId, name);
 	};
 
 	delete = async (req: Request): Promise<{ message: string }> => {
 		const watchlistId = Number(req.params.watchlistId);
 
-		if (Number.isNaN(watchlistId)) throw new HttpError(400, "Watchlist not exist");
+		if (Number.isNaN(watchlistId) || watchlistId <= 0) throw new HttpError(400, "Watchlist not exist");
 		return await this.watchlistService.deleteWatchlist(watchlistId);
 	};
 
@@ -55,7 +55,7 @@ export class WatchlistController {
 		const watchlistId = Number(req.params.watchlistId);
 		const stockId = Number(req.params.stockId);
 
-		if (Number.isNaN(watchlistId)) throw new HttpError(400, "Watchlist not exist");
+		if (Number.isNaN(watchlistId) || watchlistId <= 0) throw new HttpError(400, "Watchlist not exist");
 		return await this.watchlistService.addStock(watchlistId, stockId);
 	};
 
@@ -63,7 +63,7 @@ export class WatchlistController {
 		const watchlistId = Number(req.params.watchlistId);
 		const stockId = Number(req.params.stockId);
 
-		if (Number.isNaN(watchlistId)) throw new HttpError(400, "Watchlist not exist");
+		if (Number.isNaN(watchlistId) || watchlistId <= 0) throw new HttpError(400, "Watchlist not exist");
 		return await this.watchlistService.deleteStock(watchlistId, stockId);
 	};
 }
