@@ -13,3 +13,5 @@ cenv
 info.log
 Fin_RL
 spark-docker
+pgdata
+build
