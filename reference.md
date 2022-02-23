@@ -48,3 +48,6 @@ https://github.com/reactchartjs/react-chartjs-2#docs
 ----aws----
 How do I assign a static hostname to an Amazon EC2 instance running Ubuntu Linux?
 https://aws.amazon.com/premiumsupport/knowledge-center/linux-static-hostname/
+
+----docker----
+docker build --platform linux/amd64 -t <tag-name> .
