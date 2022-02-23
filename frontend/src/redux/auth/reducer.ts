@@ -16,7 +16,7 @@ export function authReducer(state: AuthState = initialState, action: AuthAction)
 		case "@@Auth/register":
 			return { ...state, error: null };
 		case "@@Auth/apiFailed":
-			return { ...state, error: action };
+			return { ...state, error: action.action };
 		default:
 			return { ...state, error: null };
 	}
