@@ -1,12 +1,12 @@
 image: node:16.13.1
 
 stages:
-    # - server-testing
-    # - react-testing
+    - server-testing
+    - react-testing
     - server-build
-    # - react-build
+    - react-build
     - server-deploy
-    # - react-deploy
+    - react-deploy
 
 variables:
     POSTGRES_DB: stonks-test
@@ -16,26 +16,32 @@ variables:
     REPOSITORY_URL: alvintsang/stonks
     IMAGE_TAG: latest
 
-# server-testing:
-#     services:
-#         - postgres:latest
-#     before_script:
-#         - cd backend
-#         - yarn install
-#         - yarn knex migrate:latest --env test
-#     stage: server-testing
-#     script:
-#         - yarn test
+server-testing:
+    only:
+        - production
+    services:
+        - postgres:latest
+    before_script:
+        - cd backend
+        - yarn install
+        - yarn knex migrate:latest --env test
+    stage: server-testing
+    script:
+        - yarn test
 
-# react-testing:
-#     before_script:
-#         - cd frontend
-#         - yarn install
-#     stage: react-testing
-#     script:
-#         - CI=true yarn test
+react-testing:
+    only:
+        - production
+    before_script:
+        - cd frontend
+        - yarn install
+    stage: react-testing
+    script:
+        - CI=true yarn test
 
 server-build:
+    only:
+        - production
     image: "docker:18.09"
     stage: server-build
     services:
@@ -48,16 +54,18 @@ server-build:
         - docker tag tic-tac-toe:$IMAGE_TAG $REPOSITORY_URL:$IMAGE_TAG
         - docker push $REPOSITORY_URL:$IMAGE_TAG
 
-# react-build:
-#     stage: react-build
-#     before_script:
-#         - cd frontend/
-#     script:
-#         - yarn install
-#         - yarn build
-#     artifacts:
-#         paths:
-#             - frontend/build
+react-build:
+    only:
+        - production
+    stage: react-build
+    before_script:
+        - cd frontend/
+    script:
+        - yarn install
+        - yarn build
+    artifacts:
+        paths:
+            - frontend/build
 
 server-deploy:
     before_script:
@@ -71,23 +79,23 @@ server-deploy:
         - ssh-keyscan -H ${SERVER_HOSTNAME} > ~/.ssh/known_hosts
         - chmod 644 ~/.ssh/known_hosts
     stage: server-deploy
-    # only:
-    #     - production
+    only:
+        - production
     script:
         - ssh ubuntu@${SERVER_HOSTNAME}
           "(docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD;
           docker pull alvintsang/stonks:latest;
           docker-compose down;
           docker-compose up -d;) > info.log"
-# react-deploy:
-#     image: "python:3.6"
-#     stage: react-deploy
-#     before_script:
-#         - pip install awscli
-#     dependencies:
-#         - react-build
-#     # only:
-#     #     - production
-#     script:
-#         - aws s3 sync frontend/build s3://${BUCKET_NAME} --delete
-#         - aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION} --paths "/*"
+react-deploy:
+    image: "python:3.6"
+    stage: react-deploy
+    before_script:
+        - pip install awscli
+    dependencies:
+        - react-build
+    only:
+        - production
+    script:
+        - aws s3 sync frontend/build s3://${BUCKET_NAME} --delete
+        - aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION} --paths "/*"
