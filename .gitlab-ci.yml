@@ -57,7 +57,7 @@ react-build:
         - yarn build
     artifacts:
         paths:
-            - react/build
+            - frontend/build
 
 # server-deploy:
 #     before_script:
@@ -89,5 +89,5 @@ react-deploy:
     # only:
     #     - production
     script:
-        - aws s3 sync react/build s3://${BUCKET_NAME} --delete
+        - aws s3 sync frontend/build s3://${BUCKET_NAME} --delete
         - aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION} --paths "/*"
