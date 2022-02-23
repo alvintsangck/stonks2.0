@@ -74,8 +74,7 @@ server-deploy:
     # only:
     #     - production
     script:
-        - echo $SERVER_HOSTNAME
-        - ssh ubuntu@$SERVER_HOSTNAME
+        - ssh ubuntu@${SERVER_HOSTNAME}
           "(docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD;
           docker pull alvintsang/stonks:latest;
           docker-compose down;
