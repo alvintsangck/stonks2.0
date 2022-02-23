@@ -14,7 +14,7 @@ export class UserController {
 		this.router.post("/user", wrapControllerMethod(this.register));
 		this.router.put("/user/update", multerSingle, wrapControllerMethod(this.updateUser));
 		this.router.post("/user/trade", this.tradeStockCtrl);
-		this.router.post("/user/login", this.login);
+		this.router.post("/user/login", wrapControllerMethod(this.login));
 		this.router.get("/user/login/google", this.loginGoogle);
 		this.router.get("/user/logout", isLoggedIn, this.logout);
 		this.router.get("/user/portfolio", isLoggedIn, wrapControllerMethod(this.getPortfolio));
