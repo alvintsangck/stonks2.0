@@ -94,7 +94,7 @@ export async function seed(knex: Knex): Promise<void> {
 		let t3 = Date.now();
 		for (let i = 0; i < 45; i++) {
 			logger.debug(`reading chunk ${i}`);
-			workbook = xlsx.readFile(`./data/import/chunk${i}.xlsx`);
+			workbook = xlsx.readFile(`./seeds/import/chunk${i}.xlsx`);
 			let chunkData = xlsx.utils.sheet_to_json(workbook.Sheets["Sheet1"]);
 			logger.debug(`finished read chunk ${i}`);
 

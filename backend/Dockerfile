@@ -5,4 +5,5 @@ EXPOSE 8080
 CMD yarn install && \ 
     yarn knex migrate:latest &&\
     yarn knex seed:run &&\
-    node index.js 
+    yarn add -g forever &&\
+    forever start index.js
