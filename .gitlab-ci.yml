@@ -76,9 +76,10 @@ server-deploy:
     script:
         - ssh ubuntu@${SERVER_HOSTNAME}
           "docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD;
-          docker-compose pull;
+          docker pull $REPOSITORY_URL;
+          docker-compose down;
           docker-compose up -d;"
-
+          
 # react-deploy:
 #     image: "python:3.6"
 #     stage: react-deploy
