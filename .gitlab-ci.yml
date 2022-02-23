@@ -1,4 +1,4 @@
-image: node:latest
+image: node:16.13.1
 
 stages:
     # - server-testing
@@ -41,9 +41,7 @@ server-build:
     services:
         - docker:18.09.7-dind
     before_script:
-        - echo $DOCKER_HUB_USERNAME
-        - echo $DOCKER_HUB_PASSWORD
-        - docker login -u alvintsang -p O8nAQlGNS2QZhlAgJH4zWcFfLtG7JSQi
+        - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
     script:
         - cd backend/
         - docker build  -t tic-tac-toe:$IMAGE_TAG -f Dockerfile .
