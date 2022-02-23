@@ -1,4 +1,7 @@
+import { config } from "dotenv";
 import env from "./util/env";
+
+config();
 
 const defaults = {
 	client: "pg",
@@ -37,21 +40,6 @@ const knexConfigs = {
 			database: process.env.POSTGRES_DB,
 			user: process.env.POSTGRES_USER,
 			password: process.env.POSTGRES_PASSWORD,
-		},
-		pool: {
-			min: 2,
-			max: 10,
-		},
-		migrations: {
-			tableName: "knex_migrations",
-		},
-	},
-	jest: {
-		client: "pg",
-		connection: {
-			database: env.POSTGRES_DB,
-			user: env.POSTGRES_USER,
-			password: env.POSTGRES_PASSWORD,
 		},
 		pool: {
 			min: 2,
