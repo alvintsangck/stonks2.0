@@ -77,7 +77,6 @@ server-deploy:
         - echo $SERVER_HOSTNAME
         - ssh ubuntu@$SERVER_HOSTNAME
           "docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD;
-          echo docker ps;
           docker pull alvintsang/stonks:latest;
           docker-compose down;
           docker-compose up -d;"
