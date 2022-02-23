@@ -1,5 +1,8 @@
 pandas
 numpy
-jupyterlab
-sanic
 yfinance
+python-dotenv
+pymongo
+pyspark
+openpyxl
+finnhub-python

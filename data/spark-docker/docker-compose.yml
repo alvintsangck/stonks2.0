@@ -1,0 +1,90 @@
+version: "2"
+
+services:
+    spark:
+        image: docker.io/bitnami/spark
+        user: root
+        networks:
+            dae:
+                ipv4_address: 172.1.0.2
+        environment:
+            - PYTHONIOENCODING=utf8
+            - SPARK_MODE=master
+            - SPARK_RPC_AUTHENTICATION_ENABLED=no
+            - SPARK_RPC_ENCRYPTION_ENABLED=no
+            - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+            - SPARK_SSL_ENABLED=no
+        ports:
+            - "8080:8080"
+            - "7077:7077"
+        volumes:
+            - ../spark/src:/opt/bitnami/spark/src
+            # - ./tmp/streaming:/tmp/streaming
+    spark-worker-1:
+        image: docker.io/bitnami/spark
+        user: root
+        networks:
+            dae:
+                ipv4_address: 172.1.0.3
+        environment:
+            - SPARK_MODE=worker
+            - SPARK_MASTER_URL=spark://spark:7077
+            - SPARK_WORKER_MEMORY=1G
+            - SPARK_WORKER_CORES=1
+            - SPARK_RPC_AUTHENTICATION_ENABLED=no
+            - SPARK_RPC_ENCRYPTION_ENABLED=no
+            - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+            - SPARK_SSL_ENABLED=no
+        volumes:
+            - ../spark/src:/opt/bitnami/spark/src
+            - ./tmp/streaming:/tmp/streaming
+    spark-worker-2:
+        image: docker.io/bitnami/spark
+        user: root
+        networks:
+            dae:
+                ipv4_address: 172.1.0.4
+        environment:
+            - SPARK_MODE=worker
+            - SPARK_MASTER_URL=spark://spark:7077
+            - SPARK_WORKER_MEMORY=1G
+            - SPARK_WORKER_CORES=1
+            - SPARK_RPC_AUTHENTICATION_ENABLED=no
+            - SPARK_RPC_ENCRYPTION_ENABLED=no
+            - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+            - SPARK_SSL_ENABLED=no
+        volumes:
+            - ../spark/src:/opt/bitnami/spark/src
+            - ./tmp/streaming:/tmp/streaming
+    mongodb:
+        image: mongo
+        restart: always
+        networks:
+            dae:
+                ipv4_address: 172.1.0.10
+        ports:
+            - "27017:27017"
+        volumes:
+            - ./mongodb/db:/data/db
+    postgres:
+        image: "postgres:13"
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: recentchange
+        restart: always
+        networks:
+            dae:
+                ipv4_address: 172.1.0.20
+        ports:
+            - "6432:5432"
+        volumes:
+            - ./pgdata:/var/lib/postgresql/data
+
+networks:
+    dae:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.1.0.0/24
