@@ -4,9 +4,9 @@ config();
 
 const env = {
 	DB_NAME: process.env.DB_NAME || "stonks2",
-	DB_USERNAME: process.env.DB_USERNAME || "postgres",
+	DB_USER: process.env.DB_USER || "postgres",
 	DB_PASSWORD: process.env.DB_PASSWORD || "postgres",
-	POSTGRES_DB: process.env.POSTGRES_DB_NAME || "stonks-test",
+	POSTGRES_DB: process.env.POSTGRES_DB || "stonk-test",
 	POSTGRES_USER: process.env.POSTGRES_USER || "postgres",
 	POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD || "postgres",
 	POSTGRES_HOST: process.env.POSTGRES_HOST || "postgres",
