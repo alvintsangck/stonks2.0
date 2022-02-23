@@ -12,3 +12,4 @@ cenv
 .prettierignore
 info.log
 Fin_RL
+spark-docker
