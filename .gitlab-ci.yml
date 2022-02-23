@@ -41,7 +41,10 @@ server-build:
     services:
         - docker:18.09.7-dind
     before_script:
-        - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
+    - echo $DOCKER_HUB_USERNAME
+    - echo $DOCKER_HUB_PASSWORD
+
+        - docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD}
     script:
         - cd backend/
         - docker build  -t tic-tac-toe:$IMAGE_TAG -f Dockerfile .
