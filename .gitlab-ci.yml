@@ -3,7 +3,7 @@ image: node:16.13.1
 stages:
     # - server-testing
     # - react-testing
-    - server-build
+    # - server-build
     # - react-build
     - server-deploy
     # - react-deploy
@@ -35,18 +35,18 @@ variables:
 #     script:
 #         - CI=true yarn test
 
-server-build:
-    image: "docker:18.09"
-    stage: server-build
-    services:
-        - docker:18.09.7-dind
-    before_script:
-        - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
-    script:
-        - cd backend/
-        - docker build  -t tic-tac-toe:$IMAGE_TAG -f Dockerfile .
-        - docker tag tic-tac-toe:$IMAGE_TAG $REPOSITORY_URL:$IMAGE_TAG
-        - docker push $REPOSITORY_URL:$IMAGE_TAG
+# server-build:
+#     image: "docker:18.09"
+#     stage: server-build
+#     services:
+#         - docker:18.09.7-dind
+#     before_script:
+#         - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
+#     script:
+#         - cd backend/
+#         - docker build  -t tic-tac-toe:$IMAGE_TAG -f Dockerfile .
+#         - docker tag tic-tac-toe:$IMAGE_TAG $REPOSITORY_URL:$IMAGE_TAG
+#         - docker push $REPOSITORY_URL:$IMAGE_TAG
 
 # react-build:
 #     stage: react-build
@@ -77,7 +77,8 @@ server-deploy:
         - echo $SERVER_HOSTNAME
         - ssh ubuntu@$SERVER_HOSTNAME
           "docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD;
-          docker pull $REPOSITORY_URL;
+          echo docker ps;
+          docker pull alvintsang/stonks:latest;
           docker-compose down;
           docker-compose up -d;"
 # react-deploy:
