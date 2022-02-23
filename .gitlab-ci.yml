@@ -40,8 +40,8 @@ react-testing:
         - CI=true yarn test
 
 server-build:
-    # only:
-    #     - production
+    only:
+        - production
     image: "docker:18.09"
     stage: server-build
     services:
@@ -79,8 +79,8 @@ server-deploy:
         - ssh-keyscan -H ${SERVER_HOSTNAME} > ~/.ssh/known_hosts
         - chmod 644 ~/.ssh/known_hosts
     stage: server-deploy
-    # only:
-    #     - production
+    only:
+        - production
     script:
         - ssh ubuntu@${SERVER_HOSTNAME}
           "(docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD;
