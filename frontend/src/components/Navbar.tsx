@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { RootState } from "../redux/store/state";
 import "../css/NavBar.css";
 import { Container, Nav, Navbar } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function NavBar() {
 	const dispatch = useDispatch();
@@ -63,7 +64,7 @@ export default function NavBar() {
 								/>
 							</div>
 							<button type="submit" className="form-control search-btn">
-								<span className="fa fa-search"></span>
+								{/* <FontAwesomeIcon icon="fa-solid fa-coffee" symbol/> */}
 							</button>
 						</form>
 					</div>
