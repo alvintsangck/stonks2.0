@@ -5,16 +5,23 @@ import Footer from "./components/Footer";
 import NavBar from "./components/NavBar";
 import { history } from "./redux/store/history";
 import Portfolio from "./components/Portfolio";
-import { Route } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
+import Home from "./components/Home";
+import Watchlist from "./components/Watchlist"
+import Screener from "./components/Screener"
 
 function App() {
 	return (
 		<div>
 			<ConnectedRouter history={history}>
 				<NavBar />
-				<h1>Stonks 2.0</h1>
-				{/* <Route path="/portfolio" component={Portfolio}></Route> */}
-				<Portfolio /> <Footer />
+				<Switch>
+					<Route path="/" exact component={Home}></Route>
+					<Route path="/watchlist" component={Watchlist}></Route>
+					<Route path="/screener" component={Screener}></Route>
+					<Route path="/portfolio" component={Portfolio}></Route>
+				</Switch>
+				<Footer />
 			</ConnectedRouter>
 		</div>
 	);

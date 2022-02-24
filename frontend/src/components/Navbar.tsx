@@ -2,8 +2,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { RootState } from "../redux/store/state";
 import "../css/NavBar.css";
-import { Container, Nav, Navbar } from "react-bootstrap";
+import { Col, Container, Dropdown, Nav, Navbar, Row } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 export default function NavBar() {
 	const dispatch = useDispatch();
@@ -12,8 +13,8 @@ export default function NavBar() {
 	return (
 		<nav>
 			<Container fluid>
-				<div className="row">
-					<div className="col-md-3">
+				<Row>
+					<Col md={3}>
 						<div className="login">
 							<NavLink className="non-user" to="/login">
 								Login
@@ -22,38 +23,28 @@ export default function NavBar() {
 								Register
 							</NavLink>
 						</div>
-						<div className="dropdown user-only">
-							<button
-								className="btn dropdown-toggle user-avatar-btn"
-								type="button"
-								id="dropdownMenuButton1"
-								data-bs-toggle="dropdown"
-								aria-expanded="false"
-							>
-								<img className="user-avatar" src={""} alt="user-avatar" />
-							</button>
-							<ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-								<li>
+						<Dropdown className="user-only">
+							<Dropdown.Toggle className="user-avatar-btn">
+								<img className="user-avatar" src={"STONK.png"} alt="user-avatar" />
+							</Dropdown.Toggle>
+							<Dropdown.Menu>
+								<Dropdown.Item>
 									<NavLink className="dropdown-item" to="/setting">
 										User Setting
 									</NavLink>
-								</li>
-								<li>
-									<button className="dropdown-item theme">Change Theme</button>
-								</li>
-								<li>
-									<button className="dropdown-item log-out">Log Out</button>
-								</li>
-							</ul>
-						</div>
-					</div>
-					<div className="brand-name col-md-6">
-						<NavLink className="navbar-brand" to="/">
-							STONKS
+								</Dropdown.Item>
+								<Dropdown.Item>Change Theme</Dropdown.Item>
+								<Dropdown.Item>Log Out</Dropdown.Item>
+							</Dropdown.Menu>
+						</Dropdown>
+					</Col>
+					<Col md={6} className="brand-name">
+						<NavLink to="/">
+							<span>STONKS</span>
 							<div>Tecky Academy</div>
 						</NavLink>
-					</div>
-					<div className="col-md-3">
+					</Col>
+					<Col md={3} className="search-bar">
 						<form action="#" className="search-form order-lg-last">
 							<div className="form-group">
 								<input
@@ -64,14 +55,14 @@ export default function NavBar() {
 								/>
 							</div>
 							<button type="submit" className="form-control search-btn">
-								{/* <FontAwesomeIcon icon="fa-solid fa-coffee" symbol/> */}
+								<FontAwesomeIcon icon={faSearch} className="" />
 							</button>
 						</form>
-					</div>
-				</div>
+					</Col>
+				</Row>
 			</Container>
 			<Navbar collapseOnSelect expand="md" className="blue" variant="dark">
-				<Navbar.Toggle aria-controls="responsive-navbar-nav" className="" />
+				<Navbar.Toggle aria-controls="responsive-navbar-nav" />
 				<Navbar.Collapse id="responsive-navbar-nav">
 					<Nav className="m-auto">
 						<NavLink to="/">

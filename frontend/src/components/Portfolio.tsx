@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store/state";
-import Navbar from "./Navbar";
 import { Doughnut } from "react-chartjs-2";
 
 export default function portfolio() {
@@ -21,13 +20,13 @@ export default function portfolio() {
 					</div>
 				</div>
 				<div className="col-md-6">
-					<Doughnut
+					{/* <Doughnut
 						data={{
-							labels: labelsTag,
+							// labels: labelsTag,
 							datasets: [
 								{
 									label: "My Top 10 Shares",
-									data: dataTag,
+									// data: dataTag,
 									backgroundColor: [
 										`rgb(${(Math.random() * 255).toFixed()},${(Math.random() * 255).toFixed()},${(
 											Math.random() * 255
@@ -62,8 +61,8 @@ export default function portfolio() {
 									],
 								},
 							],
-						}}
-					/>
+						}} */}
+					{/* /> */}
 					<canvas className="shares-holding" height="100" width="100"></canvas>
 				</div>
 			</div>
