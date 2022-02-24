@@ -1,5 +1,4 @@
 export type AuthState = {
-	username: string;
-	password: string;
+	user: {};
 	error: string | null;
 };
