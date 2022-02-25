@@ -1,3 +1,4 @@
+import camelcaseKeys from "camelcase-keys";
 import { Knex } from "knex";
 import fetch from "node-fetch";
 import { camelCaseKeys, makeMap } from "../util/helper";
@@ -76,7 +77,7 @@ export class UserService {
 			(
 				await this.knex.raw(
 					/*sql*/
-					`select s.ticker, s.name stock_name, p.stock_id, 
+					`select s.ticker, s.name stock_name, p.stock_id,
 					sum(p.position_size) shares, 
 					round(sum(p.position_size * p.unit_cost) / sum(p.position_size),2) avg_cost,
 					round(sum(p.position_size * p.unit_cost), 2) total_cost
@@ -90,6 +91,19 @@ export class UserService {
 				)
 			).rows
 		);
+	}
+
+	async queryUserCash(userId: number) {
+		return camelcaseKeys(
+			await this.knex.raw(
+				/*sql*/
+				`select h.cash, h.deposit, h.created_at
+					from user_history u
+					join users u on h.user_id=u.id
+					where u.id = ?
+					order by h.created_at desc`[userId]
+			)
+		).rows;
 	}
 
 	async queryStockPrice(queryString: string) {
