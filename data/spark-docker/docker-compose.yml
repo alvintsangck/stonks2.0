@@ -2,7 +2,7 @@ version: "2"
 
 services:
     spark:
-        image: docker.io/bitnami/spark
+        image: fungting/stonks:latest
         user: root
         networks:
             dae:
@@ -19,9 +19,12 @@ services:
             - "7077:7077"
         volumes:
             - ../spark/src:/opt/bitnami/spark/src
-            # - ./tmp/streaming:/tmp/streaming
+            - ./tmp/streaming:/tmp/streaming
+        build:
+            context: ./
+            dockerfile: ./Dockerfile
     spark-worker-1:
-        image: docker.io/bitnami/spark
+        image: fungting/stonks:latest
         user: root
         networks:
             dae:
@@ -38,8 +41,11 @@ services:
         volumes:
             - ../spark/src:/opt/bitnami/spark/src
             - ./tmp/streaming:/tmp/streaming
+        build:
+            context: ./
+            dockerfile: ./Dockerfile
     spark-worker-2:
-        image: docker.io/bitnami/spark
+        image: fungting/stonks:latest
         user: root
         networks:
             dae:
@@ -56,6 +62,9 @@ services:
         volumes:
             - ../spark/src:/opt/bitnami/spark/src
             - ./tmp/streaming:/tmp/streaming
+        build:
+            context: ./
+            dockerfile: ./Dockerfile
     mongodb:
         image: mongo
         restart: always
@@ -66,20 +75,6 @@ services:
             - "27017:27017"
         volumes:
             - ./mongodb/db:/data/db
-    postgres:
-        image: "postgres:13"
-        environment:
-            POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: postgres
-            POSTGRES_DB: recentchange
-        restart: always
-        networks:
-            dae:
-                ipv4_address: 172.1.0.20
-        ports:
-            - "6432:5432"
-        volumes:
-            - ./pgdata:/var/lib/postgresql/data
 
 networks:
     dae:
