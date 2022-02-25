@@ -54,7 +54,6 @@ export async function up(knex: Knex): Promise<void> {
 			table.increments();
 			table.string("ticker", 20);
 			table.string("name", 200);
-			table.decimal("market_cap", 10, 2);
 			table.integer("industry_id").unsigned().references("industries.id");
 			table.integer("sector_id").unsigned().references("sectors.id");
 			table.timestamps(false, true);

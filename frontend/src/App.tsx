@@ -9,6 +9,7 @@ import { Route, Switch } from "react-router-dom";
 import Home from "./components/Home";
 import Watchlist from "./components/Watchlist";
 import Screener from "./components/Screener";
+import Stock from "./components/Stock"
 
 function App() {
 	return (
@@ -17,6 +18,7 @@ function App() {
 				<main>
 					<Switch>
 						<Route path="/" exact component={Home}></Route>
+						<Route path="/stock" component={Stock}></Route>
 						<Route path="/watchlist" component={Watchlist}></Route>
 						<Route path="/screener" component={Screener}></Route>
 						<Route path="/portfolio" component={Portfolio}></Route>

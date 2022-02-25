@@ -53,7 +53,7 @@ export default function Home() {
 				<Row>
 					<Col md={3}>
 						<div className="small-news">
-							<a href="#">
+							<a href="/">
 								<img src="news_1.jpeg" alt="" />
 								<div className="small-news-header">Head</div>
 							</a>
@@ -65,7 +65,7 @@ export default function Home() {
 					</Col>
 					<Col md={3}>
 						<div className="small-news">
-							<a href="#">
+							<a href="/">
 								<img src="news_1.jpeg" alt="" />
 								<div className="small-news-header">Head</div>
 							</a>
@@ -77,7 +77,7 @@ export default function Home() {
 					</Col>
 					<Col md={3}>
 						<div className="small-news">
-							<a href="#">
+							<a href="/">
 								<img src="news_1.jpeg" alt="" />
 								<div className="small-news-header">Head</div>
 							</a>
