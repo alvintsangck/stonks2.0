@@ -111,5 +111,6 @@ export async function down(knex: Knex): Promise<void> {
 	await knex.schema.dropTableIfExists("industries");
 	await knex.schema.dropTableIfExists("sectors");
 	await knex.schema.dropTableIfExists("user_social");
+	await knex.schema.dropTableIfExists("user_history");
 	await knex.schema.dropTableIfExists("users");
 }

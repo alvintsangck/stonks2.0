@@ -1,0 +1,15 @@
+textarea {
+	resize: none;
+}
+
+form div:last-child {
+	margin-top: 5px;
+	text-align: right;
+}
+
+form div:last-child button {
+	padding: 0;
+	border: none;
+	background-color: transparent;
+    margin-left: 5px;
+}

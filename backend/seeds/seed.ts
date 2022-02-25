@@ -77,7 +77,9 @@ export async function seed(knex: Knex): Promise<void> {
 			return industryObj;
 		});
 
-		const industryIDs: Industry[] = await txn("industries").insert(industryData).returning(["id", "name", "sector_id"]);
+		const industryIDs: Industry[] = await txn("industries")
+			.insert(industryData)
+			.returning(["id", "name", "sector_id"]);
 		let stockData: StockData[] = [];
 		for (let stock of rawStockData) {
 			for (let industry of industryIDs) {
@@ -119,6 +121,9 @@ export async function seed(knex: Knex): Promise<void> {
 		await txn("portfolios").insert(portfolioData);
 		await txn("watchlists").insert(watchlistData);
 		await txn("watchlist_stock").insert(watchlistStockData);
+		await txn("user_history").insert([{ user_id: 1 }]);
+		await txn("user_history").insert([{ user_id: 2 }]);
+		await txn("user_history").insert([{ user_id: 3 }]);
 
 		await txn.commit();
 		logger.debug(`delete all data in ${(t2 - t1) / 1000}s`);

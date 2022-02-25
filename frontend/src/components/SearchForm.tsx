@@ -20,7 +20,7 @@ export function SearchForm() {
 					placeholder="Enter a symbol"
 					name="tickerInput"
 					value={symbol}
-					onChange={(e) => setSymbol(e.target.value)}
+					onChange={(e) => setSymbol(e.target.value.toUpperCase())}
 				/>
 			</Form.Group>
 			<button type="submit" className="form-control search-btn">
