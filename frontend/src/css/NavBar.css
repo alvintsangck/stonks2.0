@@ -4,8 +4,8 @@ a {
 }
 
 /* Login */
-nav > div:first-child {
-	padding: 16px 80px 0;
+nav .container-fluid {
+	padding: 16px 60px 0;
 }
 
 .login {

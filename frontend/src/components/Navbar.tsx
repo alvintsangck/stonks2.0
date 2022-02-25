@@ -3,16 +3,17 @@ import { NavLink } from "react-router-dom";
 import { RootState } from "../redux/store/state";
 import "../css/NavBar.css";
 import { Col, Container, Dropdown, Nav, Navbar, Row } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { SearchForm } from "./SearchForm";
+import { ColorTheme, TickerTape } from "react-ts-tradingview-widgets";
 
 export default function NavBar() {
 	const dispatch = useDispatch();
 	const user = useSelector((state: RootState) => state.auth.user);
+	const theme = useSelector((state: RootState)=> state.theme.theme)
 
 	return (
 		<nav>
+			<TickerTape colorTheme={theme as ColorTheme} copyrightStyles={{ parent: { display: "none" } }}></TickerTape>
 			<Container fluid>
 				<Row>
 					<Col md={3}>
