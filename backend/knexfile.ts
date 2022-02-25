@@ -6,6 +6,7 @@ config();
 const defaults = {
 	client: "pg",
 	connection: {
+		host: env.POSTGRES_HOST,
 		database: env.DB_NAME,
 		user: env.DB_USER,
 		password: env.DB_PASSWORD,

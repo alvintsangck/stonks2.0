@@ -9,7 +9,7 @@ const env = {
 	POSTGRES_DB: process.env.POSTGRES_DB || "stonk-test",
 	POSTGRES_USER: process.env.POSTGRES_USER || "postgres",
 	POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD || "postgres",
-	POSTGRES_HOST: process.env.POSTGRES_HOST || "postgres",
+	POSTGRES_HOST: process.env.POSTGRES_HOST || "localhost",
 	GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
 	GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 	PORT: process.env.PORT || 8080,

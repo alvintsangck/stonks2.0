@@ -1,6 +1,6 @@
-import yfinance as yf
+import time
+from datetime import datetime, timedelta
 
-msft = yf.Ticker("MSFT")
+start = datetime.today()
 
-info = msft.info
-
+print(start)
