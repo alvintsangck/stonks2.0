@@ -77,9 +77,7 @@ export async function seed(knex: Knex): Promise<void> {
 			return industryObj;
 		});
 
-		const industryIDs: Industry[] = await txn("industries")
-			.insert(industryData)
-			.returning(["id", "name", "sector_id"]);
+		const industryIDs: Industry[] = await txn("industries").insert(industryData).returning(["id", "name", "sector_id"]);
 		let stockData: StockData[] = [];
 		for (let stock of rawStockData) {
 			for (let industry of industryIDs) {
@@ -92,29 +90,30 @@ export async function seed(knex: Knex): Promise<void> {
 			stockData.push(formattedStock);
 		}
 		let stockArr = await txn("stocks").insert(stockData).returning(["id", "ticker"]);
+		//@ts-ignore
 		let stockMap = stockArr.reduce(makeMap, {});
-		let t3 = Date.now();
-		for (let i = 0; i < 45; i++) {
-			logger.debug(`reading chunk ${i}`);
-			workbook = xlsx.readFile(`./seeds/import/chunk${i}.xlsx`);
-			let chunkData = xlsx.utils.sheet_to_json(workbook.Sheets["Sheet1"]);
-			logger.debug(`finished read chunk ${i}`);
+		// let t3 = Date.now();
+		// for (let i = 0; i < 45; i++) {
+		// 	logger.debug(`reading chunk ${i}`);
+		// 	workbook = xlsx.readFile(`./seeds/import/chunk${i}.xlsx`);
+		// 	let chunkData = xlsx.utils.sheet_to_json(workbook.Sheets["Sheet1"]);
+		// 	logger.debug(`finished read chunk ${i}`);
 
-			let stockPriceData = chunkData.map((row: any) => {
-				let obj = {};
-				let { ticker, price, date } = row;
+		// 	let stockPriceData = chunkData.map((row: any) => {
+		// 		let obj = {};
+		// 		let { ticker, price, date } = row;
 
-				ticker = ticker.toString().toUpperCase();
-				obj["stock_id"] = Number(stockMap[ticker]);
-				obj["price"] = price;
-				obj["created_at"] = excelDateToJSDate(date);
-				obj["updated_at"] = excelDateToJSDate(date);
-				return obj;
-			});
-			await txn.batchInsert("stock_prices", stockPriceData, 15000);
-			logger.debug("finished insert ", i + 1);
-		}
-		let t4 = Date.now();
+		// 		ticker = ticker.toString().toUpperCase();
+		// 		obj["stock_id"] = Number(stockMap[ticker]);
+		// 		obj["price"] = price;
+		// 		obj["created_at"] = excelDateToJSDate(date);
+		// 		obj["updated_at"] = excelDateToJSDate(date);
+		// 		return obj;
+		// 	});
+		// 	await txn.batchInsert("stock_prices", stockPriceData, 15000);
+		// 	logger.debug("finished insert ", i + 1);
+		// }
+		// let t4 = Date.now();
 
 		await txn("users").insert(userData);
 		await txn("comments").insert(commentData);
@@ -127,7 +126,7 @@ export async function seed(knex: Knex): Promise<void> {
 
 		await txn.commit();
 		logger.debug(`delete all data in ${(t2 - t1) / 1000}s`);
-		logger.debug(`insert chunk data in ${(t4 - t3) / 1000}s`);
+		// logger.debug(`insert chunk data in ${(t4 - t3) / 1000}s`);
 
 		return;
 	} catch (e) {
