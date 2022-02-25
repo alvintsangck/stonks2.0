@@ -7,13 +7,13 @@ import { SearchForm } from "./SearchForm";
 import { ColorTheme, TickerTape } from "react-ts-tradingview-widgets";
 
 export default function NavBar() {
-	const dispatch = useDispatch();
-	const user = useSelector((state: RootState) => state.auth.user);
-	const theme = useSelector((state: RootState)=> state.theme.theme)
+	// const dispatch = useDispatch();
+	// const user = useSelector((state: RootState) => state.auth.user);
+	const theme = useSelector((state: RootState) => state.theme.theme);
 
 	return (
 		<nav>
-			<TickerTape colorTheme={theme as ColorTheme} copyrightStyles={{ parent: { display: "none" } }}></TickerTape>
+			<TickerTape colorTheme={theme as ColorTheme} copyrightStyles={{ parent: { display: "none" } }} />
 			<Container fluid>
 				<Row>
 					<Col md={3}>
@@ -47,19 +47,6 @@ export default function NavBar() {
 						</NavLink>
 					</Col>
 					<Col md={3} className="search-bar">
-						{/* <form action="#" className="search-form">
-							<div className="form-group">
-								<input
-									type="search"
-									className="form-control"
-									placeholder="Search Ticker"
-									name="tickerInput"
-								/>
-							</div>
-							<button type="submit" className="form-control search-btn">
-								<FontAwesomeIcon icon={faSearch} className="" />
-							</button>
-						</form> */}
 						<SearchForm />
 					</Col>
 				</Row>
