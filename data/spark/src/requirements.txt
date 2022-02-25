@@ -1,0 +1,8 @@
+pandas
+numpy
+yfinance
+python-dotenv
+pymongo
+pyspark
+openpyxl
+finnhub-python

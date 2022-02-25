@@ -19,7 +19,7 @@ services:
             - "7077:7077"
         volumes:
             - ../spark/src:/opt/bitnami/spark/src
-            - ./tmp/streaming:/tmp/streaming
+            - ../tmp/streaming:/tmp/streaming
         build:
             context: ./
             dockerfile: ./Dockerfile
@@ -40,7 +40,7 @@ services:
             - SPARK_SSL_ENABLED=no
         volumes:
             - ../spark/src:/opt/bitnami/spark/src
-            - ./tmp/streaming:/tmp/streaming
+            - ../tmp/streaming:/tmp/streaming
         build:
             context: ./
             dockerfile: ./Dockerfile
@@ -61,7 +61,7 @@ services:
             - SPARK_SSL_ENABLED=no
         volumes:
             - ../spark/src:/opt/bitnami/spark/src
-            - ./tmp/streaming:/tmp/streaming
+            - ../tmp/streaming:/tmp/streaming
         build:
             context: ./
             dockerfile: ./Dockerfile
@@ -74,7 +74,7 @@ services:
         ports:
             - "27017:27017"
         volumes:
-            - ./mongodb/db:/data/db
+            - ../mongodb/db:/data/db
 
 networks:
     dae:
