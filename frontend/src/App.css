@@ -2,6 +2,16 @@ body {
 	background-color: rgb(255, 255, 255);
 }
 
+#root {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+main {
+	flex: 1;
+}
+
 body.dark {
 	background-color: #000000;
 	color: rgba(255, 255, 255, 0.9);

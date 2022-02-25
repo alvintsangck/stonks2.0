@@ -7,23 +7,23 @@ import { history } from "./redux/store/history";
 import Portfolio from "./components/Portfolio";
 import { Route, Switch } from "react-router-dom";
 import Home from "./components/Home";
-import Watchlist from "./components/Watchlist"
-import Screener from "./components/Screener"
+import Watchlist from "./components/Watchlist";
+import Screener from "./components/Screener";
 
 function App() {
 	return (
-		<div>
 			<ConnectedRouter history={history}>
 				<NavBar />
-				<Switch>
-					<Route path="/" exact component={Home}></Route>
-					<Route path="/watchlist" component={Watchlist}></Route>
-					<Route path="/screener" component={Screener}></Route>
-					<Route path="/portfolio" component={Portfolio}></Route>
-				</Switch>
+				<main>
+					<Switch>
+						<Route path="/" exact component={Home}></Route>
+						<Route path="/watchlist" component={Watchlist}></Route>
+						<Route path="/screener" component={Screener}></Route>
+						<Route path="/portfolio" component={Portfolio}></Route>
+					</Switch>
+				</main>
 				<Footer />
 			</ConnectedRouter>
-		</div>
 	);
 }
 
