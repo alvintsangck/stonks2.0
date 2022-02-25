@@ -66,15 +66,17 @@ export default function portfolio() {
 					<div className="portfolio-table col-md-12 col-sm-12 col-xs-12">
 						<Table responsive striped hover className="portfo-table table table-striped table-hover">
 							<thead>
-								<th>Ticker</th>
-								<th>Company Name</th>
-								<th>Price(now price)</th>
-								<th>Share(s)</th>
-								<th>Avg. Unit Cost(sum (share* buy-sell unit cost) / shares)</th>
-								<th>Total Cost(share * avg unit cost)</th>
-								<th>Market Value(share * now price)</th>
-								<th>Profit/Loss(mk v - tt c)</th>
-								<th>Profit/Loss%((mk v -tt c) /tt c *100%)</th>
+								<tr>
+									<th>Ticker</th>
+									<th>Company Name</th>
+									<th>Price(now price)</th>
+									<th>Share(s)</th>
+									<th>Avg. Unit Cost(sum (share* buy-sell unit cost) / shares)</th>
+									<th>Total Cost(share * avg unit cost)</th>
+									<th>Market Value(share * now price)</th>
+									<th>Profit/Loss(mk v - tt c)</th>
+									<th>Profit/Loss%((mk v -tt c) /tt c *100%)</th>
+								</tr>
 							</thead>
 							<tbody>
 								<tr>
