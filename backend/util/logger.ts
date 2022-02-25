@@ -1,4 +1,4 @@
-import winston, { createLogger, format, transports } from "winston";
+import { createLogger, format, transports } from "winston";
 import env from "./env";
 
 const logFormat = format.printf(function (info) {
@@ -11,10 +11,10 @@ export const logger = createLogger({
 		new transports.Console({
 			format: format.combine(format.colorize(), format.timestamp(), format.splat(), logFormat),
 		}),
-		new winston.transports.File({
-			filename: "info.log",
-			level: "info",
-			format: format.combine(format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }), format.json()),
-		}),
+		// new winston.transports.File({
+		// 	filename: "info.log",
+		// 	level: "info",
+		// 	format: format.combine(format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }), format.json()),
+		// }),
 	],
 });
