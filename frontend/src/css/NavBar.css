@@ -23,9 +23,9 @@ nav > div:first-child {
 	border-right: #000 1px solid;
 }
 
-.user-avatar-btn{
+.user-avatar-btn {
 	background-color: transparent;
-    border: none;
+	border: none;
 }
 
 .user-avatar-btn::after {
@@ -54,37 +54,6 @@ nav > div:first-child {
 	color: rgba(0, 0, 0, 0.3);
 }
 
-/* Search Bar */
-.search-bar {
-	display: flex;
-	justify-content: center;
-}
-
-.search-form {
-	display: flex;
-}
-
-.search-form input {
-	height: 50px;
-	border: none;
-}
-
-.search-form .search-btn {
-	width: 50px;
-	height: 50px;
-	background: #273472;
-	border-radius: 0 25px 25px 0px;
-}
-
-.search-form .search-btn span {
-	font-size: 16px;
-	color: #ffffff;
-}
-
-.search-form button {
-	color: #ffffff;
-}
-
 /* Bottom Bar */
 .navbar-toggler {
 	color: rgb(255, 255, 255, 0.5);
@@ -104,5 +73,4 @@ nav > div:first-child {
 .navbar button {
 	text-transform: uppercase;
 	font-size: 16px;
-	cursor: pointer;
 }

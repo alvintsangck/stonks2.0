@@ -5,6 +5,7 @@ import "../css/NavBar.css";
 import { Col, Container, Dropdown, Nav, Navbar, Row } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { SearchForm } from "./SearchForm";
 
 export default function NavBar() {
 	const dispatch = useDispatch();
@@ -45,7 +46,7 @@ export default function NavBar() {
 						</NavLink>
 					</Col>
 					<Col md={3} className="search-bar">
-						<form action="#" className="search-form order-lg-last">
+						{/* <form action="#" className="search-form">
 							<div className="form-group">
 								<input
 									type="search"
@@ -57,7 +58,8 @@ export default function NavBar() {
 							<button type="submit" className="form-control search-btn">
 								<FontAwesomeIcon icon={faSearch} className="" />
 							</button>
-						</form>
+						</form> */}
+						<SearchForm />
 					</Col>
 				</Row>
 			</Container>
