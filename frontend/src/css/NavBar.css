@@ -1,0 +1,76 @@
+a {
+	color: #000000;
+	text-decoration: none;
+}
+
+/* Login */
+nav .container-fluid {
+	padding: 16px 60px 0;
+}
+
+.login {
+	display: flex;
+	justify-content: center;
+}
+
+.login a {
+	width: 80px;
+	padding: 8px 16px;
+	text-align: center;
+}
+
+.login a:first-child {
+	border-right: #000 1px solid;
+}
+
+.user-avatar-btn {
+	background-color: transparent;
+	border: none;
+}
+
+.user-avatar-btn::after {
+	content: none;
+}
+
+.user-avatar {
+	height: 80px;
+	width: 80px;
+}
+
+.brand-name {
+	text-align: center;
+	padding-top: 8px;
+	color: #000;
+	text-transform: uppercase;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 1.2;
+	margin-bottom: 30px;
+}
+
+.brand-name div {
+	font-size: 12px;
+	font-weight: 500;
+	color: rgba(0, 0, 0, 0.3);
+}
+
+/* Bottom Bar */
+.navbar-toggler {
+	color: rgb(255, 255, 255, 0.5);
+}
+
+.blue {
+	background-color: #273472;
+	color: #ffffff;
+}
+
+.blue a {
+	color: #ffffff;
+	padding: 15px;
+}
+
+.navbar,
+.navbar button {
+	text-transform: uppercase;
+	font-size: 16px;
+}

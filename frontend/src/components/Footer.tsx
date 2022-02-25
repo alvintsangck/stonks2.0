@@ -1,3 +1,5 @@
+import "../css/Footer.css";
+
 export default function Footer() {
-	return <footer>Footer</footer>;
+	return <footer>Stonks 2022</footer>;
 }

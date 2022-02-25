@@ -1,7 +1,9 @@
 import { RouterState } from "connected-react-router";
 import { AuthState } from "../auth/state";
+import { ThemeState } from "../theme/state";
 
 export type RootState = {
 	auth: AuthState;
+	theme: ThemeState;
 	router: RouterState;
 };

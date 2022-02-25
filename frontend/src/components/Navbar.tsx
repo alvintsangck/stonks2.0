@@ -1,110 +1,88 @@
-// import { useDispatch, useSelector } from "react-redux";
-// import { RootState } from "../redux/store/state";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
+import { RootState } from "../redux/store/state";
+import "../css/NavBar.css";
+import { Col, Container, Dropdown, Nav, Navbar, Row } from "react-bootstrap";
+import { SearchForm } from "./SearchForm";
+import { ColorTheme, TickerTape } from "react-ts-tradingview-widgets";
 
-export default function Navbar() {
-	// const dispatch = useDispatch();
-	// const user = useSelector((state: RootState) => state.auth);
+export default function NavBar() {
+	const dispatch = useDispatch();
+	const user = useSelector((state: RootState) => state.auth.user);
+	const theme = useSelector((state: RootState)=> state.theme.theme)
 
 	return (
 		<nav>
-			<div className="row">
-				<div className="col-md-2 social-media">
-					<p className="mb-0 d-flex">
-						<a href="login.html" className="boarder1 non-user">
-							Login
-						</a>
-						<a href="login.html" className="non-user">
-							Register
-						</a>
-					</p>
-					<div className="dropdown user-only">
-						<button
-							className="btn dropdown-toggle user-avatar-btn"
-							type="button"
-							id="dropdownMenuButton1"
-							data-bs-toggle="dropdown"
-							aria-expanded="false"
-						>
-							<img className="user-avatar" src={""} alt="user-avatar" />
-						</button>
-						<ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-							<li>
-								<a className="dropdown-item" href="setting.html">
-									User Setting
-								</a>
-							</li>
-							<li>
-								<button className="dropdown-item theme">Change Theme</button>
-							</li>
-							<li>
-								<a className="dropdown-item log-out" href="/user/logout">
-									Log Out
-								</a>
-							</li>
-						</ul>
-					</div>
-				</div>
-				<div className="brand-name col-md-8">
-					<a className="navbar-brand" href="index.html">
-						STONKS
-						<div>Tecky Academy</div>
-					</a>
-				</div>
-				<div className="col-md-2">
-					<form action="#" className="search-form order-lg-last">
-						<div className="form-group d-flex">
-							<input
-								type="search"
-								className="form-control pl-3"
-								placeholder="Search Ticker"
-								name="tickerInput"
-							/>
-							<button type="submit" placeholder="" className="form-control search">
-								<span className="fa fa-search"></span>
-							</button>
+			<TickerTape colorTheme={theme as ColorTheme} copyrightStyles={{ parent: { display: "none" } }}></TickerTape>
+			<Container fluid>
+				<Row>
+					<Col md={3}>
+						<div className="login">
+							<NavLink className="non-user" to="/login">
+								Login
+							</NavLink>
+							<NavLink className="non-user" to="/login">
+								Register
+							</NavLink>
 						</div>
-					</form>
-				</div>
-			</div>
-			<div className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-				<div className="container-fluid blue-color">
-					<button
-						className="navbar-toggler"
-						type="button"
-						data-toggle="collapse"
-						data-target="#ftco-nav"
-						aria-controls="ftco-nav"
-						aria-expanded="false"
-						aria-label="Toggle navigation"
-					>
-						<span className="fa fa-bars"></span> Menu
-					</button>
-					<div className="collapse navbar-collapse" id="ftco-nav">
-						<ul className="navbar-nav m-auto">
-							<li className="nav-item active">
-								<a href="/" className="nav-link">
-									Home
-								</a>
-							</li>
-							<li className="nav-item">
-								<a href="/watchlist" className="nav-link">
-									Watchlist
-								</a>
-							</li>
-							<li className="nav-item">
-								<a href="/screener" className="nav-link">
-									Screener
-								</a>
-							</li>
-							<li className="nav-item">
-								<a href="/portfolio" className="nav-link">
-									Portfolio
-								</a>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
+						<Dropdown className="user-only">
+							<Dropdown.Toggle className="user-avatar-btn">
+								<img className="user-avatar" src={"STONK.png"} alt="user-avatar" />
+							</Dropdown.Toggle>
+							<Dropdown.Menu>
+								<Dropdown.Item>
+									<NavLink className="dropdown-item" to="/setting">
+										User Setting
+									</NavLink>
+								</Dropdown.Item>
+								<Dropdown.Item>Change Theme</Dropdown.Item>
+								<Dropdown.Item>Log Out</Dropdown.Item>
+							</Dropdown.Menu>
+						</Dropdown>
+					</Col>
+					<Col md={6} className="brand-name">
+						<NavLink to="/">
+							<span>STONKS</span>
+							<div>Tecky Academy</div>
+						</NavLink>
+					</Col>
+					<Col md={3} className="search-bar">
+						{/* <form action="#" className="search-form">
+							<div className="form-group">
+								<input
+									type="search"
+									className="form-control"
+									placeholder="Search Ticker"
+									name="tickerInput"
+								/>
+							</div>
+							<button type="submit" className="form-control search-btn">
+								<FontAwesomeIcon icon={faSearch} className="" />
+							</button>
+						</form> */}
+						<SearchForm />
+					</Col>
+				</Row>
+			</Container>
+			<Navbar collapseOnSelect expand="md" className="blue" variant="dark">
+				<Navbar.Toggle aria-controls="responsive-navbar-nav" />
+				<Navbar.Collapse id="responsive-navbar-nav">
+					<Nav className="m-auto">
+						<NavLink to="/">
+							<span>Home</span>
+						</NavLink>
+						<NavLink to="/watchlist">
+							<span>Watchlist</span>
+						</NavLink>
+						<NavLink to="/screener">
+							<span>Screener</span>
+						</NavLink>
+						<NavLink to="/portfolio">
+							<span>Portfolio</span>
+						</NavLink>
+					</Nav>
+				</Navbar.Collapse>
+			</Navbar>
 		</nav>
 	);
 }

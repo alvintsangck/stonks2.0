@@ -2,8 +2,7 @@ import { AuthAction } from "./action";
 import { AuthState } from "./state";
 
 const initialState = {
-	username: "",
-	password: "",
+	user: {},
 	error: null,
 };
 
