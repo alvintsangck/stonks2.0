@@ -1,9 +1,13 @@
 import { Carousel, Col, Container, Row } from "react-bootstrap";
 import { Helmet } from "react-helmet";
-import { MarketOverview } from "react-ts-tradingview-widgets";
+import { useSelector } from "react-redux";
+import { ColorTheme, MarketOverview } from "react-ts-tradingview-widgets";
 import "../css/Home.css";
+import { RootState } from "../redux/store/state";
 
 export default function Home() {
+	const theme = useSelector((state: RootState) => state.theme.theme);
+
 	return (
 		<>
 			<Helmet>
@@ -35,7 +39,7 @@ export default function Home() {
 					</Col>
 					<Col md={4}>
 						<MarketOverview
-							colorTheme="light"
+							colorTheme={theme as ColorTheme}
 							height="650px"
 							width="400px"
 							copyrightStyles={{ parent: { display: "none" } }}
