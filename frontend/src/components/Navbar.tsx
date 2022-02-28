@@ -12,7 +12,7 @@ export default function NavBar() {
 	const theme = useSelector((state: RootState) => state.theme.theme);
 
 	return (
-		<nav>
+		<nav className='nav-bar'>
 			<TickerTape colorTheme={theme as ColorTheme} copyrightStyles={{ parent: { display: "none" } }} />
 			<Container fluid>
 				<Row>
