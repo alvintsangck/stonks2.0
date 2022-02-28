@@ -5,10 +5,12 @@ import { history } from "./history";
 import { connectRouter } from "connected-react-router";
 import { themeReducer } from "../theme/reducer";
 import { portfolioReducer } from "../portfolio/reducer";
+import { watchlistReducer } from "../watchlist/reducer";
 
 export const rootReducer = combineReducers<RootState>({
 	auth: authReducer,
 	theme: themeReducer,
-	router: connectRouter(history),
+	watchlist: watchlistReducer,
 	portfolio: portfolioReducer,
+	router: connectRouter(history),
 });
