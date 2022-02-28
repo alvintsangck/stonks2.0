@@ -4,8 +4,9 @@ import { camelCaseKeys } from "../util/helper";
 export class WatchlistService {
 	constructor(private knex: Knex) {}
 
-	async getWatchlist(userId: number): Promise<any[]> {
-		return createArr(await this.queryWatchlist(userId));
+	async getWatchlist(watchlistId: number): Promise<{}> {
+		const stocks = createStockArr(await this.queryWatchlist(watchlistId));
+		return { watchlistId, stocks };
 	}
 
 	async createWatchlist(userId: number, name: string): Promise<number> {
@@ -58,17 +59,16 @@ export class WatchlistService {
 	}
 }
 
-function createArr(queryArr: any[]): any[] {
-	let watchlistArr: any[] = [];
+function createStockArr(queryArr: any[]): {} {
+	let stocksArr: any[] = [];
 	for (let i = 0; i < queryArr.length; i += 2) {
-		watchlistArr.push({
-			id: queryArr[i].id,
-			stockId: queryArr[i].stockId,
+		stocksArr.push({
+			id: queryArr[i].stockId,
 			name: queryArr[i].stockName,
 			ticker: queryArr[i].ticker,
 			prevPrice: queryArr[i].price,
 			price: queryArr[i + 1].price,
 		});
 	}
-	return watchlistArr;
+	return stocksArr;
 }
