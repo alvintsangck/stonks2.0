@@ -13,8 +13,8 @@ h2 {
 	border-left: 1px solid #000000;
 }
 
-tbody td:last-child,
-tbody td:last-child:hover {
+.watchlist-container tbody td:last-child,
+.watchlist-container tbody td:last-child:hover {
 	color: #e41212;
 	cursor: pointer;
 }

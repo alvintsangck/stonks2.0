@@ -14,7 +14,7 @@ export default function Watchlist() {
 			<Helmet>
 				<title>Watchlist | Stonks</title>
 			</Helmet>
-			<Container fluid>
+			<Container fluid className="watchlist-container">
 				<Row>
 					<Col md={3}>
 						<Sidebar />
@@ -36,7 +36,9 @@ export default function Watchlist() {
 									<td>3</td>
 									<td>4</td>
 									<td>5</td>
-									<td><FontAwesomeIcon icon={faTimes}/></td>
+									<td>
+										<FontAwesomeIcon icon={faTimes} />
+									</td>
 								</tr>
 							</tbody>
 						</Table>
