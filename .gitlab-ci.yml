@@ -83,10 +83,10 @@ server-deploy:
         - production
     script:
         - ssh ubuntu@${SERVER_HOSTNAME}
-          "(docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD;
-          docker pull alvintsang/stonks:latest;
+          "docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD;
+          docker pull $REPOSITORY_URL:$IMAGE_TAG;
           docker-compose down;
-          docker-compose up -d;) > info.log"
+          docker-compose up -d;"
 react-deploy:
     image: "python:3.6"
     stage: react-deploy
