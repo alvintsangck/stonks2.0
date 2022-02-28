@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FormEvent, useState } from "react";
 import { Form } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
-import "../css/CommentForm.css"
+import "../css/CommentForm.css";
 
 export default function CommentForm() {
 	const [comment, setComment] = useState("");
@@ -13,7 +13,7 @@ export default function CommentForm() {
 	};
 
 	return (
-		<Form onSubmit={onSubmit}>
+		<Form onSubmit={onSubmit} id="comment-form">
 			<Form.Group>
 				<NavLink to="/login">
 					<Form.Control as="textarea" disabled placeholder="Please login to send comment" />
