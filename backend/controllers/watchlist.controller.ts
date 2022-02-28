@@ -17,7 +17,7 @@ export class WatchlistController {
 	router = express.Router();
 
 	getAllWatchlistsName = async (req: Request) => {
-		return await this.watchlistService.getAllWatchlistsName(Number(req.session["user"].id));
+		return await this.watchlistService.getAllWatchlistsName(Number(1));
 	};
 
 	get = async (req: Request) => {
