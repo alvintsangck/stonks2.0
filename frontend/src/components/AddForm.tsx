@@ -28,12 +28,12 @@ function AddForm({ name, placeholder }: Props) {
 					onClick={() => setIsRotate(!isRotate)}
 				/>
 			</div>
-			<Form onSubmit={onSubmit} className="add-form">
+			{isRotate && <Form onSubmit={onSubmit} className="add-form">
 				<Form.Control type="text" placeholder={`add ${placeholder}`} />
 				<button className="submit-btn" type="submit">
 					Add
 				</button>
-			</Form>
+			</Form>}
 		</>
 	);
 }
