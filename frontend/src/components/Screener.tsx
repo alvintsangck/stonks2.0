@@ -6,6 +6,20 @@ import "../css/Screener.css";
 import StockTable from "./StockTable";
 
 export default function Screener() {
+	const tableHeadings: string[] = [
+		"TICKER",
+		"COMPANY NAME",
+		"PRICE ($)",
+		"CHANGE ($)",
+		"CHANGE %",
+		"52 WEEKS HIGH ($)",
+		"MARKET CAP (MIL)",
+		"RS RATING",
+		"SECTOR",
+		"INDUSTRY",
+		"INDUSTRY RS",
+		"INDUSTRY RANK",
+	]
 	return (
 		<>
 			<Helmet>
@@ -113,7 +127,7 @@ export default function Screener() {
 					</Row>
 				</Form>
 				<h4 className='screen-result'>Number of stocks found:</h4>
-				<StockTable />
+				<StockTable headings={tableHeadings} content={['']}/>
 			</Container>
 		</>
 	);
