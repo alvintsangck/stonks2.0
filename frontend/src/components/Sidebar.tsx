@@ -3,7 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AddForm from "./AddForm";
 import "../css/Sidebar.css";
 import { useDispatch } from "react-redux";
-import { deleteWatchlistThunk, getWatchlistThunk } from "../redux/watchlist/thunk";
+import { addWatchlistThunk, deleteWatchlistThunk, getWatchlistThunk } from "../redux/watchlist/thunk";
+import { push } from "connected-react-router";
 
 type Props = {
 	lists: any[];
@@ -12,22 +13,23 @@ type Props = {
 
 function Sidebar({ lists, currentListId }: Props) {
 	const dispatch = useDispatch();
-
+	const deleteWatchlist = (listId: number) => {
+		dispatch(deleteWatchlistThunk(listId));
+		if (currentListId === listId) {
+			dispatch(push(`/watchlist/${lists[0].id}`));
+		}
+	};
 	return (
 		<>
-			<AddForm name="My Lists" placeholder="watchlist" />
+			<AddForm name="My Lists" placeholder="watchlist" onAdd={addWatchlistThunk} />
 			<div className="section">
 				{lists.map((list) => (
-					<div
-						key={list.id}
-						className={list.id === currentListId ? "selected" : ""}
-						onClick={() => dispatch(getWatchlistThunk(list.id))}
-					>
-						<div>
+					<div key={list.id} className={list.id === currentListId ? "selected" : ""}>
+						<div onClick={() => dispatch(getWatchlistThunk(list.id))}>
 							<span>{list.name}</span>
 						</div>
 						<div>
-							<FontAwesomeIcon icon={faTimes} onClick={() => dispatch(deleteWatchlistThunk(list.id))} />
+							<FontAwesomeIcon icon={faTimes} onClick={() => deleteWatchlist(list.id)} />
 						</div>
 					</div>
 				))}

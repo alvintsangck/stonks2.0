@@ -7,32 +7,37 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { deleteStockThunk, getAllWatchlistsThunk, getWatchlistThunk } from "../redux/watchlist/thunk";
+import { addStockThunk, deleteStockThunk, getAllWatchlistsThunk, getWatchlistThunk } from "../redux/watchlist/thunk";
 import { RootState } from "../redux/store/state";
 import StockTable from "./StockTable";
+import { useParams } from "react-router-dom";
 
 export default function Watchlist() {
-	const tableHeadings = ["Ticker", "Company Name", "Price", "Change", "Change %", ""];
 	const watchlists = useSelector((state: RootState) => state.watchlist.watchlists);
-	const watchlistId = useSelector((state: RootState) => state.watchlist.watchlistId);
 	const stocks = useSelector((state: RootState) => state.watchlist.stocks);
-	const currentWatchlistName = watchlists.find((watchlist) => watchlist?.id === watchlistId)?.name || "";
+	const currentWatchlistId: number = Number(useParams<{ watchlistId: string }>().watchlistId);
+	const currentWatchlistName = watchlists.find((watchlist) => watchlist?.id === currentWatchlistId)?.name || "";
+	const tableHeadings = ["Ticker", "Company Name", "Price", "Change", "Change %", ""];
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		dispatch(getAllWatchlistsThunk());
-	}, [dispatch]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
-		if (watchlistId && watchlistId > 0) {
-			dispatch(getWatchlistThunk(watchlistId));
+		if (watchlists.length > 0) {
+			if (Number.isNaN(currentWatchlistId)) {
+				dispatch(getWatchlistThunk(watchlists[0]!.id));
+			} else {
+				dispatch(getWatchlistThunk(currentWatchlistId));
+			}
 		}
-	}, [dispatch, watchlistId]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [watchlists]);
 
-	const deleteStock = (watchlistId: number | null, stockId: number) => {
-		if (watchlistId && watchlistId > 0) {
-			dispatch(deleteStockThunk(watchlistId, stockId));
-		}
+	const addStock = (ticker: string) => {
+		return addStockThunk(currentWatchlistId, ticker);
 	};
 
 	const calculatedStocks = stocks.map((stock) => {
@@ -44,7 +49,12 @@ export default function Watchlist() {
 				price: stock.price,
 				change: change.toFixed(2),
 				changePercentage: ((change / stock.prevPrice) * 100).toFixed(2) + "%",
-				deleteBtn: <FontAwesomeIcon icon={faTimes} onClick={() => deleteStock(watchlistId, stock.id)} />,
+				deleteBtn: (
+					<FontAwesomeIcon
+						icon={faTimes}
+						onClick={() => dispatch(deleteStockThunk(currentWatchlistId, stock.id))}
+					/>
+				),
 			};
 		}
 		return null;
@@ -58,10 +68,10 @@ export default function Watchlist() {
 			<Container fluid className="watchlist-container">
 				<Row>
 					<Col md={3}>
-						<Sidebar lists={watchlists} currentListId={watchlistId} />
+						<Sidebar lists={watchlists} currentListId={currentWatchlistId} />
 					</Col>
 					<Col md={9}>
-						<AddForm name={currentWatchlistName} placeholder="stock" />
+						<AddForm name={currentWatchlistName} placeholder="stock" onAdd={addStock} />
 						<StockTable headings={tableHeadings} content={calculatedStocks} />
 					</Col>
 				</Row>

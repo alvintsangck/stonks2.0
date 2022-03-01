@@ -13,6 +13,5 @@ export type WatchlistStock = {
 
 export type WatchlistState = {
 	watchlists: Array<Watchlist | null>;
-	watchlistId: number | null;
 	stocks: Array<WatchlistStock | null>;
 };

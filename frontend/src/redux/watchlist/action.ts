@@ -29,12 +29,12 @@ export const deleteWatchlistAction = (watchlistId: number) => ({
 });
 
 export const addStockToWatchlistAction = (stock: WatchlistStock) => ({
-	type: "@@Watchlist/addStock" as const,
+	type: "@@Watchlist/add_stock" as const,
 	stock,
 });
 
 export const deleteStockFromWatchlistAction = (stockId: number) => ({
-	type: "@@Watchlist/deleteStock" as const,
+	type: "@@Watchlist/delete_stock" as const,
 	stockId,
 });
 
