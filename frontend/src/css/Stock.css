@@ -26,7 +26,7 @@
 	height: 60vh;
 }
 
-.col-md-4 > div {
+.stock-container .col-md-4 > div {
 	border-top: 1px solid rgb(224, 224, 224);
 	padding: 20px 0;
 	/* border-bottom: 1px solid rgb(224, 224, 224); */

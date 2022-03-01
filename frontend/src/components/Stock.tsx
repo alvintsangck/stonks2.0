@@ -19,7 +19,7 @@ export default function Stock() {
 		{ name: <FontAwesomeIcon icon={faBell} />, className: "noti-btn", fn: null },
 	];
 	return (
-		<Container fluid>
+		<Container fluid className='stock-container'>
 			<Row>
 				<Col md={8} className="stock-info">
 					<SymbolInfo
