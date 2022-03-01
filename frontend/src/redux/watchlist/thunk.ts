@@ -25,13 +25,13 @@ export function getAllWatchlistsThunk() {
 
 export function getWatchlistThunk(watchlistId: number | null) {
 	return async (dispatch: RootDispatch) => {
+		dispatch(push(`/watchlist/${watchlistId}`));
 		const result = await callApi(`/watchlist/${watchlistId}`);
 		if ("error" in result) {
 			defaultErrorSwal(result.error);
 		} else {
 			const { watchlistId, stocks } = result;
 			dispatch(getWatchlistAction(watchlistId, stocks));
-			dispatch(push(`/watchlist/${watchlistId}`));
 		}
 	};
 }
