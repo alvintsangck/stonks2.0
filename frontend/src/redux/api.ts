@@ -9,7 +9,6 @@ export async function callApi(url: string, method: string = "GET", body?: any) {
 		});
 		return await res.json();
 	} catch (error) {
-		console.log(error);
 		return { error: String(error) };
 	}
 }
