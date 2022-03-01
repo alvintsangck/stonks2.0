@@ -15,9 +15,9 @@ db = client.stonks
 
 end = datetime.now()
 start_day = end - timedelta(1)
-start_year = datetime(end.year, end.month, end.day - 1, end.hour)
+start_year = datetime(end.year - 1, end.month, end.day, end.hour)
 #check start time
-start = start_year
+start = start_day
 
 print("start date:", start, "end date:", end)
 
@@ -61,12 +61,13 @@ else:
                 stocks_not_working.append(ticker)
             else:
                 df.insert(0, 'Ticker', ticker)
-                if (end - start).days == 1:
-                    df = df.loc[str(start_day.date())]
+                # if (end - start).days == 1:
+                #     df = df.loc[str(start_day.date())]
                 df.reset_index(level=0, inplace=True)
                 df['Date'] = df['Date'].dt.strftime('%Y-%m-%d')
                 result = df.to_json(orient="records")
                 obj = json.loads(result)
+                print(obj)
                 db.stockPrices.insert_many(obj)
 
         print(f"time elapsed: {time.perf_counter() - start_time}")

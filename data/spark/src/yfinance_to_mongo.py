@@ -15,11 +15,14 @@ db = client.stonks
 
 end = datetime.now()
 start_day = end - timedelta(1)
-start_year = datetime(end.year, end.month, end.day - 1, end.hour)
+start_year = datetime(end.year - 1, end.month, end.day, end.hour)
 #check start time
-start = start_year
+start = start_day
 
 print("start date:", start, "end date:", end)
+
+#change directory path
+os.chdir("/opt/bitnami/spark/src/")
 
 #tickers config
 tickers = pd.read_excel("./data.xlsx", sheet_name="stocks")
@@ -48,8 +51,6 @@ else:
         print("downloading stocks...")
         data = yf.download(ticker_string, start=start, end=end, group_by='ticker', auto_adjust=True)
 
-        print(data)
-
         print("inserting into mongodb...")
         for ticker in split:
             if (len(split) > 1):
@@ -61,20 +62,21 @@ else:
                 stocks_not_working.append(ticker)
             else:
                 df.insert(0, 'Ticker', ticker)
-                if (end - start).days == 1:
-                    df = df.loc[str(start_day.date())]
+                # if (end - start).days == 1:
+                #     df = df.loc[str(start_day.date())]
                 df.reset_index(level=0, inplace=True)
                 df['Date'] = df['Date'].dt.strftime('%Y-%m-%d')
                 result = df.to_json(orient="records")
                 obj = json.loads(result)
+                # print(obj)
                 db.stockPrices.insert_many(obj)
 
         print(f"time elapsed: {time.perf_counter() - start_time}")
 
-    with open(f"stocks_not_downloaded.txt ", "w") as f:
-        f.write(f"Total no. of missing stocks = {len(stocks_not_working)}\n")
-        for stock in stocks_not_working:
-            f.write(f'{stock}\n')
+    # with open(f"stocks_not_downloaded.txt ", "w") as f:
+    #     f.write(f"Total no. of missing stocks = {len(stocks_not_working)}\n")
+    #     for stock in stocks_not_working:
+    #         f.write(f'{stock}\n')
 
     end_time = time.perf_counter()
 
