@@ -51,9 +51,7 @@ export class ScreenerController {
 		}
 
 		if (excludedIndustry) {
-			industryIds = industryIds.filter((id: number) => {
-				return !excludedIndustry.includes(id);
-			});
+			industryIds = industryIds.filter((id: number) => !excludedIndustry.includes(id));
 		}
 
 		if (includedSector.length == 0) {
@@ -61,14 +59,12 @@ export class ScreenerController {
 		}
 
 		if (excludedSector) {
-			sectorIds = sectorIds.filter((id: number) => {
-				return !excludedSector.includes(id);
-			});
+			sectorIds = sectorIds.filter((id: number) => !excludedSector.includes(id));
 		}
 
 		console.log(price, offYearHigh, marketCap, rS, industryRs, industryRank, industryIds, sectorIds);
 
-		let result = await this.screenerService.screenStocks(
+		const result = await this.screenerService.screenStocks(
 			price,
 			offYearHigh,
 			marketCap,

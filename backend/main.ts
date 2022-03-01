@@ -4,7 +4,6 @@ import http from "http";
 import { Server as SocketIO } from "socket.io";
 import { setSocketIO } from "./util/socketio";
 import env from "./util/env";
-import { isLoggedIn } from "./middlewares/guard";
 import { logger } from "./util/logger";
 import { attachApi } from "./api";
 import cors from "cors";
@@ -20,10 +19,8 @@ app.use(sessionMiddleWare);
 app.use(oAuthMiddleWare);
 
 app.use(express.static("assets/pic"));
-app.use(express.static("public"));
 app.use(express.static("assets/uploads"));
 attachApi(app, io);
-app.use(isLoggedIn, express.static("protected"));
 
 server.listen(env.PORT, () => {
 	logger.info(`Listening at port ${env.PORT}`);

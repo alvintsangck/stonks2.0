@@ -39,8 +39,10 @@ https://github.com/gadicc/node-yahoo-finance2
 login
 https://codepen.io/Rh2o/pen/yLgxJoG
 
-alert box
+sweetalert2
 https://sweetalert2.github.io
+sweetalert2-react-content
+https://github.com/sweetalert2/sweetalert2-react-content
 
 react-chartjs
 https://github.com/reactchartjs/react-chartjs-2#docs

@@ -2,14 +2,26 @@ import { ThemeAction } from "./action";
 import { ThemeState } from "./state";
 
 const initialState = {
-	theme: "light",
+	theme: getTheme(),
 };
 
-export function themeReducer(state: ThemeState = initialState, action: ThemeAction) {
+function getTheme() {
+	return localStorage.getItem("theme") || "light";
+}
+
+export function themeReducerLogic(state: ThemeState, action: ThemeAction) {
 	switch (action.type) {
 		case "@@Theme/toggle":
-			return { theme: action.theme };
+			return { theme: state.theme === "light" ? "dark" : "light" };
 		default:
 			return state;
 	}
+}
+
+export function themeReducer(state: ThemeState = initialState, action: ThemeAction) {
+	const newState = themeReducerLogic(state, action);
+	if (newState !== state) {
+		localStorage.setItem("theme", newState.theme);
+	}
+	return newState;
 }

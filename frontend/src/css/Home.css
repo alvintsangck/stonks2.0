@@ -1,11 +1,9 @@
 .market-row {
-	margin-top: 20px;
 	margin-bottom: 20px;
 }
 
 img {
-	height: 100%;
-	width: 100%;
+	max-width: 100%; 
 }
 
 .market-row img {
@@ -15,17 +13,6 @@ img {
 .market-overview {
 	display: flex;
 	justify-content: flex-end;
-}
-
-@media (min-width: 1400px) {
-	.container,
-	.container-lg,
-	.container-md,
-	.container-sm,
-	.container-xl,
-	.container-xxl {
-		max-width: 1700px;
-	}
 }
 
 .carousel-caption {
@@ -59,7 +46,6 @@ img {
 
 .small-news {
 	position: relative;
-	height: 250px;
 }
 
 .small-news .small-news-header {
