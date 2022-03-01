@@ -10,8 +10,8 @@ export class WatchlistController {
 		this.router.post("/watchlist", wrapControllerMethod(this.post));
 		this.router.put("/watchlist/:watchlistId", wrapControllerMethod(this.put));
 		this.router.delete("/watchlist/:watchlistId", wrapControllerMethod(this.delete));
-		this.router.post("/watchlist/:watchlistId/:stockId", wrapControllerMethod(this.addStockToWatchlist));
-		this.router.delete("/watchlist/:watchlistId/:stockId", wrapControllerMethod(this.deleteStockFromWatchlist));
+		this.router.post("/watchlist/:watchlistId/:stockId", wrapControllerMethod(this.addStock));
+		this.router.delete("/watchlist/:watchlistId/:stockId", wrapControllerMethod(this.deleteStock));
 	}
 
 	router = express.Router();
@@ -29,10 +29,9 @@ export class WatchlistController {
 
 	post = async (req: Request) => {
 		const name = String(req.body.name).replace(/\s+/g, "");
-		const userId = req.session["user"].id;
 
 		if (name === "") throw new HttpError(400, "Watchlist name cannot be empty");
-		return await this.watchlistService.createWatchlist(userId, name);
+		return await this.watchlistService.createWatchlist(1, name);
 	};
 
 	put = async (req: Request): Promise<{ message: string }> => {
@@ -51,15 +50,18 @@ export class WatchlistController {
 		return await this.watchlistService.deleteWatchlist(watchlistId);
 	};
 
-	addStockToWatchlist = async (req: Request): Promise<{ message: string }> => {
+	addStock = async (req: Request): Promise<{ message: string }> => {
 		const watchlistId = Number(req.params.watchlistId);
 		const stockId = Number(req.params.stockId);
 
 		if (Number.isNaN(watchlistId) || watchlistId <= 0) throw new HttpError(400, "Watchlist not exist");
+		const result = await this.watchlistService.getStock(watchlistId, stockId);
+		if (result) throw new HttpError(400, "Stock already exist");
+
 		return await this.watchlistService.addStock(watchlistId, stockId);
 	};
 
-	deleteStockFromWatchlist = async (req: Request): Promise<{ message: string }> => {
+	deleteStock = async (req: Request): Promise<{ message: string }> => {
 		const watchlistId = Number(req.params.watchlistId);
 		const stockId = Number(req.params.stockId);
 

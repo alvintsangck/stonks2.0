@@ -27,16 +27,25 @@ export class WatchlistService {
 		return await this.knex("watchlists").select("id", "name").where("user_id", userId);
 	}
 
+	async getStock(watchlistId: number, stockId: number): Promise<{ stockId: string }> {
+		return camelCaseKeys(
+			await this.knex("watchlist_stock")
+				.select("stock_id")
+				.where("watchlist_id", watchlistId)
+				.where("stock_id", stockId)
+		)[0];
+	}
+
 	async addStock(watchlistId: number, stockId: number): Promise<{ message: string }> {
 		await this.knex("watchlist_stock").insert({ watchlist_id: watchlistId, stock_id: stockId });
 		return { message: `${stockId} added to watchlist ${watchlistId}` };
 	}
 
 	async deleteStock(watchlistId: number, stockId: number): Promise<{ message: string }> {
-		await this.knex("watchlist_stock as ws")
+		await this.knex("watchlist_stock")
 			.delete()
-			.where("ws.stock_id", stockId)
-			.where("ws.watchlist_id", watchlistId);
+			.where("stock_id", stockId)
+			.where("watchlist_id", watchlistId);
 		return { message: "stock deleted" };
 	}
 
