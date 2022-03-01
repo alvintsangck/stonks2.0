@@ -3,19 +3,27 @@ import { WatchlistState } from "./state";
 
 const initialState: WatchlistState = {
 	watchlists: [],
-	watchlistId: null,
 	stocks: [],
 };
 
 export function watchlistReducer(state: WatchlistState = initialState, action: WatchlistAction) {
 	switch (action.type) {
 		case "@@Watchlist/get_all":
-			return { ...state, watchlists: action.watchlists, watchlistId: action.watchlists[0].id };
+			return {
+				...state,
+				watchlists: action.watchlists,
+			};
 		case "@@Watchlist/get":
-			return { ...state, stocks: action.stocks, watchlistId: action.watchlistId };
+			return {
+				...state,
+				stocks: action.stocks,
+			};
 		case "@@Watchlist/add":
 			const { watchlistId, name } = action;
-			return { ...state, watchlists: state.watchlists.concat([{ id: watchlistId, name }]) };
+			return {
+				...state,
+				watchlists: state.watchlists.concat([{ id: watchlistId, name }]),
+			};
 		case "@@Watchlist/rename":
 			return {
 				...state,
@@ -29,9 +37,9 @@ export function watchlistReducer(state: WatchlistState = initialState, action: W
 		case "@@Watchlist/delete":
 			const newWatchlists = state.watchlists.filter((watchlist) => watchlist!.id !== action.watchlistId);
 			return { ...state, watchlists: newWatchlists };
-		case "@@Watchlist/addStock":
+		case "@@Watchlist/add_stock":
 			return { ...state, stocks: state.stocks.concat([action.stock]) };
-		case "@@Watchlist/deleteStock":
+		case "@@Watchlist/delete_stock":
 			const newStocks = state.stocks.filter((stock) => stock!.id !== action.stockId);
 			return { ...state, stocks: newStocks };
 		default:

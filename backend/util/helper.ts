@@ -1,6 +1,5 @@
 import camelcaseKeys from "camelcase-keys";
 import { Request, Response } from "express";
-import { HttpError } from "./models";
 
 export function wrapControllerMethod(method: (req: Request) => any) {
 	return async (req: Request, res: Response) => {
@@ -8,7 +7,7 @@ export function wrapControllerMethod(method: (req: Request) => any) {
 			const result = await method(req);
 			res.json(result);
 		} catch (error: any) {
-			if (error instanceof HttpError) {
+			if ("status" in error) {
 				res.status(error.status).json({ error: error.message });
 			} else {
 				res.status(500).json({ error: String(error) });

@@ -46,8 +46,14 @@ describe("StockController", () => {
 			});
 		});
 
-		test("throw error if no stock found", async () => {
+		test("throw error if invalid ticker", async () => {
 			req.params = { ticker: "" };
+			service.getStockInfo = jest.fn(() => Promise.resolve(null));
+			await expect(controller.getStockInfo(req)).rejects.toThrow("Invalid ticker");
+		});
+
+		test("throw error if no stock found", async () => {
+			req.params = { ticker: "abc" };
 			service.getStockInfo = jest.fn(() => Promise.resolve(null));
 			await expect(controller.getStockInfo(req)).rejects.toThrow("Stock not found");
 			expect(service.getStockInfo).toBeCalled();

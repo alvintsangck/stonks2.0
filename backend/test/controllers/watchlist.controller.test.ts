@@ -109,14 +109,14 @@ describe("WatchlistController", () => {
 	describe("POST /watchlist/:watchlistId/:stockId", () => {
 		test("get all watchlists name", async () => {
 			req.params = { watchlistId: "1", stockId: "1" };
-			const result = await controller.addStockToWatchlist(req);
+			const result = await controller.addStock(req);
 			expect(service.addStock).toBeCalled;
 			expect(result).toMatchObject({ message: "stock added" });
 		});
 
 		test("throw error with wrong watchlistId", async () => {
 			req.params = { watchlistId: "", stockId: "" };
-			await expect(controller.addStockToWatchlist(req)).rejects.toThrowError("Watchlist not exist");
+			await expect(controller.addStock(req)).rejects.toThrowError("Watchlist not exist");
 		});
 	});
 
@@ -124,7 +124,7 @@ describe("WatchlistController", () => {
 		test("get all watchlists name", async () => {
 			req.params = { watchlistId: "1", stockId: "1" };
 
-			const result = await controller.deleteStockFromWatchlist(req);
+			const result = await controller.deleteStock(req);
 			expect(service.deleteStock).toBeCalled;
 			expect(result).toMatchObject({ message: "stock deleted" });
 		});

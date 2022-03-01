@@ -15,6 +15,7 @@ export class StockController {
 
 	getStockInfo = async (req: Request) => {
 		const ticker: string = String(req.params.ticker).toUpperCase();
+		if (!ticker.match(/[a-zA-z]/g)) throw new HttpError(400, "Invalid ticker");
 		const stock = await this.stockService.getStockInfo(ticker);
 		if (!stock) throw new HttpError(400, "Stock not found");
 		return stock;
