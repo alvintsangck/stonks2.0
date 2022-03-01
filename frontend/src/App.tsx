@@ -18,7 +18,7 @@ function App() {
 				<main>
 					<Switch>
 						<Route path="/" exact component={Home}></Route>
-						<Route path="/stock" component={Stock}></Route>
+						<Route path="/stocks/:ticker" component={Stock}></Route>
 						<Route path="/watchlist/:watchlistId?" component={Watchlist}></Route>
 						<Route path="/screener" component={Screener}></Route>
 						<Route path="/portfolio" component={Portfolio}></Route>
