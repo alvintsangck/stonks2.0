@@ -9,7 +9,7 @@ import os
 import json
 import pytz
 
-client = MongoClient('mongodb',27017)
+client = MongoClient('localhost',27017)
 
 db = client.stonks
 

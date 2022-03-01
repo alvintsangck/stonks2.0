@@ -21,7 +21,7 @@ export async function up(knex: Knex): Promise<void> {
 				INSERT INTO dim_dates (year,month,day) VALUES (NEW.year,NEW.month,NEW.day) on conflict(year,month,day) 
 					DO UPDATE set updated_at = NOW() RETURNING id into date_id;
 
-				INSERT INTO stock_prices (stock_id,date_id,price) VALUES (NEW.stock_id, NEW.date_id, NEW.price);
+				INSERT INTO stock_prices (stock_id,date_id,price) VALUES (NEW.stock_id, date_id, NEW.price);
 		
 				return NEW;
 			END
