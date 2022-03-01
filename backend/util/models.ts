@@ -50,6 +50,12 @@ export type UserComment = {
 	avatar?: string;
 };
 
+export enum Table {
+	users = "users",
+	watchlist = "watchlist",
+	watchlistStock = 'watchlist-stock'
+}
+
 // for xlsx Data
 export type UserData = Omit<User, "id"> & { email: string };
 export type SectorData = Omit<Sector, "id">;
