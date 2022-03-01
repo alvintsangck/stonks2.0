@@ -12,6 +12,6 @@ export type WatchlistStock = {
 };
 
 export type WatchlistState = {
-	watchlists: Array<Watchlist | null>;
-	stocks: Array<WatchlistStock | null>;
+	watchlists: Watchlist[]
+	stocks: WatchlistStock[]
 };

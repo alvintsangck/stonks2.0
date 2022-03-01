@@ -8,7 +8,7 @@ import { push } from "connected-react-router";
 
 type Props = {
 	lists: any[];
-	currentListId: number | null;
+	currentListId: number;
 };
 
 function Sidebar({ lists, currentListId }: Props) {
