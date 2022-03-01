@@ -1,12 +1,26 @@
+import { useEffect } from "react";
 import { Carousel, Col, Container, Row } from "react-bootstrap";
 import { Helmet } from "react-helmet";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ColorTheme, MarketOverview } from "react-ts-tradingview-widgets";
 import "../css/Home.css";
+import { News } from "../redux/news/state";
+import { getNewsThunk } from "../redux/news/thunk";
 import { RootState } from "../redux/store/state";
+
+const env = process.env.NODE_ENV === "development" ? process.env.REACT_APP_API_ORIGIN : process.env.REACT_API_SERVER;
 
 export default function Home() {
 	const theme = useSelector((state: RootState) => state.theme.theme);
+	const news = useSelector((state: RootState) => state.news.news);
+	const dispatch = useDispatch()
+	const bigNews = news.slice(0, 3);
+	const smallNews = news.slice(3);
+
+	useEffect(()=>{
+		dispatch(getNewsThunk())
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	},[])
 
 	return (
 		<>
@@ -17,31 +31,14 @@ export default function Home() {
 				<Row className="market-row">
 					<Col md={8}>
 						<Carousel>
-							<Carousel.Item>
-								<img src="news_1.jpeg" alt=""></img>
-								<Carousel.Caption>
-									<p>hi</p>
-								</Carousel.Caption>
-							</Carousel.Item>
-							<Carousel.Item>
-								<img src="news_1.jpeg" alt=""></img>
-								<Carousel.Caption>
-									<p>hihi</p>
-								</Carousel.Caption>
-							</Carousel.Item>
-							<Carousel.Item>
-								<img src="news_1.jpeg" alt=""></img>
-								<Carousel.Caption>
-									<p>hihihi</p>
-								</Carousel.Caption>
-							</Carousel.Item>
+							{bigNews.length > 0 && bigNews.map(makeBigNewsElem)}
 						</Carousel>
 					</Col>
 					<Col md={4}>
 						<MarketOverview
 							colorTheme={theme as ColorTheme}
 							height="650px"
-							width="400px"
+							width="100%"
 							copyrightStyles={{ parent: { display: "none" } }}
 						/>
 					</Col>
@@ -51,44 +48,52 @@ export default function Home() {
 					<div className="bar"></div>
 				</Row>
 				<Row>
-					<Col md={3}>
-						<div className="small-news">
-							<a href="/">
-								<img src="news_1.jpeg" alt="" />
-								<div className="small-news-header">Head</div>
-							</a>
-						</div>
-						<div className="small-news-content">
-							<h4>aaaaaaa</h4>
-							<span>aaa</span>
-						</div>
-					</Col>
-					<Col md={3}>
-						<div className="small-news">
-							<a href="/">
-								<img src="news_1.jpeg" alt="" />
-								<div className="small-news-header">Head</div>
-							</a>
-						</div>
-						<div className="small-news-content">
-							<h4>aaaaaaa</h4>
-							<span>aaa</span>
-						</div>
-					</Col>
-					<Col md={3}>
-						<div className="small-news">
-							<a href="/">
-								<img src="news_1.jpeg" alt="" />
-								<div className="small-news-header">Head</div>
-							</a>
-						</div>
-						<div className="small-news-content">
-							<h4>aaaaaaa</h4>
-							<span>aaa</span>
-						</div>
-					</Col>
+					{smallNews.map(makeSmallNewsElem)}
 				</Row>
 			</Container>
 		</>
 	);
+}
+
+function makeBigNewsElem(news: News, i:number) {
+	const rawContent = extractContent(news.attributes.content);
+	const index = "Getty Images ";
+	const content = rawContent?.slice(rawContent.indexOf(index) + index.length);
+	return (
+		<Carousel.Item key={i}>
+			<a href={news.links.canonical}>
+				<img src={news.attributes.gettyImageUrl} alt=""></img>
+				<Carousel.Caption>
+					<h2>{news.attributes.title}</h2>
+					<p>{content}</p>
+				</Carousel.Caption>
+			</a>
+		</Carousel.Item>
+	);
+}
+
+function makeSmallNewsElem(news: News, i:number) {
+	const header = Object.keys(news.attributes.themes)[0];
+	const rawContent = extractContent(news.attributes.content);
+	const index = "Getty Images ";
+	const content = rawContent?.slice(rawContent.indexOf(index) + index.length);
+	const image = news.attributes.gettyImageUrl || `${env}/stonk_bg.webp`
+	return (
+		<Col md={3} key={i}>
+			<div className="small-news">
+				<a href={news.links.canonical}>
+					<img src={image} alt="news"/>
+					<div className="small-news-header">{header}</div>
+				</a>
+			</div>
+			<div className="small-news-content">
+				<h4>{news.attributes.title}</h4>
+				<span>{content}</span>
+			</div>
+		</Col>
+	);
+}
+
+function extractContent(html: any) {
+	return new DOMParser().parseFromString(html, "text/html").documentElement.textContent;
 }

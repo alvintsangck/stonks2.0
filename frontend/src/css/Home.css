@@ -1,13 +1,18 @@
+img {
+	width: 100%;
+}
+
 .market-row {
 	margin-bottom: 20px;
 }
 
-img {
-	max-width: 100%; 
-}
-
 .market-row img {
 	height: 650px;
+}
+
+.market-row .col-md-4 {
+	display: flex;
+	justify-content: center;
 }
 
 .market-overview {

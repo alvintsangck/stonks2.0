@@ -3,10 +3,12 @@ import { AuthState } from "../auth/state";
 import { ThemeState } from "../theme/state";
 import { PortfolioState } from "../portfolio/state";
 import { WatchlistState } from "../watchlist/state";
+import { NewsState } from "../news/state";
 
 export type RootState = {
 	auth: AuthState;
 	theme: ThemeState;
+	news: NewsState;
 	watchlist: WatchlistState;
 	router: RouterState;
 	portfolio: PortfolioState;
