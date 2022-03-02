@@ -43,18 +43,19 @@ export default function Watchlist() {
 	const calculatedStocks = stocks.map((stock) => {
 		if (stock) {
 			const change = stock.price - stock.prevPrice;
+			const deleteInfo = {
+				watchlistId: currentWatchlistId,
+				stockId: stock.id,
+				ticker: stock.ticker,
+				watchlistName: currentWatchlistName,
+			};
 			return {
 				ticker: stock.ticker,
 				name: stock.name,
 				price: stock.price,
 				change: change.toFixed(2),
 				changePercentage: ((change / stock.prevPrice) * 100).toFixed(2) + "%",
-				deleteBtn: (
-					<FontAwesomeIcon
-						icon={faTimes}
-						onClick={() => dispatch(deleteStockThunk(currentWatchlistId, stock.id))}
-					/>
-				),
+				deleteBtn: <FontAwesomeIcon icon={faTimes} onClick={() => dispatch(deleteStockThunk(deleteInfo))} />,
 			};
 		}
 		return null;

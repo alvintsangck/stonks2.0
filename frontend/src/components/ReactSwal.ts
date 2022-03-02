@@ -13,3 +13,14 @@ export function defaultErrorSwal(error: string) {
 		title: error,
 	});
 }
+
+export function defaultSuccessSwal(msg: string) {
+	ReactSwal.fire({
+		toast: true,
+		position: "top",
+		showConfirmButton: false,
+		timer: 1800,
+		icon: "success",
+		title: msg,
+	});
+}

@@ -1,5 +1,5 @@
 import { push } from "connected-react-router";
-import { defaultErrorSwal } from "../../helper";
+import { defaultErrorSwal, defaultSuccessSwal } from "../../components/ReactSwal";
 import { callApi } from "../api";
 import { RootDispatch } from "../store/action";
 import {
@@ -43,6 +43,7 @@ export function addWatchlistThunk(name: string) {
 			defaultErrorSwal(result.error);
 		} else {
 			dispatch(addWatchlistAction(result.id, name));
+			defaultSuccessSwal(`Watchlist ${name} is added`);
 		}
 	};
 }
@@ -54,17 +55,19 @@ export function renameWatchlistThunk(watchlistId: number, name: string) {
 			defaultErrorSwal(result.error);
 		} else {
 			dispatch(renameWatchlistAction(watchlistId, name));
+			defaultSuccessSwal(`Watchlist renamed to ${name}`);
 		}
 	};
 }
 
-export function deleteWatchlistThunk(watchlistId: number) {
+export function deleteWatchlistThunk(watchlistId: number, name: string) {
 	return async (dispatch: RootDispatch) => {
 		const result = await callApi(`/watchlist/${watchlistId}`, "DELETE");
 		if ("error" in result) {
 			defaultErrorSwal(result.error);
 		} else {
 			dispatch(deleteWatchlistAction(watchlistId));
+			defaultSuccessSwal(`Watchlist ${name} is deleted`);
 		}
 	};
 }
@@ -79,6 +82,7 @@ export function addStockThunk(watchlistId: number, ticker: string) {
 				defaultErrorSwal(result.error);
 			} else {
 				dispatch(addStockToWatchlistAction(stock));
+				defaultSuccessSwal(`${stock.ticker} is added to watchlist`);
 			}
 		}
 	};
@@ -93,13 +97,24 @@ async function getStock(ticker: string) {
 	return result;
 }
 
-export function deleteStockThunk(watchlistId: number, stockId: number) {
+export function deleteStockThunk({
+	watchlistId,
+	stockId,
+	ticker,
+	watchlistName,
+}: {
+	watchlistId: number;
+	stockId: number;
+	ticker: string;
+	watchlistName: string;
+}) {
 	return async (dispatch: RootDispatch) => {
 		const result = await callApi(`/watchlist/${watchlistId}/${stockId}`, "DELETE");
 		if ("error" in result) {
 			defaultErrorSwal(result.error);
 		} else {
 			dispatch(deleteStockFromWatchlistAction(stockId));
+			defaultSuccessSwal(`${ticker} is deleted from ${watchlistName}`);
 		}
 	};
 }
