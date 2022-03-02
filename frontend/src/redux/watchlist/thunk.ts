@@ -10,6 +10,7 @@ import {
 	getAllWatchlistsAction,
 	getWatchlistAction,
 	renameWatchlistAction,
+	loadWatchlistAction,
 } from "./action";
 
 export function getAllWatchlistsThunk() {
@@ -25,6 +26,7 @@ export function getAllWatchlistsThunk() {
 
 export function getWatchlistThunk(watchlistId: number | null) {
 	return async (dispatch: RootDispatch) => {
+		dispatch(loadWatchlistAction())
 		dispatch(push(`/watchlist/${watchlistId}`));
 		const result = await callApi(`/watchlist/${watchlistId}`);
 		if ("error" in result) {

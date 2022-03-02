@@ -1,11 +1,12 @@
-import { Watchlist, WatchlistStock } from "./state";
+import { Stock } from "../Stock/state";
+import { Watchlist } from "./state";
 
 export const getAllWatchlistsAction = (watchlists: Watchlist[]) => ({
 	type: "@@Watchlist/get_all" as const,
 	watchlists,
 });
 
-export const getWatchlistAction = (watchlistId: number, stocks: WatchlistStock[]) => ({
+export const getWatchlistAction = (watchlistId: number, stocks: Stock[]) => ({
 	type: "@@Watchlist/get" as const,
 	watchlistId,
 	stocks,
@@ -28,7 +29,7 @@ export const deleteWatchlistAction = (watchlistId: number) => ({
 	watchlistId,
 });
 
-export const addStockToWatchlistAction = (stock: WatchlistStock) => ({
+export const addStockToWatchlistAction = (stock: Stock) => ({
 	type: "@@Watchlist/add_stock" as const,
 	stock,
 });
@@ -38,6 +39,8 @@ export const deleteStockFromWatchlistAction = (stockId: number) => ({
 	stockId,
 });
 
+export const loadWatchlistAction = () => ({ type: "@@Watchlist/load" as const });
+
 export type WatchlistAction =
 	| ReturnType<typeof getAllWatchlistsAction>
 	| ReturnType<typeof getWatchlistAction>
@@ -45,4 +48,5 @@ export type WatchlistAction =
 	| ReturnType<typeof renameWatchlistAction>
 	| ReturnType<typeof deleteWatchlistAction>
 	| ReturnType<typeof addStockToWatchlistAction>
-	| ReturnType<typeof deleteStockFromWatchlistAction>;
+	| ReturnType<typeof deleteStockFromWatchlistAction>
+	| ReturnType<typeof loadWatchlistAction>;
