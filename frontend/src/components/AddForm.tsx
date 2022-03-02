@@ -11,7 +11,7 @@ type Props = {
 	onAdd: (content: string) => void;
 };
 
-function AddForm({ name, placeholder, onAdd }: Props) {
+export default function AddForm({ name, placeholder, onAdd }: Props) {
 	const [content, setContent] = useState("");
 	const [isRotate, setIsRotate] = useState(false);
 	const dispatch = useDispatch();
@@ -48,5 +48,3 @@ function AddForm({ name, placeholder, onAdd }: Props) {
 		</>
 	);
 }
-
-export default AddForm;
