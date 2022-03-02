@@ -1,0 +1,33 @@
+.button-container {
+	display: flex;
+	justify-content: center;
+}
+
+.button-container button {
+	margin: 0 5px;
+	padding: 5px 20px;
+	width: 100%;
+	border-radius: 5px;
+	text-align: center;
+}
+
+.buy-btn,
+.sell-btn {
+	border: none;
+	color: #ffffff;
+}
+
+.buy-btn {
+	background-color: #0b56bf;
+}
+
+.sell-btn {
+	background-color: #db1222;
+}
+
+.watchlist-btn,
+.noti-btn {
+	background-color: transparent;
+	border: 1px solid #0b56bf;
+	color: #0b56bf;
+}
