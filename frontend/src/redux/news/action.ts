@@ -5,4 +5,8 @@ export const getNewsAction = (news: News[]) => ({
 	news,
 });
 
-export type NewsAction = ReturnType<typeof getNewsAction>;
+export const loadingNewsAction = () => ({
+	type: "@@/News/loading" as const,
+});
+
+export type NewsAction = ReturnType<typeof getNewsAction> | ReturnType<typeof loadingNewsAction>;

@@ -12,7 +12,8 @@ import { RootState } from "../redux/store/state";
 import StockTable from "./StockTable";
 import { useParams } from "react-router-dom";
 import { Stock } from "../redux/Stock/state";
-import { Triangle } from "react-loader-spinner";
+import LoadingSpinner from "./LoadingSpinner";
+
 
 export default function Watchlist() {
 	const watchlists = useSelector((state: RootState) => state.watchlist.watchlists);
@@ -57,10 +58,8 @@ export default function Watchlist() {
 					</Col>
 					<Col md={9}>
 						<AddForm name={currentWatchlistName} placeholder="stock" onAdd={addStock} />
-						{isLoading ? (
-							<div className="loading">
-								<Triangle ariaLabel="loading-indicator" color="#273472" />
-							</div>
+
+						{isLoading ? (<LoadingSpinner/>
 						) : (
 							<StockTable headings={tableHeadings} content={calculatedStocks} />
 						)}

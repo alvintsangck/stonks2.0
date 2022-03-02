@@ -11,4 +11,5 @@ export type News = {
 
 export type NewsState = {
 	news: News[];
+	isLoading: boolean;
 };

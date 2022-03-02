@@ -1,8 +1,9 @@
 import { RootDispatch } from "../store/action";
-import { getNewsAction } from "./action";
+import { getNewsAction, loadingNewsAction } from "./action";
 
 export function getNewsThunk() {
 	return async (dispatch: RootDispatch) => {
+		dispatch(loadingNewsAction());
 		const res = await fetch("https://seeking-alpha.p.rapidapi.com/news/v2/list-trending?until=0&since=0&size=7", {
 			method: "GET",
 			headers: {
@@ -12,6 +13,6 @@ export function getNewsThunk() {
 		});
 		const result = await res.json();
 		const news = result.data;
-        dispatch(getNewsAction(news))
+		dispatch(getNewsAction(news));
 	};
 }

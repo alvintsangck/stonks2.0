@@ -23,10 +23,6 @@ body.dark {
 	--bs-table-hover-color: #ffffff;
 	--bs-table-hover-bg: rgba(255, 255, 255, 0.075);
 }
-.loading {
-	display: flex;
-	justify-content: center;
-}
 
 /* user */
 .non-user {
