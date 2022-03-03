@@ -1,0 +1,103 @@
+h4 {
+	margin-bottom: 0;
+}
+
+input[type="number"] {
+	width: 110px;
+}
+
+.screener-btn {
+	background: transparent;
+	transition: all 0.3s ease;
+	position: relative;
+	background-color: #273472;
+	color: #fff;
+	padding: 5px 10px;
+	border: none;
+	border-radius: 5px;
+}
+.screener-btn:hover {
+	background: transparent;
+	color: #273472;
+	box-shadow: -7px -7px 20px 0px #fff9, -4px -4px 5px 0px #fff9, 7px 7px 20px 0px #0002, 4px 4px 5px 0px #0001;
+}
+.screener-btn:before,
+.screener-btn:after {
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 2px;
+	width: 0;
+	background: #273472;
+	transition: 400ms ease all;
+}
+.screener-btn:after {
+	right: inherit;
+	top: inherit;
+	left: 0;
+	bottom: 0;
+}
+.screener-btn:hover:before,
+.screener-btn:hover:after {
+	width: 100%;
+	transition: 800ms ease all;
+}
+
+.dark .screener-btn {
+	background-color: #ffffff;
+	color: #000;
+}
+.dark .screener-btn:hover {
+	background-color: transparent;
+	color: #ffffff;
+	/* border: 2px solid ; */
+}
+.dark .screener-btn:before,
+.dark .screener-btn:after {
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 2px;
+	width: 0;
+	background: #fff;
+	transition: 400ms ease all;
+}
+.dark .screener-btn:after {
+	right: inherit;
+	top: inherit;
+	left: 0;
+	bottom: 0;
+}
+.dark .screener-btn:hover:before,
+.dark .screener-btn:hover:after {
+	width: 100%;
+	transition: 800ms ease all;
+}
+
+.result-btn {
+	padding: 10px 20px;
+	text-transform: uppercase;
+}
+
+.reset-btn {
+	border-radius: 0 5px 5px 0;
+	padding: 0 15px;
+}
+
+.screener-items {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding-bottom: 5px;
+}
+
+.screener-items > div {
+	display: flex;
+	align-items: center;
+}
+
+.screener-items > div > span {
+	margin: 0 1vw;
+}

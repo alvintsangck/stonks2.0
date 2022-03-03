@@ -5,12 +5,14 @@ import { ThemeAction } from "../theme/action";
 import { PortfolioAction } from "../portfolio/action";
 import { WatchlistAction } from "../watchlist/action";
 import { NewsAction } from "../news/action";
+import { ScreenerAction } from "../screener/action";
 
 export type RootAction =
 	| AuthAction
 	| ThemeAction
 	| WatchlistAction
 	| NewsAction
+	| ScreenerAction
 	| CallHistoryMethodAction
 	| PortfolioAction;
 

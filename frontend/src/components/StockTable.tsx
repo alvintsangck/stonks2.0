@@ -17,11 +17,11 @@ function StockTable({ headings, content: contents }: Props) {
 				</tr>
 			</thead>
 			<tbody>
-				{contents.map((content) => {
+				{contents.map((content, i) => {
 					const { id, ...obj } = content;
 					const values = Object.values(obj);
 					return (
-						<tr key={id} id={String(id)}>
+						<tr key={i} id={String(id)}>
 							{values.map((value: any, i) => (
 								<td key={i}>{value}</td>
 							))}
