@@ -8,7 +8,7 @@ export function defaultErrorSwal(error: string) {
 		toast: true,
 		position: "top",
 		showConfirmButton: false,
-		timer: 1800,
+		timer: 2000,
 		icon: "error",
 		title: error,
 	});
