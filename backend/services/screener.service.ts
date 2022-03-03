@@ -5,11 +5,11 @@ export class ScreenerService {
 	constructor(private knex: Knex) {}
 
 	async getAllIndustries(): Promise<Industry[]> {
-		return await this.knex("industries").select("*");
+		return await this.knex("industries").select("id", "name");
 	}
 
 	async getAllSectors(): Promise<Sector[]> {
-		return await this.knex("sectors").select("*");
+		return await this.knex("sectors").select("id", "name");
 	}
 
 	async screenStocks(
