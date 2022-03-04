@@ -3,12 +3,12 @@ import { Container } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import StockTable from "./StockTable";
 import ScreenerForm from "./ScreenerForm";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../redux/store/state";
+import LoadingSpinner from "./LoadingSpinner";
 
 export default function Screener() {
 	const tableHeadings: string[] = [
-		"NUMBER",
 		"TICKER",
 		"COMPANY NAME",
 		"PRICE ($)",
@@ -22,9 +22,10 @@ export default function Screener() {
 		"INDUSTRY RS",
 		"INDUSTRY RANK",
 	];
-	const dispatch = useDispatch();
 	const stocks = useSelector((state: RootState) => state.screener.stocks);
-
+	const isLoading = useSelector((state: RootState) => state.screener.isLoading);
+	console.log(stocks);
+	
 	return (
 		<>
 			<Helmet>
@@ -34,7 +35,11 @@ export default function Screener() {
 				<ScreenerForm />
 			</Container>
 			<Container fluid>
-				<StockTable headings={tableHeadings} content={stocks} />
+				{isLoading ? (
+					<LoadingSpinner />
+				) : (
+					<StockTable headings={tableHeadings} content={stocks.map(({ id, ...obj }) => obj)} />
+				)}
 			</Container>
 		</>
 	);
