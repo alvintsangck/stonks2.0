@@ -4,6 +4,7 @@ import { WatchlistState } from "./state";
 const initialState: WatchlistState = {
 	watchlists: [],
 	stocks: [],
+	isLoading: true,
 };
 
 export function watchlistReducer(state: WatchlistState = initialState, action: WatchlistAction) {
@@ -17,6 +18,7 @@ export function watchlistReducer(state: WatchlistState = initialState, action: W
 			return {
 				...state,
 				stocks: action.stocks,
+				isLoading: false,
 			};
 		case "@@Watchlist/add":
 			const { watchlistId, name } = action;
@@ -42,6 +44,8 @@ export function watchlistReducer(state: WatchlistState = initialState, action: W
 		case "@@Watchlist/delete_stock":
 			const newStocks = state.stocks.filter((stock) => stock!.id !== action.stockId);
 			return { ...state, stocks: newStocks };
+		case "@@Watchlist/load":
+			return { ...state, isLoading: true };
 		default:
 			return state;
 	}

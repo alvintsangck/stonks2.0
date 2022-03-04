@@ -11,10 +11,14 @@ import { addStockThunk, deleteStockThunk, getAllWatchlistsThunk, getWatchlistThu
 import { RootState } from "../redux/store/state";
 import StockTable from "./StockTable";
 import { useParams } from "react-router-dom";
+import { Stock } from "../redux/Stock/state";
+import LoadingSpinner from "./LoadingSpinner";
+
 
 export default function Watchlist() {
 	const watchlists = useSelector((state: RootState) => state.watchlist.watchlists);
 	const stocks = useSelector((state: RootState) => state.watchlist.stocks);
+	const isLoading = useSelector((state: RootState) => state.watchlist.isLoading);
 	const currentWatchlistId: number = Number(useParams<{ watchlistId: string }>().watchlistId);
 	const currentWatchlistName = watchlists.find((watchlist) => watchlist?.id === currentWatchlistId)?.name || "";
 	const tableHeadings = ["Ticker", "Company Name", "Price", "Change", "Change %", ""];
@@ -40,25 +44,7 @@ export default function Watchlist() {
 		return addStockThunk(currentWatchlistId, ticker);
 	};
 
-	const calculatedStocks = stocks.map((stock) => {
-		if (stock) {
-			const change = stock.price - stock.prevPrice;
-			return {
-				ticker: stock.ticker,
-				name: stock.name,
-				price: stock.price,
-				change: change.toFixed(2),
-				changePercentage: ((change / stock.prevPrice) * 100).toFixed(2) + "%",
-				deleteBtn: (
-					<FontAwesomeIcon
-						icon={faTimes}
-						onClick={() => dispatch(deleteStockThunk(currentWatchlistId, stock.id))}
-					/>
-				),
-			};
-		}
-		return null;
-	});
+	const calculatedStocks = loadStocks(stocks, currentWatchlistId, currentWatchlistName, dispatch);
 
 	return (
 		<>
@@ -72,10 +58,39 @@ export default function Watchlist() {
 					</Col>
 					<Col md={9}>
 						<AddForm name={currentWatchlistName} placeholder="stock" onAdd={addStock} />
-						<StockTable headings={tableHeadings} content={calculatedStocks} />
+
+						{isLoading ? (<LoadingSpinner/>
+						) : (
+							<StockTable headings={tableHeadings} content={calculatedStocks} />
+						)}
 					</Col>
 				</Row>
 			</Container>
 		</>
 	);
+}
+
+function loadStocks(stocks: Stock[], watchlistId: number, watchlistName: string, dispatch: Function) {
+	return stocks.map((stock) => {
+		if (stock) {
+			const deleteInfo = {
+				watchlistId,
+				stockId: stock.id,
+				ticker: stock.ticker,
+				watchlistName,
+			};
+			//load into table
+			const change = stock.price - stock.prevPrice!;
+			return {
+				id: stock.id,
+				ticker: stock.ticker,
+				name: stock.name,
+				price: stock.price,
+				change: change.toFixed(2),
+				changePercentage: ((change / stock.prevPrice!) * 100).toFixed(2) + "%",
+				deleteBtn: <FontAwesomeIcon icon={faTimes} onClick={() => dispatch(deleteStockThunk(deleteInfo))} />,
+			};
+		}
+		return null;
+	});
 }

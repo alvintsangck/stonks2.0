@@ -1,15 +1,19 @@
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { push } from "connected-react-router";
 import { FormEvent, useState } from "react";
 import { Form } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 import "../css/SearchForm.css";
 
 export function SearchForm() {
-	const [symbol, setSymbol] = useState("");
+	const [ticker, setTicker] = useState("");
+	const dispatch = useDispatch();
 
 	const onSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		console.log(symbol);
+		dispatch(push(`/stocks/${ticker}`));
+		setTicker('')
 	};
 
 	return (
@@ -19,8 +23,8 @@ export function SearchForm() {
 					type="search"
 					placeholder="Enter a symbol"
 					name="tickerInput"
-					value={symbol}
-					onChange={(e) => setSymbol(e.target.value.toUpperCase())}
+					value={ticker}
+					onChange={(e) => setTicker(e.target.value.toUpperCase())}
 				/>
 			</Form.Group>
 			<button type="submit" className="form-control search-btn">

@@ -1,5 +1,5 @@
-import { Table } from "react-bootstrap";
 import "../css/StockTable.css";
+import { Table } from "react-bootstrap";
 
 type Props = {
 	headings: string[];
@@ -21,7 +21,7 @@ function StockTable({ headings, content: contents }: Props) {
 					const { id, ...obj } = content;
 					const values = Object.values(obj);
 					return (
-						<tr key={i} id={id}>
+						<tr key={i} id={String(id)}>
 							{values.map((value: any, i) => (
 								<td key={i}>{value}</td>
 							))}

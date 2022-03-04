@@ -35,7 +35,7 @@ const ChartData = {
 	],
 };
 
-export default function portfolio() {
+export default function Portfolio() {
 	// const dispatch = useDispatch();
 	// const user = useSelector((state: RootState)=>state.auth);
 	// const theme = useSelector((state: RootState) => state.theme.theme);

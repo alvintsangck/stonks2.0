@@ -8,13 +8,13 @@ import { push } from "connected-react-router";
 
 type Props = {
 	lists: any[];
-	currentListId: number | null;
+	currentListId: number;
 };
 
 function Sidebar({ lists, currentListId }: Props) {
 	const dispatch = useDispatch();
-	const deleteWatchlist = (listId: number) => {
-		dispatch(deleteWatchlistThunk(listId));
+	const deleteWatchlist = (listId: number, name:string) => {
+		dispatch(deleteWatchlistThunk(listId,name));
 		if (currentListId === listId) {
 			dispatch(push(`/watchlist/${lists[0].id}`));
 		}
@@ -29,7 +29,7 @@ function Sidebar({ lists, currentListId }: Props) {
 							<span>{list.name}</span>
 						</div>
 						<div>
-							<FontAwesomeIcon icon={faTimes} onClick={() => deleteWatchlist(list.id)} />
+							<FontAwesomeIcon icon={faTimes} onClick={() => deleteWatchlist(list.id, list.name)} />
 						</div>
 					</div>
 				))}

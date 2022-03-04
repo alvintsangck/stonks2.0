@@ -23,11 +23,13 @@ export class StockController {
 
 	getStockNews = async (req: Request) => {
 		const ticker: string = String(req.params.ticker).toUpperCase();
+		if (!ticker.match(/[a-zA-z]/g)) throw new HttpError(400, "Invalid ticker");
 		return (await yahooFinance.search(ticker, { newsCount: 10 })).news;
 	};
 
 	getStockPrice = async (req: Request) => {
 		const ticker: string = String(req.params.ticker).toUpperCase();
+		if (!ticker.match(/[a-zA-z]/g)) throw new HttpError(400, "Invalid ticker");
 		return await yahooFinance.quote(ticker);
 	};
 }

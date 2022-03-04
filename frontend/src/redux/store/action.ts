@@ -4,7 +4,18 @@ import { AuthAction } from "../auth/action";
 import { ThemeAction } from "../theme/action";
 import { PortfolioAction } from "../portfolio/action";
 import { WatchlistAction } from "../watchlist/action";
+import { NewsAction } from "../news/action";
+import { ScreenerAction } from "../screener/action";
+import { StockAction } from "../Stock/action";
 
-export type RootAction = AuthAction | ThemeAction | WatchlistAction | CallHistoryMethodAction | PortfolioAction;
+export type RootAction =
+	| AuthAction
+	| ThemeAction
+	| WatchlistAction
+	| NewsAction
+	| ScreenerAction
+	| StockAction
+	| CallHistoryMethodAction
+	| PortfolioAction;
 
 export type RootDispatch = Dispatch<RootAction>;

@@ -19,6 +19,7 @@ export class WatchlistService {
 	}
 
 	async deleteWatchlist(watchlistId: number): Promise<{ message: string }> {
+		await this.knex("watchlist_stock").delete().where("watchlist_id", watchlistId);
 		await this.knex("watchlists").delete().where("id", watchlistId);
 		return { message: "watchlist deleted" };
 	}
@@ -42,10 +43,7 @@ export class WatchlistService {
 	}
 
 	async deleteStock(watchlistId: number, stockId: number): Promise<{ message: string }> {
-		await this.knex("watchlist_stock")
-			.delete()
-			.where("stock_id", stockId)
-			.where("watchlist_id", watchlistId);
+		await this.knex("watchlist_stock").delete().where("stock_id", stockId).where("watchlist_id", watchlistId);
 		return { message: "stock deleted" };
 	}
 
