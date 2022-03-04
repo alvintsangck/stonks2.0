@@ -34,20 +34,24 @@ export async function seed(knex: Knex): Promise<void> {
 	try {
 		// Deletes ALL existing entries
 		let t1 = Date.now();
+		
 		await txn("watchlist_stock").del();
 		await txn.raw(`ALTER SEQUENCE watchlist_stock_id_seq RESTART`);
-
+		
 		await txn("industry_rs").del();
 		await txn.raw(`ALTER SEQUENCE industry_rs_id_seq RESTART`);
-
+		
 		await txn("stock_rs").del();
 		await txn.raw(`ALTER SEQUENCE stock_rs_id_seq RESTART`);
-
+		
 		await txn("watchlists").del();
 		await txn.raw(`ALTER SEQUENCE watchlists_id_seq RESTART`);
-
+		
 		await txn("stock_prices").del();
 		await txn.raw(`ALTER SEQUENCE stock_prices_id_seq RESTART`);
+		
+		await txn("dim_dates").del();
+		await txn.raw(`ALTER SEQUENCE dim_dates_id_seq RESTART`);
 
 		await txn("portfolios").del();
 		await txn.raw(`ALTER SEQUENCE portfolios_id_seq RESTART`);
@@ -97,28 +101,39 @@ export async function seed(knex: Knex): Promise<void> {
 		let stockArr = await txn("stocks").insert(stockData).returning(["id", "ticker"]);
 		//@ts-ignore
 		let stockMap = stockArr.reduce(makeMap, {});
-		// let t3 = Date.now();
-		// for (let i = 0; i < 45; i++) {
-		// 	logger.debug(`reading chunk ${i}`);
-		// 	workbook = xlsx.readFile(`./seeds/import/chunk${i}.xlsx`);
-		// 	let chunkData = xlsx.utils.sheet_to_json(workbook.Sheets["Sheet1"]);
-		// 	logger.debug(`finished read chunk ${i}`);
+		let t3 = Date.now();
+		let dateArr = getDates(new Date(2021,0,2), new Date(2023,0,2))
+		await txn("dim_dates").insert(dateArr)
 
-		// 	let stockPriceData = chunkData.map((row: any) => {
-		// 		let obj = {};
-		// 		let { ticker, price, date } = row;
+		let newDateArr: any = []
 
-		// 		ticker = ticker.toString().toUpperCase();
-		// 		obj["stock_id"] = Number(stockMap[ticker]);
-		// 		obj["price"] = price;
-		// 		obj["created_at"] = excelDateToJSDate(date);
-		// 		obj["updated_at"] = excelDateToJSDate(date);
-		// 		return obj;
-		// 	});
-		// 	await txn.batchInsert("stock_prices", stockPriceData, 15000);
-		// 	logger.debug("finished insert ", i + 1);
-		// }
-		// let t4 = Date.now();
+		for (let i = 0; i < dateArr.length; i++){
+			let date = new Date(dateArr[i]["year"], dateArr[i]["month"], dateArr[i]["day"])
+			newDateArr.push(date)
+		}
+
+		for (let i = 0; i < 45; i++) {
+			logger.debug(`reading chunk ${i}`);
+			workbook = xlsx.readFile(`../data/import/chunk${i}.xlsx`);
+			let chunkData = xlsx.utils.sheet_to_json(workbook.Sheets["Sheet1"]);
+			//@ts-ignore
+			let stockPriceData = chunkData.map((row: any) => {
+				let obj = {};
+				let { ticker, price, date } = row;
+
+				ticker = ticker.toString().toUpperCase();
+				let psqlDate = excelDateToJSDate(date)
+				// console.log(psqlDate);
+				obj["stock_id"] = Number(stockMap[ticker]);
+				obj["price"] = price;
+				obj["date_id"] = newDateArr.map(Number).indexOf(+psqlDate) + 1
+				obj["created_at"] = psqlDate
+				return obj;
+			});
+			await txn.batchInsert("stock_prices", stockPriceData, 10000);
+			logger.debug(`finished insert chunk ${i}`);
+		}
+		let t4 = Date.now();
 
 		await txn("users").insert(userData);
 		await txn("comments").insert(commentData);
@@ -131,7 +146,7 @@ export async function seed(knex: Knex): Promise<void> {
 
 		await txn.commit();
 		logger.debug(`delete all data in ${(t2 - t1) / 1000}s`);
-		// logger.debug(`insert chunk data in ${(t4 - t3) / 1000}s`);
+		logger.debug(`insert chunk data in ${(t4 - t3) / 1000}s`);
 
 		return;
 	} catch (e) {
@@ -152,13 +167,31 @@ export function excelDateToJSDate(serial: number) {
 	let utc_value = utc_days * 86400;
 	let date_info = new Date(utc_value * 1000);
 
-	let fractional_day = serial - Math.floor(serial) + 0.0000001;
-	let total_seconds = Math.floor(86400 * fractional_day);
-	let seconds = total_seconds % 60;
-	total_seconds -= seconds;
+	// let fractional_day = serial - Math.floor(serial) + 0.0000001;
+	// let total_seconds = Math.floor(86400 * fractional_day);
+	// let seconds = total_seconds % 60;
+	// total_seconds -= seconds;
 
-	let hours = Math.floor(total_seconds / (60 * 60));
-	let minutes = Math.floor(total_seconds / 60) % 60;
+	// let hours = Math.floor(total_seconds / (60 * 60));
+	// let minutes = Math.floor(total_seconds / 60) % 60;
 
-	return new Date(date_info.getFullYear(), date_info.getMonth(), date_info.getDate(), hours, minutes, seconds);
+	return new Date(date_info.getFullYear(), date_info.getMonth(), date_info.getDate());
+}
+
+// function sleep(ms: number) {
+// 	return new Promise((resolve) => {
+// 	  setTimeout(resolve, ms);
+// 	});
+//   }
+
+
+function getDates(startDate: Date, stopDate: Date) {
+    let dateArray = new Array();
+    let currentDate = startDate;
+    while (currentDate <= stopDate) {
+		let newDate = new Date(currentDate)
+        dateArray.push({year: newDate.getFullYear(), month: newDate.getMonth(), day: newDate.getDate()});
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return dateArray;
 }
