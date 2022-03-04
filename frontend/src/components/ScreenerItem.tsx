@@ -2,17 +2,23 @@ import "../css/ScreenerItem.css";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ButtonGroup, Col, Form, ListGroup, Row, ToggleButton } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { Dispatch, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store/state";
 import { getIndustriesThunk, getSectorsThunk } from "../redux/screener/thunk";
 import { addItemAction, removeItemAction, resetItemAction } from "../redux/screener/action";
 import { Item } from "../redux/screener/state";
 
-export default function ScreenerItem() {
+type Props = {
+	radioIndustry: string;
+	radioSector: string;
+	setRadioIndustry: Dispatch<string>
+	setRadioSector: Dispatch<string>;
+};
+
+export default function ScreenerItem({ radioIndustry, radioSector, setRadioIndustry, setRadioSector }: Props) {
 	const dispatch = useDispatch();
-	const [radioSector, setRadioSector] = useState("include");
-	const [radioIndustry, setRadioIndustry] = useState("include");
+
 	const sectors = useSelector((state: RootState) => state.screener.sectors);
 	const industries = useSelector((state: RootState) => state.screener.industries);
 	const addedSectors = useSelector((state: RootState) => state.screener.addedSectors);
