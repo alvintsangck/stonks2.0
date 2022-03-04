@@ -1,16 +1,33 @@
 import "../css/Stock.css";
 import { Col, Container, Row } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AdvancedRealTimeChart, ColorTheme, FundamentalData, SymbolInfo } from "react-ts-tradingview-widgets";
 import { RootState } from "../redux/store/state";
 import { useParams } from "react-router";
 import CommentForm from "./CommentForm";
 import StockButtons from "./StockButtons";
 import { Helmet } from "react-helmet";
+import { useEffect } from "react";
+import { getCommentsThunk, getStockThunk } from "../redux/Stock/thunk";
+
+const env = process.env.REACT_APP_API_ORIGIN;
 
 export default function Stock() {
+	const dispatch = useDispatch();
 	const theme = useSelector((state: RootState) => state.theme.theme);
+	const stock = useSelector((state: RootState) => state.stock.stock);
+	const comments = useSelector((state: RootState) => state.stock.comments);
 	const { ticker } = useParams<{ ticker: string }>();
+
+	useEffect(() => {
+		dispatch(getStockThunk(ticker));
+	}, []);
+
+	useEffect(() => {
+		if (stock) {
+			dispatch(getCommentsThunk(stock.id));
+		}
+	}, [stock]);
 
 	return (
 		<>
@@ -65,17 +82,20 @@ export default function Stock() {
 							</div>
 						</div>
 						<div className="comment-container">
+							<h3>Comments</h3>
 							<div className="comment-section">
-								<div className="comment-wrap">
-									<img className="avatar" src="" alt="avatar" />
-									<div className="content">
-										<div>
-											<span className="username"></span>
-											<span className="comment-date"></span>
+								{comments.map((comment, i) => (
+									<div className="comment-wrap" key={i}>
+										<img className="avatar" src={`${env}/${comment.avatar}`} alt="avatar" />
+										<div className="content">
+											<div>
+												<span className="username">{comment.username}</span>
+												<span className="comment-date">{comment.createdAt}</span>
+											</div>
+											<div className="content">{comment.content}</div>
 										</div>
-										<div className="content"></div>
 									</div>
-								</div>
+								))}
 							</div>
 							<CommentForm />
 						</div>

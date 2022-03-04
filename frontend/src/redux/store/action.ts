@@ -6,6 +6,7 @@ import { PortfolioAction } from "../portfolio/action";
 import { WatchlistAction } from "../watchlist/action";
 import { NewsAction } from "../news/action";
 import { ScreenerAction } from "../screener/action";
+import { StockAction } from "../Stock/action";
 
 export type RootAction =
 	| AuthAction
@@ -13,6 +14,7 @@ export type RootAction =
 	| WatchlistAction
 	| NewsAction
 	| ScreenerAction
+	| StockAction
 	| CallHistoryMethodAction
 	| PortfolioAction;
 

@@ -8,11 +8,13 @@ import { portfolioReducer } from "../portfolio/reducer";
 import { watchlistReducer } from "../watchlist/reducer";
 import { newsReducer } from "../news/reducer";
 import { screenerReducer } from "../screener/reducer";
+import { stockReducer } from "../Stock/reducer";
 
 export const rootReducer = combineReducers<RootState>({
 	auth: authReducer,
 	news: newsReducer,
 	screener: screenerReducer,
+	stock :stockReducer,
 	theme: themeReducer,
 	watchlist: watchlistReducer,
 	portfolio: portfolioReducer,

@@ -10,8 +10,7 @@ export class CommentService {
 			await this.knex("comments as c")
 				.select("u.username", "u.avatar", "c.content", "c.created_at")
 				.join("users as u", "u.id", "c.user_id")
-				.join("stocks as s", "s.id", "c.stock_id")
-				.where("c.stock_id", "=", stockId)
+				.where("c.stock_id", stockId)
 		);
 	}
 

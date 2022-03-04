@@ -1,15 +1,23 @@
+import "../css/CommentForm.css";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FormEvent, useState } from "react";
 import { Form } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import "../css/CommentForm.css";
+import { postCommentThunk } from "../redux/Stock/thunk";
+import { RootState } from "../redux/store/state";
 
 export default function CommentForm() {
+	const dispatch = useDispatch();
+	const stock = useSelector((state: RootState) => state.stock.stock);
 	const [comment, setComment] = useState("");
-
-	const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+	const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		if (stock) {
+			dispatch(postCommentThunk(stock.id, comment));
+			setComment("");
+		}
 	};
 
 	return (
