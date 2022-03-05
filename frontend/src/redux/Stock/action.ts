@@ -1,4 +1,4 @@
-import { Stock, UserComment } from "./state";
+import { Stock, StockNews, UserComment } from "./state";
 
 export const getStockAction = (stock: Stock) => ({
 	type: "@@Stock/get_stock" as const,
@@ -15,7 +15,13 @@ export const postCommentAction = (comment: UserComment) => ({
 	comment,
 });
 
+export const getStockNewsAction = (news: StockNews[]) => ({
+	type: "@@Stock/get_news" as const,
+	news,
+});
+
 export type StockAction =
 	| ReturnType<typeof getStockAction>
 	| ReturnType<typeof getCommentsAction>
-	| ReturnType<typeof postCommentAction>;
+	| ReturnType<typeof postCommentAction>
+	| ReturnType<typeof getStockNewsAction>;

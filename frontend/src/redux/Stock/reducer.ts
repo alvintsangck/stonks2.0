@@ -4,6 +4,7 @@ import { StockState } from "./state";
 const initialState: StockState = {
 	stock: null,
 	comments: [],
+	news: [],
 };
 
 export function stockReducer(state: StockState = initialState, action: StockAction) {
@@ -14,6 +15,10 @@ export function stockReducer(state: StockState = initialState, action: StockActi
 			return { ...state, comments: action.comments };
 		case "@@Stock/post_comment":
 			return { ...state, comments: state.comments.concat(action.comment) };
+		case "@@Stock/get_news":
+			console.log("re ", action.news);
+
+			return { ...state, news: action.news };
 		default:
 			return state;
 	}
