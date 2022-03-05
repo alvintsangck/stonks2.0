@@ -23,31 +23,64 @@ export type FormState = {
 	maxIndustryRank: number;
 };
 
-const defaultValues = {
-	minPrice: 0,
-	maxPrice: 1000000,
-	minWeekPercent: 0,
-	maxWeekPercent: 100,
-	minMarketCap: 0,
-	maxMarketCap: 5000000,
-	minRS: 1,
-	maxRS: 99,
-	minIndustryRS: 1,
-	maxIndustryRS: 99,
-	minIndustryRank: 1,
-	maxIndustryRank: 197,
+type Input = {
+	title: string;
+	name: string;
+	min: number;
+	max: number;
 };
 
 export default function ScreenerForm() {
 	const dispatch = useDispatch();
-	const { register, handleSubmit, reset } = useForm<FormState>({ defaultValues });
 	const addedIndustries = useSelector((state: RootState) => state.screener.addedIndustries);
 	const addedSectors = useSelector((state: RootState) => state.screener.addedSectors);
 	const [radioSector, setRadioSector] = useState("include");
 	const [radioIndustry, setRadioIndustry] = useState("include");
-	const onSubmit = (data: FormState) => {
-		dispatch(loadScreenResultThunk(data, addedIndustries, addedSectors));
+	const defaultValues = {
+		minPrice: 0,
+		maxPrice: 1000000,
+		minWeekPercent: 0,
+		maxWeekPercent: 100,
+		minMarketCap: 0,
+		maxMarketCap: 5000000,
+		minRS: 0,
+		maxRS: 100,
+		minIndustryRS: 0,
+		maxIndustryRS: 100,
+		minIndustryRank: 1,
+		maxIndustryRank: 197,
 	};
+	const inputsArr: Input[][] = [
+		[
+			{ title: "Price ($)", name: "price", min: 0, max: 1000000 },
+			{ title: "% Off 52-week High", name: "weekPercent", min: 0, max: 100 },
+			{ title: "Market Capitalization (Mil)", name: "marketCap", min: 0, max: 5000000 },
+		],
+		[
+			{ title: "RS Rating (0-100)", name: "rS", min: 0, max: 100 },
+			{ title: "Industry RS Rating (0-100)", name: "industryRS", min: 0, max: 100 },
+			{ title: "Industry Ranking (1-197)", name: "industryRank", min: 1, max: 197 },
+		],
+	];
+	const { register, handleSubmit, reset, setValue, watch } = useForm<FormState>({ defaultValues });
+
+	function onSubmit(data: FormState) {
+		dispatch(loadScreenResultThunk(data, addedIndustries, addedSectors));
+	}
+
+	function validateValue(e: any) {
+		const name = e.target.name as keyof FormState;
+		const value = Number(e.target.value);
+		const key = name.substring(3);
+		const minKey = ("min" + key) as keyof FormState;
+		const maxKey = ("max" + key) as keyof FormState;
+		const minValue = watch(minKey);
+		const maxValue = watch(maxKey);
+		if (value <= defaultValues[minKey]) setValue(name, defaultValues[minKey]);
+		if (value >= defaultValues[maxKey]) setValue(name, defaultValues[maxKey]);
+		if (name.match(/min/) && value > maxValue) setValue(name, maxValue);
+		if (name.match(/max/) && value < minValue) setValue(name, minValue);
+	}
 
 	function resetForm() {
 		reset();
@@ -60,130 +93,40 @@ export default function ScreenerForm() {
 		<>
 			<Form id="screener-form" onSubmit={handleSubmit(onSubmit)}>
 				<Row>
-					<Col lg={6}>
-						<Form.Group className="screener-items">
-							<h4>Price ($)</h4>
-							<div>
-								<Form.Control
-									{...register("minPrice")}
-									type="number"
-									placeholder="min"
-									min="0"
-									max="1000000"
-								></Form.Control>
-								<span>to</span>
-								<Form.Control
-									{...register("maxPrice")}
-									type="number"
-									placeholder="max"
-									min="0"
-									max="1000000"
-								></Form.Control>
-							</div>
-						</Form.Group>
-						<Form.Group className="screener-items">
-							<h4>% Off 52-week High</h4>
-							<div>
-								<Form.Control
-									{...register("minWeekPercent")}
-									type="number"
-									placeholder="min"
-									min="0"
-									max="100"
-								></Form.Control>
-								<span>to</span>
-								<Form.Control
-									{...register("maxWeekPercent")}
-									type="number"
-									placeholder="max"
-									min="0"
-									max="100"
-								></Form.Control>
-							</div>
-						</Form.Group>
-						<Form.Group className="screener-items">
-							<h4>Market Capitalization (Mil)</h4>
-							<div>
-								<Form.Control
-									{...register("minMarketCap")}
-									type="number"
-									placeholder="min"
-									min="0"
-									max="5000000"
-								></Form.Control>
-								<span>to</span>
-								<Form.Control
-									{...register("maxMarketCap")}
-									type="number"
-									placeholder="max"
-									min="0"
-									max="5000000"
-								></Form.Control>
-							</div>
-						</Form.Group>
-					</Col>
-					<Col lg={6}>
-						<Form.Group className="screener-items">
-							<h4>RS Rating (1-99)</h4>
-							<div>
-								<Form.Control
-									{...register("minRS")}
-									type="number"
-									placeholder="min"
-									min="0"
-									max="100"
-								/>
-								<span>to</span>
-								<Form.Control
-									{...register("maxRS")}
-									type="number"
-									placeholder="max"
-									min="0"
-									max="100"
-								/>
-							</div>
-						</Form.Group>
-						<Form.Group className="screener-items">
-							<h4>Industry RS Rating (1-99)</h4>
-							<div>
-								<Form.Control
-									{...register("minIndustryRS")}
-									type="number"
-									placeholder="min"
-									min="0"
-									max="100"
-								/>
-								<span>to</span>
-								<Form.Control
-									{...register("maxIndustryRS")}
-									type="number"
-									placeholder="max"
-									min="0"
-									max="100"
-								/>
-							</div>
-						</Form.Group>
-						<Form.Group className="screener-items">
-							<h4>Industry Ranking (1-197)</h4>
-							<div>
-								<Form.Control
-									{...register("minIndustryRank")}
-									type="number"
-									placeholder="min"
-									min="1"
-									max="197"
-								/>
-								<span>to</span>
-								<Form.Control
-									{...register("maxIndustryRank")}
-									type="number"
-									placeholder="max"
-									min="1"
-									max="197"
-								/>
-							</div>
-						</Form.Group>
-					</Col>
+					{inputsArr.map((inputs) => (
+						<Col lg={6}>
+							{inputs.map(({ title, name, min, max }) => (
+								<Form.Group className="screener-items">
+									<h4>{title}</h4>
+									<div>
+										<Form.Control
+											{...register(
+												`min${name[0].toUpperCase() + name.substring(1)}` as keyof FormState,
+												{ valueAsNumber: true }
+											)}
+											type="number"
+											placeholder="min"
+											min={min}
+											max={max}
+											onBlur={validateValue}
+										/>
+										<span>to</span>
+										<Form.Control
+											{...register(
+												`max${name[0].toUpperCase() + name.substring(1)}` as keyof FormState,
+												{ valueAsNumber: true }
+											)}
+											type="number"
+											placeholder="max"
+											min={min}
+											max={max}
+											onBlur={validateValue}
+										/>
+									</div>
+								</Form.Group>
+							))}
+						</Col>
+					))}
 				</Row>
 			</Form>
 			<ScreenerItem
