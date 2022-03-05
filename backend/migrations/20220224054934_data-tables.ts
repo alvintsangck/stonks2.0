@@ -44,6 +44,8 @@ export async function up(knex: Knex): Promise<void> {
 		});
 	}
 
+	await knex.schema.raw(`CREATE UNIQUE INDEX stock_prices_idx on stock_prices(stock_id, date_id); `);
+
 	if (!(await knex.schema.hasTable("stock_rs"))) {
 		await knex.schema.createTable("stock_rs", (table) => {
 			table.increments();

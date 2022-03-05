@@ -54,7 +54,7 @@ async function calculateRs() {
 	let resultArr = (
 		await knex.raw(
 			/*sql*/
-			`select stock_id, off_year_high, 
+			`select stock_id, 
 			round(percent_rank() OVER (
 			ORDER BY relative_strength) * 100) as rs_rating
 			from temp_stock_rs
