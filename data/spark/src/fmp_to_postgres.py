@@ -33,8 +33,8 @@ AWS_BUCKET_NAME = os.getenv("AWS_BUCKET_NAME")
 POSTGRES_DB=os.getenv('POSTGRES_DB')
 POSTGRES_USER=os.getenv("POSTGRES_USER")
 POSTGRES_PASSWORD=os.getenv("POSTGRES_PASSWORD")
-# POSTGRES_HOST=os.getenv('AWS_PSQL_ADDRESS')
-POSTGRES_HOST=os.getenv('POSTGRES_HOST')
+POSTGRES_HOST=os.getenv('AWS_PSQL_ADDRESS')
+# POSTGRES_HOST=os.getenv('POSTGRES_HOST')
 
 SPARK_ADDRESS=os.getenv('SPARK_ADDRESS')
 MONGO_ADDRESS=os.getenv('MONGO_ADDRESS')
@@ -75,11 +75,13 @@ df = df.withColumn('year', F.year(df['date']))
 df = df.withColumn('month', F.month(df['date']))
 df = df.withColumn('day', F.dayofmonth(df['date']))
 df = df.withColumnRenamed('date', 'created_at')
+df = df.drop('_id')
 df.show(5)
 
 
 print("writing avro to S3")
 df.write.format('avro').save(os.path.join(f's3a://{AWS_BUCKET_NAME}/{date_for_mongo}.avro'),mode="overwrite")
+print(f"finsihed writing to S3. Time elapsed: {time.perf_counter() - start_time}")
 
 print("inserting data into psql")
 df.write.format('jdbc')\

@@ -126,7 +126,7 @@ export async function seed(knex: Knex): Promise<void> {
 		
 		for (let i = 0; i < 44; i++) {
 			logger.debug(`reading chunk ${i}`);
-			workbook = xlsx.readFile(`./seeds/import_copy/chunk${i}.xlsx`);
+			workbook = xlsx.readFile(`./seeds/import/chunk${i}.xlsx`);
 			let chunkData = xlsx.utils.sheet_to_json(workbook.Sheets["Sheet1"]);
 			//@ts-ignore
 			let stockPriceData = chunkData.map((row: any) => {

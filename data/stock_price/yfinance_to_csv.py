@@ -68,7 +68,7 @@ save_string = 'day' if (end - start).days == 1 else 'year'
 print(f'start loading xlsx...')
 
 start_file = time.perf_counter()
-chunk_size = 50000
+chunk_size = 500000
 num_chunks = math.ceil(len(stock_data) / chunk_size)
 
 for i in range(num_chunks):
