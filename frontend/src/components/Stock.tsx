@@ -8,7 +8,8 @@ import CommentForm from "./CommentForm";
 import StockButtons from "./StockButtons";
 import { Helmet } from "react-helmet";
 import { useEffect } from "react";
-import { getCommentsThunk, getStockThunk } from "../redux/Stock/thunk";
+import { getCommentsThunk, getStockNewsThunk, getStockThunk } from "../redux/Stock/thunk";
+import { localTime } from "../helper";
 
 const env = process.env.REACT_APP_API_ORIGIN;
 
@@ -16,11 +17,13 @@ export default function Stock() {
 	const dispatch = useDispatch();
 	const theme = useSelector((state: RootState) => state.theme.theme);
 	const stock = useSelector((state: RootState) => state.stock.stock);
+	const news = useSelector((state: RootState) => state.stock.news);
 	const comments = useSelector((state: RootState) => state.stock.comments);
 	const { ticker } = useParams<{ ticker: string }>();
 
 	useEffect(() => {
 		dispatch(getStockThunk(ticker));
+		dispatch(getStockNewsThunk(ticker));
 	}, []);
 
 	useEffect(() => {
@@ -28,6 +31,7 @@ export default function Stock() {
 			dispatch(getCommentsThunk(stock.id));
 		}
 	}, [stock]);
+	console.log("new ", news);
 
 	return (
 		<>
@@ -73,12 +77,14 @@ export default function Stock() {
 						<div className="news-container">
 							<h3>News</h3>
 							<div className="news-section">
-								{/* <div className="news-wrap">
-                            <div className="news-title">
-                                <a href=""></a>
-                            </div>
-                            <div className="news-date"></div>
-                        </div> */}
+								{news.map((news) => (
+									<div className="news-wrap" key={news.uuid}>
+										<div className="news-title">
+											<a href={news.link}>{news.title}</a>
+										</div>
+										<div className="news-date">{localTime(news.providerPublishTime)}</div>
+									</div>
+								))}
 							</div>
 						</div>
 						<div className="comment-container">
@@ -90,7 +96,7 @@ export default function Stock() {
 										<div className="content">
 											<div>
 												<span className="username">{comment.username}</span>
-												<span className="comment-date">{comment.createdAt}</span>
+												<span className="comment-date">{localTime(comment.createdAt)}</span>
 											</div>
 											<div className="content">{comment.content}</div>
 										</div>

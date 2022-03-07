@@ -1,7 +1,7 @@
 import { defaultErrorSwal } from "../../components/ReactSwal";
 import { callApi } from "../api";
 import { RootDispatch } from "../store/action";
-import { getCommentsAction, getStockAction, postCommentAction } from "./action";
+import { getCommentsAction, getStockNewsAction, getStockAction, postCommentAction } from "./action";
 
 export function getStockThunk(ticker: string) {
 	return async (dispatch: RootDispatch) => {
@@ -32,6 +32,17 @@ export function postCommentThunk(stockId: number, comment: string) {
 			defaultErrorSwal(result.error);
 		} else {
 			dispatch(postCommentAction(result));
+		}
+	};
+}
+
+export function getStockNewsThunk(ticker: string) {
+	return async (dispatch: RootDispatch) => {
+		const result = await callApi(`/stocks/${ticker}/news`);
+		if ("error" in result) {
+			defaultErrorSwal(result.error);
+		} else {
+			dispatch(getStockNewsAction(result));
 		}
 	};
 }

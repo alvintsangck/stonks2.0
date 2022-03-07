@@ -8,6 +8,15 @@ export type Stock = {
 	industryName?: string;
 };
 
+export type StockNews = {
+	uuid: string;
+	link: string;
+	providerPublishTime: string;
+	publisher: string;
+	title: string;
+	type: string;
+};
+
 export type UserComment = {
 	username: string;
 	content: string;
@@ -18,4 +27,5 @@ export type UserComment = {
 export type StockState = {
 	stock: Stock | null;
 	comments: UserComment[];
+	news: StockNews[];
 };
