@@ -16,7 +16,7 @@ start_year = datetime(end.year - 1, end.month, end.day)
 start = start_year
 
 #tickers config
-tickers = pd.read_excel("../backend/seeds/data.xlsx", sheet_name="stocks")
+tickers = pd.read_excel("../../backend/seeds/new_data.xlsx", sheet_name="stocks")
 ticker_list = list(tickers['ticker'])
 # ticker_list = ["GOOG"]
 ticker_string = ' '.join(ticker_list)
@@ -26,7 +26,7 @@ def calculate_time(start_time, end_time):
     second = (end_time - start_time) % 60
     return f'{minute} minutes {second} seconds'
 
-splits = np.array_split(ticker_list, 5)
+splits = np.array_split(ticker_list, 2)
 
 stock_data = pd.DataFrame()
 stocks_not_working = []

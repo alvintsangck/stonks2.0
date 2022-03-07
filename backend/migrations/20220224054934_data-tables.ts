@@ -59,7 +59,7 @@ export async function up(knex: Knex): Promise<void> {
 		await knex.schema.createTable("stock_market_caps", (table) => {
 			table.increments();
 			table.integer("stock_id").unsigned().notNullable().references("stocks.id");
-			table.decimal("market_cap", 10, 2);
+			table.decimal("market_cap", 14, 2);
 			table.timestamps(false, true);
 		});
 	}

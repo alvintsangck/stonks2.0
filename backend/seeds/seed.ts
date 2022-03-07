@@ -1,7 +1,7 @@
 import { Knex } from "knex";
 import xlsx from "xlsx";
 import { hashPassword } from "../util/hash";
-import { logger } from "../util/logger";
+// import { logger } from "../util/logger";
 import {
 	Industry,
 	RawIndustryData,
@@ -16,7 +16,7 @@ import {
 } from "../util/models";
 
 export async function seed(knex: Knex): Promise<void> {
-	let workbook = xlsx.readFile("./seeds/data.xlsx");
+	let workbook = xlsx.readFile("./seeds/new_data.xlsx");
 	let sectorData: SectorData[] = xlsx.utils.sheet_to_json(workbook.Sheets["sectors"]);
 	let rawIndustryData: RawIndustryData[] = xlsx.utils.sheet_to_json(workbook.Sheets["industries"]);
 	let rawStockData: RawStockData[] = xlsx.utils.sheet_to_json(workbook.Sheets["stocks"]);
@@ -25,6 +25,7 @@ export async function seed(knex: Knex): Promise<void> {
 	let commentData: UserComment[] = xlsx.utils.sheet_to_json(workbook.Sheets["comments"]);
 	let watchlistData = xlsx.utils.sheet_to_json(workbook.Sheets["watchlists"]);
 	let watchlistStockData = xlsx.utils.sheet_to_json(workbook.Sheets["watchlistStock"]);
+	let marketCaps = xlsx.utils.sheet_to_json(workbook.Sheets["stock_market_caps"]);
 
 	for (let user of userData) {
 		user.password = await hashPassword(user.password!.toString());
@@ -33,6 +34,8 @@ export async function seed(knex: Knex): Promise<void> {
 	let txn = await knex.transaction();
 	try {
 		// Deletes ALL existing entries
+		await txn("stock_market_caps").del();
+		await txn.raw(`ALTER SEQUENCE stock_market_caps_id_seq RESTART`);
 		
 		await txn("watchlist_stock").del();
 		await txn.raw(`ALTER SEQUENCE watchlist_stock_id_seq RESTART`);
@@ -99,37 +102,48 @@ export async function seed(knex: Knex): Promise<void> {
 		let stockArr = await txn("stocks").insert(stockData).returning(["id", "ticker"]);
 		//@ts-ignore
 		let stockMap = stockArr.reduce(makeMap, {});
-		let dateArr = getDates(new Date(2021,1,1), new Date(2023,1,1))
-		await txn("dim_dates").insert(dateArr)
 
+		let marketCapsData = marketCaps.map((row: any) => {
+			let {ticker, ...marketCapObj} = row;
+			marketCapObj["stock_id"] = stockMap[ticker]
+			return marketCapObj;
+		})
+		
+		await txn("stock_market_caps").insert(marketCapsData);
+
+		let dateArr = getDates(new Date(2021,0,2), new Date(2023,0,2))
+		await txn("dim_dates").insert(dateArr)
+		// console.log(dateArr[0]);
+		
 		let newDateArr: any = []
 
 		for (let i = 0; i < dateArr.length; i++){
-			let date = new Date(dateArr[i]["year"], dateArr[i]["month"] , dateArr[i]["day"])
+			let date = new Date(dateArr[i]["year"], dateArr[i]["month"] - 1, dateArr[i]["day"])
 			newDateArr.push(date)
 		}
+		// console.log(newDateArr[0], newDateArr[60]);
+		
+		// for (let i = 0; i < 1; i++) {
+		// 	logger.debug(`reading chunk ${i}`);
+		// 	workbook = xlsx.readFile(`../data/import/chunk${i}.xlsx`);
+		// 	let chunkData = xlsx.utils.sheet_to_json(workbook.Sheets["Sheet1"]);
+		// 	//@ts-ignore
+		// 	let stockPriceData = chunkData.map((row: any) => {
+		// 		let obj = {};
+		// 		let { ticker, price, date } = row;
 
-		for (let i = 0; i < 4; i++) {
-			logger.debug(`reading chunk ${i}`);
-			workbook = xlsx.readFile(`../data/import/chunk${i}.xlsx`);
-			let chunkData = xlsx.utils.sheet_to_json(workbook.Sheets["Sheet1"]);
-			//@ts-ignore
-			let stockPriceData = chunkData.map((row: any) => {
-				let obj = {};
-				let { ticker, price, date } = row;
-
-				ticker = ticker.toString().toUpperCase();
-				let psqlDate = excelDateToJSDate(date)
-				// console.log(psqlDate);
-				obj["stock_id"] = Number(stockMap[ticker]);
-				obj["price"] = price;
-				obj["date_id"] = newDateArr.map(Number).indexOf(+psqlDate) + 1
-				obj["created_at"] = psqlDate
-				return obj;
-			});
-			await txn.batchInsert("stock_prices", stockPriceData, 10000);
-			logger.debug(`finished insert chunk ${i}`);
-		}
+		// 		ticker = ticker.toString().toUpperCase();
+		// 		let psqlDate = excelDateToJSDate(date)
+		// 		// console.log(psqlDate);
+		// 		obj["stock_id"] = Number(stockMap[ticker]);
+		// 		obj["price"] = price;
+		// 		obj["date_id"] = newDateArr.map(Number).indexOf(+psqlDate) + 1
+		// 		obj["created_at"] = psqlDate
+		// 		return obj;
+		// 	});
+		// 	await txn.batchInsert("stock_prices", stockPriceData, 10000);
+		// 	logger.debug(`finished insert chunk ${i}`);
+		// }
 
 		await txn("users").insert(userData);
 		await txn("comments").insert(commentData);
@@ -184,7 +198,7 @@ function getDates(startDate: Date, stopDate: Date) {
     let currentDate = startDate;
     while (currentDate <= stopDate) {
 		let newDate = new Date(currentDate)
-        dateArray.push({year: newDate.getFullYear(), month: newDate.getMonth(), day: newDate.getDate()});
+        dateArray.push({year: newDate.getFullYear(), month: newDate.getMonth() + 1, day: newDate.getDate()});
         currentDate.setDate(currentDate.getDate() + 1);
     }
     return dateArray;
