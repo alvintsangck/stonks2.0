@@ -7,7 +7,7 @@ import time
 import math
 import os
 import json
-import pytz
+
 
 client = MongoClient('mongodb',27017)
 
@@ -15,9 +15,6 @@ db = client.stonks
 
 end = datetime.now()
 start_day = end - timedelta(1)
-start_year = datetime(end.year - 1, end.month, end.day, end.hour)
-#check start time
-start = start_day
 
 print("start date:", start, "end date:", end)
 
@@ -25,10 +22,10 @@ print("start date:", start, "end date:", end)
 os.chdir("/opt/bitnami/spark/src/")
 
 #tickers config
-tickers = pd.read_excel("./data.xlsx", sheet_name="stocks")
+tickers = pd.read_excel("./new_data.xlsx", sheet_name="stocks")
 ticker_list = list(tickers['ticker'])
 
-is_market_open = yf.download("SPY", start=start, end=end, group_by='ticker', auto_adjust=True)
+is_market_open = yf.download("SPY", start=start_day, end=end, group_by='ticker', auto_adjust=True)
 
 if is_market_open.empty:
     print("market is closed")
