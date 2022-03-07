@@ -27,7 +27,7 @@ export default function WatchlistModal({ isShow, setIsShow }: Props) {
 
 	useEffect(() => {
 		dispatch(getAllWatchlistsThunk());
-	}, []);
+	}, [dispatch]);
 
 	return (
 		<Modal show={isShow} onHide={hideModal} centered>
