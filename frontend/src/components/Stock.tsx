@@ -24,14 +24,13 @@ export default function Stock() {
 	useEffect(() => {
 		dispatch(getStockThunk(ticker));
 		dispatch(getStockNewsThunk(ticker));
-	}, []);
+	}, [dispatch, ticker]);
 
 	useEffect(() => {
 		if (stock) {
 			dispatch(getCommentsThunk(stock.id));
 		}
-	}, [stock]);
-	console.log("new ", news);
+	}, [dispatch, stock]);
 
 	return (
 		<>
