@@ -1,7 +1,8 @@
 import { Knex } from "knex";
 import xlsx from "xlsx";
 import { hashPassword } from "../util/hash";
-// import { logger } from "../util/logger";
+//@ts-ignore
+import { logger } from "../util/logger";
 import {
 	Industry,
 	RawIndustryData,
@@ -113,7 +114,7 @@ export async function seed(knex: Knex): Promise<void> {
 
 		let dateArr = getDates(new Date(2021,0,2), new Date(2023,0,2))
 		await txn("dim_dates").insert(dateArr)
-		// console.log(dateArr[0]);
+		console.log(dateArr[0]);
 		
 		let newDateArr: any = []
 
@@ -121,29 +122,29 @@ export async function seed(knex: Knex): Promise<void> {
 			let date = new Date(dateArr[i]["year"], dateArr[i]["month"] - 1, dateArr[i]["day"])
 			newDateArr.push(date)
 		}
-		// console.log(newDateArr[0], newDateArr[60]);
+		console.log(newDateArr[0], newDateArr[60]);
 		
-		// for (let i = 0; i < 1; i++) {
-		// 	logger.debug(`reading chunk ${i}`);
-		// 	workbook = xlsx.readFile(`../data/import/chunk${i}.xlsx`);
-		// 	let chunkData = xlsx.utils.sheet_to_json(workbook.Sheets["Sheet1"]);
-		// 	//@ts-ignore
-		// 	let stockPriceData = chunkData.map((row: any) => {
-		// 		let obj = {};
-		// 		let { ticker, price, date } = row;
+		for (let i = 0; i < 44; i++) {
+			logger.debug(`reading chunk ${i}`);
+			workbook = xlsx.readFile(`./seeds/import_copy/chunk${i}.xlsx`);
+			let chunkData = xlsx.utils.sheet_to_json(workbook.Sheets["Sheet1"]);
+			//@ts-ignore
+			let stockPriceData = chunkData.map((row: any) => {
+				let obj = {};
+				let { ticker, price, date } = row;
 
-		// 		ticker = ticker.toString().toUpperCase();
-		// 		let psqlDate = excelDateToJSDate(date)
-		// 		// console.log(psqlDate);
-		// 		obj["stock_id"] = Number(stockMap[ticker]);
-		// 		obj["price"] = price;
-		// 		obj["date_id"] = newDateArr.map(Number).indexOf(+psqlDate) + 1
-		// 		obj["created_at"] = psqlDate
-		// 		return obj;
-		// 	});
-		// 	await txn.batchInsert("stock_prices", stockPriceData, 10000);
-		// 	logger.debug(`finished insert chunk ${i}`);
-		// }
+				ticker = ticker.toString().toUpperCase();
+				let psqlDate = excelDateToJSDate(date)
+				// console.log(psqlDate);
+				obj["stock_id"] = Number(stockMap[ticker]);
+				obj["price"] = price;
+				obj["date_id"] = newDateArr.map(Number).indexOf(+psqlDate) + 1
+				obj["created_at"] = psqlDate
+				return obj;
+			});
+			await txn.batchInsert("stock_prices", stockPriceData, 10000);
+			logger.debug(`finished insert chunk ${i}`);
+		}
 
 		await txn("users").insert(userData);
 		await txn("comments").insert(commentData);

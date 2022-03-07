@@ -61,7 +61,7 @@ for stock in stocklist:
 
 # print(stocks_not_working)
 
-db.stockPriceToday.insert_many(results)
+db.stockPricesToday.insert_many(results)
 
 end_time = time.perf_counter()
 

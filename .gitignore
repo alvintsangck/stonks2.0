@@ -16,3 +16,4 @@ mongodb
 pgdata
 tmp
 build
+database.ini
