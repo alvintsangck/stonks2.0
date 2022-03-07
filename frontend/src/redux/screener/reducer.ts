@@ -16,18 +16,21 @@ export function screenerReducer(state: ScreenerState = initialState, action: Scr
 			return { ...state, industries: action.industries };
 		case "@@Screener/get_sector":
 			return { ...state, sectors: action.sectors };
-		case "@@Screener/add_item":
+		case "@@Screener/add_item": {
 			const { key, item, value } = action;
 			const isInclude = value === "include";
 			return {
 				...state,
 				[key]: state[key].concat({ ...item, isInclude }),
 			};
-		case "@@Screener/remove_item":
+		}
+		case "@@Screener/remove_item": {
+			const { key } = action;
 			return {
 				...state,
 				[key]: state[key].filter((item) => item.id !== action.item.id),
 			};
+		}
 		case "@@Screener/result":
 			return {
 				...state,
