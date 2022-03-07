@@ -25,6 +25,7 @@ export const addItemAction = (
 export const removeItemAction = (item: Item, key: keyof Pick<ScreenerState, "addedIndustries" | "addedSectors">) => ({
 	type: "@@Screener/remove_item" as const,
 	item,
+	key,
 });
 
 export const resetItemAction = (key: keyof Pick<ScreenerState, "addedIndustries" | "addedSectors">) => ({
