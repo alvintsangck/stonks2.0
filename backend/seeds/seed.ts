@@ -33,7 +33,6 @@ export async function seed(knex: Knex): Promise<void> {
 	let txn = await knex.transaction();
 	try {
 		// Deletes ALL existing entries
-		let t1 = Date.now();
 		
 		await txn("watchlist_stock").del();
 		await txn.raw(`ALTER SEQUENCE watchlist_stock_id_seq RESTART`);
@@ -73,7 +72,6 @@ export async function seed(knex: Knex): Promise<void> {
 
 		await txn("sectors").del();
 		await txn.raw(`ALTER SEQUENCE sectors_id_seq RESTART`);
-		let t2 = Date.now();
 
 		// Inserts seed entries
 		const sectorArr: Sector[] = await txn("sectors").insert(sectorData).returning(["id", "name"]);
@@ -101,18 +99,17 @@ export async function seed(knex: Knex): Promise<void> {
 		let stockArr = await txn("stocks").insert(stockData).returning(["id", "ticker"]);
 		//@ts-ignore
 		let stockMap = stockArr.reduce(makeMap, {});
-		let t3 = Date.now();
-		let dateArr = getDates(new Date(2021,0,2), new Date(2023,0,2))
+		let dateArr = getDates(new Date(2021,1,1), new Date(2023,1,1))
 		await txn("dim_dates").insert(dateArr)
 
 		let newDateArr: any = []
 
 		for (let i = 0; i < dateArr.length; i++){
-			let date = new Date(dateArr[i]["year"], dateArr[i]["month"], dateArr[i]["day"])
+			let date = new Date(dateArr[i]["year"], dateArr[i]["month"] , dateArr[i]["day"])
 			newDateArr.push(date)
 		}
 
-		for (let i = 0; i < 45; i++) {
+		for (let i = 0; i < 4; i++) {
 			logger.debug(`reading chunk ${i}`);
 			workbook = xlsx.readFile(`../data/import/chunk${i}.xlsx`);
 			let chunkData = xlsx.utils.sheet_to_json(workbook.Sheets["Sheet1"]);
@@ -133,7 +130,6 @@ export async function seed(knex: Knex): Promise<void> {
 			await txn.batchInsert("stock_prices", stockPriceData, 10000);
 			logger.debug(`finished insert chunk ${i}`);
 		}
-		let t4 = Date.now();
 
 		await txn("users").insert(userData);
 		await txn("comments").insert(commentData);
@@ -145,8 +141,6 @@ export async function seed(knex: Knex): Promise<void> {
 		await txn("user_history").insert([{ user_id: 3 }]);
 
 		await txn.commit();
-		logger.debug(`delete all data in ${(t2 - t1) / 1000}s`);
-		logger.debug(`insert chunk data in ${(t4 - t3) / 1000}s`);
 
 		return;
 	} catch (e) {
