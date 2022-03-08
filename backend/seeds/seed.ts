@@ -35,6 +35,9 @@ export async function seed(knex: Knex): Promise<void> {
 	let txn = await knex.transaction();
 	try {
 		// Deletes ALL existing entries
+		await txn("staging_stock_prices").del();
+		await txn.raw(`ALTER SEQUENCE staging_stock_prices_id_seq RESTART`);
+
 		await txn("stock_market_caps").del();
 		await txn.raw(`ALTER SEQUENCE stock_market_caps_id_seq RESTART`);
 		
