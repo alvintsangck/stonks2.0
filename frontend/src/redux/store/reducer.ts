@@ -8,7 +8,7 @@ import { portfolioReducer } from "../portfolio/reducer";
 import { watchlistReducer } from "../watchlist/reducer";
 import { newsReducer } from "../news/reducer";
 import { screenerReducer } from "../screener/reducer";
-import { stockReducer } from "../Stock/reducer";
+import { stockReducer } from "../stock/reducer";
 
 export const rootReducer = combineReducers<RootState>({
 	auth: authReducer,

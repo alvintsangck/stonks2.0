@@ -8,6 +8,7 @@ declare global {
 	/* tslint:disable:interface-name */
 	interface Window {
 		__REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any;
+		ethereum?:any
 	}
 }
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

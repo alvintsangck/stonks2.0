@@ -1,4 +1,4 @@
-import { Stock } from "../Stock/state";
+import { Stock } from "../stock/state";
 import { Item, ScreenerState } from "./state";
 
 export const getIndustriesAction = (industries: Item[]) => ({
