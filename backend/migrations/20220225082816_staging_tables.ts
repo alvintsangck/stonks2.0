@@ -4,7 +4,8 @@ export async function up(knex: Knex): Promise<void> {
 	if (!(await knex.schema.hasTable("staging_stock_prices"))) {
 		await knex.schema.createTable("staging_stock_prices", (table) => {
 			table.increments();
-			table.integer("stock_id").unsigned().notNullable().references("stocks.id");
+			// table.integer("stock_id").unsigned().notNullable().references("stocks.id");
+			table.string("ticker", 20)
 			table.decimal("price", 12, 4);
 			table.integer("year");
 			table.integer("month");
@@ -13,24 +14,24 @@ export async function up(knex: Knex): Promise<void> {
 		});
 	}
 
-	await knex.schema.raw(
-		`CREATE OR REPLACE FUNCTION insert_stock_prices() RETURNS trigger AS $$
-			DECLARE
-				new_date_id integer;
-			BEGIN
-				INSERT INTO dim_dates (year,month,day) VALUES (NEW.year,NEW.month,NEW.day) on conflict(year,month,day) 
-					DO UPDATE set updated_at = NOW() RETURNING id into new_date_id;
+	// await knex.schema.raw(
+	// 	`CREATE OR REPLACE FUNCTION insert_stock_prices() RETURNS trigger AS $$
+	// 		DECLARE
+	// 			new_date_id integer;
+	// 		BEGIN
+	// 			INSERT INTO dim_dates (year,month,day) VALUES (NEW.year,NEW.month,NEW.day) on conflict(year,month,day) 
+	// 				DO UPDATE set updated_at = NOW() RETURNING id into new_date_id;
 
-				INSERT INTO stock_prices (stock_id,date_id,price) VALUES (NEW.stock_id, new_date_id, NEW.price) on conflict(stock_id, date_id) 
-					DO UPDATE set price = NEW.price, updated_at = NOW();
+	// 			INSERT INTO stock_prices (stock_id,date_id,price) VALUES (NEW.stock_id, new_date_id, NEW.price) on conflict(stock_id, date_id) 
+	// 				DO UPDATE set price = NEW.price, updated_at = NOW();
 		
-				return NEW;
-			END
-		$$ LANGUAGE plpgsql;
+	// 			return NEW;
+	// 		END
+	// 	$$ LANGUAGE plpgsql;
 		
-		CREATE TRIGGER stock_prices_trigger AFTER INSERT ON staging_stock_prices FOR EACH ROW EXECUTE PROCEDURE insert_stock_prices();
-		`
-	);
+	// 	CREATE TRIGGER stock_prices_trigger AFTER INSERT ON staging_stock_prices FOR EACH ROW EXECUTE PROCEDURE insert_stock_prices();
+	// 	`
+	// );
 }
 
 export async function down(knex: Knex): Promise<void> {

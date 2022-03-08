@@ -46,7 +46,7 @@ else:
         ticker_string = ' '.join(split)
 
         print("downloading stocks...")
-        data = yf.download(ticker_string, start=start, end=end, group_by='ticker', auto_adjust=True)
+        data = yf.download(ticker_string, start=start_day, end=end, group_by='ticker', auto_adjust=True)
 
         print("inserting into mongodb...")
         for ticker in split:

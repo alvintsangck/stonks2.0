@@ -7,3 +7,4 @@ pyspark
 openpyxl
 finnhub-python
 datapackage
+psycopg2

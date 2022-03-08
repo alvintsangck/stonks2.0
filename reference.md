@@ -34,6 +34,12 @@ https://www.tradingview.com/widget/
 
 yahoo-finance2
 https://github.com/gadicc/node-yahoo-finance2
+
+AAII investors' sentiment
+https://ycharts.com/indicators/us_investor_sentiment_neutral
+
+financial modeling prep
+https://site.financialmodelingprep.com/developer/docs#Market-Capitalization
 ----css reference----
 
 login
