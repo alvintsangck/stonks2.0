@@ -6,3 +6,4 @@ pymongo
 pyspark
 openpyxl
 finnhub-python
+psycopg2

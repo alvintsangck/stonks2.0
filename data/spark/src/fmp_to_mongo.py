@@ -49,19 +49,12 @@ for stock in stocklist:
         obj["date"] = start
         results.append(obj)
 
-# result_tickers_list = []
-# for result in results:
-#     ticker = result["ticker"]
-#     result_tickers_list.append(ticker)
-
-# for ticker in ticker_list:
-#     if ticker not in result_tickers_list:
-#         stocks_not_working.append(ticker)
-
-# print(stocks_not_working)
+db.stockPricesToday.drop()
 
 db.stockPricesToday.insert_many(results)
 
 end_time = time.perf_counter()
 
-print(f'total time used: {(end_time - start_time)} seconds')
+print(f'finished inserting into mongodb, total time used: {(end_time - start_time)} seconds')
+
+exit()

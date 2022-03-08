@@ -7,7 +7,7 @@ from pymongo import MongoClient
 import time
 from datetime import datetime, timedelta
 
-end = datetime(2022,3,5)
+end = datetime.now()
 start = end - timedelta(1)
 
 is_market_open = yf.download("SPY", start=start, end=end, group_by='ticker', auto_adjust=True)
@@ -18,6 +18,8 @@ if is_market_open.empty:
 
 print("starting")
 date_for_mongo = str(start.strftime('%Y-%m-%d'))
+
+print('processing stock prices on', date_for_mongo )
 
 client = MongoClient('mongodb',27017)
 
@@ -78,11 +80,6 @@ df = df.withColumnRenamed('date', 'created_at')
 df = df.drop('_id')
 df.show(5)
 
-
-print("writing avro to S3")
-df.write.format('avro').save(os.path.join(f's3a://{AWS_BUCKET_NAME}/{date_for_mongo}.avro'),mode="overwrite")
-print(f"finsihed writing to S3. Time elapsed: {time.perf_counter() - start_time}")
-
 print("inserting data into psql")
 df.write.format('jdbc')\
 .format("jdbc") \
@@ -97,9 +94,12 @@ df.write.format('jdbc')\
 
 print(f"finsihed inserting time elapsed: {time.perf_counter() - start_time}")
 
+print("writing avro to S3")
+df.write.format('avro').save(os.path.join(f's3a://{AWS_BUCKET_NAME}/{date_for_mongo}.avro'),mode="overwrite")
+print(f"finsihed writing to S3. Time elapsed: {time.perf_counter() - start_time}")
 
-# print("removing data in mongodb")
-# db.stockPriceToday.drop()
+print("removing data in mongodb")
+db.stockPricesToday.drop()
 
 end_time = time.perf_counter()
 

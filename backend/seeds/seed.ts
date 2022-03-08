@@ -115,7 +115,7 @@ export async function seed(knex: Knex): Promise<void> {
 		
 		await txn("stock_market_caps").insert(marketCapsData);
 
-		let dateArr = getDates(new Date(2021,0,2), new Date(2023,0,2))
+		let dateArr = getDates(new Date(2021,0,2), new Date(2025,0,2))
 		await txn("dim_dates").insert(dateArr)
 		console.log(dateArr[0]);
 		
@@ -127,7 +127,7 @@ export async function seed(knex: Knex): Promise<void> {
 		}
 		console.log(newDateArr[0], newDateArr[60]);
 		
-		for (let i = 0; i < 44; i++) {
+		for (let i = 0; i < 22; i++) {
 			logger.debug(`reading chunk ${i}`);
 			workbook = xlsx.readFile(`./seeds/import/chunk${i}.xlsx`);
 			let chunkData = xlsx.utils.sheet_to_json(workbook.Sheets["Sheet1"]);

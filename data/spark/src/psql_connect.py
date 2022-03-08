@@ -11,7 +11,12 @@ conn = psycopg2.connect(**params)
 def execute_cursor():
     # create a cursor
     cur = conn.cursor()
-        
+
+    # cur.execute("select * from stocks limit 1")
+
+    # result = cur.fetchall()
+    # print(result)
+
 	# execute a statement
     cur.execute("""INSERT INTO stock_prices (stock_id,date_id,price,created_at) 
                 (select s.id as stock_id, dd.id as date_id, ssp.price, ssp.created_at 
@@ -24,6 +29,8 @@ def execute_cursor():
 	# close the communication with the PostgreSQL
     cur.close()
 
+    print('Inserted into stock_prices')
+
 def close_connection():
     if conn is not None:
         conn.close()
@@ -34,4 +41,4 @@ def close_connection():
 if __name__ == '__main__':
     execute_cursor()
     close_connection()
-
+    exit()
