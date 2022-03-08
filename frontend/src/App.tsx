@@ -9,23 +9,25 @@ import Portfolio from "./components/Portfolio";
 import Home from "./components/Home";
 import Watchlist from "./components/Watchlist";
 import Screener from "./components/Screener";
-import Stock from "./components/Stock"
+import Stock from "./components/Stock";
+import Payment from "./components/Payment";
 
 function App() {
 	return (
-			<ConnectedRouter history={history}>
-				<NavBar />
-				<main>
-					<Switch>
-						<Route path="/" exact component={Home}></Route>
-						<Route path="/stocks/:ticker" component={Stock}></Route>
-						<Route path="/watchlist/:watchlistId?" component={Watchlist}></Route>
-						<Route path="/screener" component={Screener}></Route>
-						<Route path="/portfolio" component={Portfolio}></Route>
-					</Switch>
-				</main>
-				<Footer />
-			</ConnectedRouter>
+		<ConnectedRouter history={history}>
+			<NavBar />
+			<main>
+				<Switch>
+					<Route path="/" exact component={Home}></Route>
+					<Route path="/stocks/:ticker" component={Stock}></Route>
+					<Route path="/watchlist/:watchlistId?" component={Watchlist}></Route>
+					<Route path="/screener" component={Screener}></Route>
+					<Route path="/portfolio" component={Portfolio}></Route>
+					<Route path="/payment" component={Payment}></Route>
+				</Switch>
+			</main>
+			<Footer />
+		</ConnectedRouter>
 	);
 }
 

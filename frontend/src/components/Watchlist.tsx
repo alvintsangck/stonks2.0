@@ -11,7 +11,7 @@ import { addStockThunk, deleteStockThunk, getAllWatchlistsThunk, getWatchlistThu
 import { RootState } from "../redux/store/state";
 import StockTable from "./StockTable";
 import { useParams } from "react-router-dom";
-import { Stock } from "../redux/Stock/state";
+import { Stock } from "../redux/stock/state";
 import LoadingSpinner from "./LoadingSpinner";
 
 

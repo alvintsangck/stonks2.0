@@ -5,7 +5,7 @@ import { PortfolioState } from "../portfolio/state";
 import { WatchlistState } from "../watchlist/state";
 import { NewsState } from "../news/state";
 import { ScreenerState } from "../screener/state";
-import { StockState } from "../Stock/state";
+import { StockState } from "../stock/state";
 
 export type RootState = {
 	auth: AuthState;

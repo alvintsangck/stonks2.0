@@ -6,7 +6,7 @@ import { PortfolioAction } from "../portfolio/action";
 import { WatchlistAction } from "../watchlist/action";
 import { NewsAction } from "../news/action";
 import { ScreenerAction } from "../screener/action";
-import { StockAction } from "../Stock/action";
+import { StockAction } from "../stock/action";
 
 export type RootAction =
 	| AuthAction
