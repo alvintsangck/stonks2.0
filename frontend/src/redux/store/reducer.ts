@@ -9,13 +9,15 @@ import { watchlistReducer } from "../watchlist/reducer";
 import { newsReducer } from "../news/reducer";
 import { screenerReducer } from "../screener/reducer";
 import { stockReducer } from "../stock/reducer";
+import { metaMaskReducer } from "../metaMask/reducer";
 
 export const rootReducer = combineReducers<RootState>({
 	auth: authReducer,
 	news: newsReducer,
 	screener: screenerReducer,
-	stock :stockReducer,
+	stock: stockReducer,
 	theme: themeReducer,
+	metaMask: metaMaskReducer,
 	watchlist: watchlistReducer,
 	portfolio: portfolioReducer,
 	router: connectRouter(history),

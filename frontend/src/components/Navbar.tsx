@@ -67,7 +67,7 @@ export default function NavBar() {
 						<NavLink to="/portfolio">
 							<span>Portfolio</span>
 						</NavLink>
-						<NavLink to="/payment">
+						<NavLink to="/deposit">
 							<span>Payment</span>
 						</NavLink>
 					</Nav>

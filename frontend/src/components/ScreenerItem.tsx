@@ -56,7 +56,7 @@ export default function ScreenerItem({ radioIndustry, radioSector, setRadioIndus
 	return (
 		<Row>
 			<Col md={6}>
-				<div className="screener-btn-container">
+				<div className="stonk-btn-container">
 					<h4>Sector</h4>
 					<ButtonGroup>
 						{radioButtons.map((btn) => (
@@ -72,7 +72,7 @@ export default function ScreenerItem({ radioIndustry, radioSector, setRadioIndus
 								{btn.value}
 							</ToggleButton>
 						))}
-						<button className="screener-btn reset-btn" onClick={resetSector}>
+						<button className="stonk-btn reset-btn" onClick={resetSector}>
 							Reset
 						</button>
 					</ButtonGroup>
@@ -100,7 +100,7 @@ export default function ScreenerItem({ radioIndustry, radioSector, setRadioIndus
 				</Form.Group>
 			</Col>
 			<Col md={6}>
-				<div className="screener-btn-container">
+				<div className="stonk-btn-container">
 					<h4>Industry</h4>
 					<ButtonGroup>
 						{radioButtons.map((btn) => (
@@ -116,7 +116,7 @@ export default function ScreenerItem({ radioIndustry, radioSector, setRadioIndus
 								{btn.value}
 							</ToggleButton>
 						))}
-						<button className="screener-btn reset-btn" onClick={resetIndustry}>
+						<button className="stonk-btn reset-btn" onClick={resetIndustry}>
 							Reset
 						</button>
 					</ButtonGroup>

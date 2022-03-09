@@ -3,7 +3,7 @@ import withReactContent from "sweetalert2-react-content";
 
 const ReactSwal = withReactContent(Swal);
 
-export function defaultErrorSwal(error: string) {
+export function defaultErrorSwal(error: any) {
 	ReactSwal.fire({
 		toast: true,
 		position: "top",

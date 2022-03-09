@@ -40,3 +40,73 @@ body.dark {
 .user-role .non-user {
 	display: none;
 }
+
+.stonk-btn {
+	background: transparent;
+	transition: all 0.3s ease;
+	position: relative;
+	background-color: #273472;
+	color: #fff;
+	padding: 5px 10px;
+	border: none;
+	border-radius: 5px;
+}
+.stonk-btn:hover {
+	background: transparent;
+	color: #273472;
+	box-shadow: -7px -7px 20px 0px #fff9, -4px -4px 5px 0px #fff9, 7px 7px 20px 0px #0002, 4px 4px 5px 0px #0001;
+}
+.stonk-btn:before,
+.stonk-btn:after {
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 2px;
+	width: 0;
+	background: #273472;
+	transition: 400ms ease all;
+}
+.stonk-btn:after {
+	right: inherit;
+	top: inherit;
+	left: 0;
+	bottom: 0;
+}
+.stonk-btn:hover:before,
+.stonk-btn:hover:after {
+	width: 100%;
+	transition: 800ms ease all;
+}
+
+.dark .stonk-btn {
+	background-color: #ffffff;
+	color: #000;
+}
+.dark .stonk-btn:hover {
+	background-color: transparent;
+	color: #ffffff;
+	/* border: 2px solid ; */
+}
+.dark .stonk-btn:before,
+.dark .stonk-btn:after {
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 2px;
+	width: 0;
+	background: #fff;
+	transition: 400ms ease all;
+}
+.dark .stonk-btn:after {
+	right: inherit;
+	top: inherit;
+	left: 0;
+	bottom: 0;
+}
+.dark .stonk-btn:hover:before,
+.dark .stonk-btn:hover:after {
+	width: 100%;
+	transition: 800ms ease all;
+}
