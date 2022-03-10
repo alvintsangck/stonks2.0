@@ -8,7 +8,7 @@ import { portfolioReducer } from "../portfolio/reducer";
 import { watchlistReducer } from "../watchlist/reducer";
 import { newsReducer } from "../news/reducer";
 import { screenerReducer } from "../screener/reducer";
-import { stockReducer } from "../stocks/reducer";
+import { stockReducer } from "../stock/reducer";
 import { metaMaskReducer } from "../metaMask/reducer";
 
 export const rootReducer = combineReducers<RootState>({

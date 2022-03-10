@@ -1,4 +1,4 @@
-import { Stock } from "../stocks/state";
+import { Stock } from "../stock/state";
 import { Watchlist } from "./state";
 
 export const getAllWatchlistsAction = (watchlists: Watchlist[]) => ({
