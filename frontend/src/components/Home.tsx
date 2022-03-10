@@ -85,7 +85,7 @@ function makeSmallNewsElem(news: News, i: number) {
 				</a>
 			</div>
 			<div className="small-news-content">
-				<h4>{news.attributes.title}</h4>
+				<h5>{news.attributes.title}</h5>
 				<span>{content}</span>
 			</div>
 		</Col>
