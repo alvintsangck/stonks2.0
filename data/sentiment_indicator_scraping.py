@@ -1,27 +1,18 @@
-from ast import List
-from typing import Collection
-from numpy import number
 from playwright.sync_api import Playwright, sync_playwright
 from pymongo import MongoClient
 import time
 from datetime import datetime
-import csv
+# import csv
 
-from sqlalchemy import String
+
 
 client = MongoClient('localhost',27017)
 
 db = client.stonks
 
-bullish_collection, bearish_collection, neutral_collection = db.bullish, db.bearish, db.neutral
-
-bullish_collection.drop()
-bearish_collection.drop()
-neutral_collection.drop()
-
 sentiment_collection = db.sentiment 
 
-def run(playwright: Playwright, type: String) -> list:
+def run(playwright: Playwright, type: str) -> list:
     browser = playwright.chromium.launch(headless=True)
     context = browser.new_context()
 
@@ -87,7 +78,7 @@ def sign_in(page):
 
     time.sleep(2)
 
-def insertMongo(ls: List, collection_name: Collection):
+def insertMongo(ls: list, collection_name):
     print(f"{len(ls)} data scraped, inserting into {str(collection_name)}")
     duplicates = len(ls) - len(set([item["date"] for item in ls]))
     if duplicates:
