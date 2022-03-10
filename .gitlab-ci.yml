@@ -1,9 +1,9 @@
 image: node:16.13.1
 
 stages:
-    - server-testing
-    - react-testing
-    - server-build
+    # - server-testing
+    # - react-testing
+    # - server-build
     - react-build
     - server-deploy
     - react-deploy
