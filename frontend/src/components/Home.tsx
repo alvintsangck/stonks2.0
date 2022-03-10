@@ -29,7 +29,7 @@ export default function Home() {
 			<Helmet>
 				<title>Home | Stonks</title>
 			</Helmet>
-			<Container fluid>
+			<Container>
 				<Row className="market-row">
 					<Col md={8}>
 						<Carousel>{isLoading ? <LoadingSpinner /> : bigNews.map(makeBigNewsElem)}</Carousel>
@@ -85,7 +85,7 @@ function makeSmallNewsElem(news: News, i: number) {
 				</a>
 			</div>
 			<div className="small-news-content">
-				<h4>{news.attributes.title}</h4>
+				<h5>{news.attributes.title}</h5>
 				<span>{content}</span>
 			</div>
 		</Col>
