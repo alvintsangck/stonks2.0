@@ -293,7 +293,7 @@ export function getBalanceThunk(account: string) {
 			const calculatedBalance = ethers.utils.formatEther(balance);
 			dispatch(getBalanceAction(Number(calculatedBalance)));
 		} catch (error) {
-			console.log(error);
+			defaultErrorSwal(error);
 		}
 	};
 }

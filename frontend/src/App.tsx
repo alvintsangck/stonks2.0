@@ -10,7 +10,7 @@ import Home from "./components/Home";
 import Watchlist from "./components/Watchlist";
 import Screener from "./components/Screener";
 import Stock from "./components/Stock";
-import Deposit from "./components/Deposit";
+import Transfer from "./components/Transfer";
 
 function App() {
 	return (
@@ -23,7 +23,7 @@ function App() {
 					<Route path="/watchlist/:watchlistId?" component={Watchlist}></Route>
 					<Route path="/screener" component={Screener}></Route>
 					<Route path="/portfolio" component={Portfolio}></Route>
-					<Route path="/deposit" component={Deposit}></Route>
+					<Route path="/transfer" component={Transfer}></Route>
 				</Switch>
 			</main>
 			<Footer />
