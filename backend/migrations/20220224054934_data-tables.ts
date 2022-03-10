@@ -1,6 +1,7 @@
 import { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
+
 	if (!(await knex.schema.hasTable("dim_dates"))) {
 		await knex.schema.createTable("dim_dates", (table) => {
 			table.increments();
@@ -23,6 +24,37 @@ export async function up(knex: Knex): Promise<void> {
 	}
 
 	await knex.schema.raw(`CREATE UNIQUE INDEX year_quarters_unique_idx on dim_year_quarters(year,quarter); `);
+
+	if (!(await knex.schema.hasTable("dim_types"))) {
+		await knex.schema.createTable("dim_types", (table) => {
+			table.increments();
+			table.string("type", 30);
+			table.timestamps(false, true);
+		});
+	}
+
+	await knex.schema.raw(`CREATE UNIQUE INDEX types_unique_idx on dim_types(type); `);
+
+	if (!(await knex.schema.hasTable("dim_countries"))) {
+		await knex.schema.createTable("dim_countries", (table) => {
+			table.increments();
+			table.string("country", 20);
+			table.timestamps(false, true);
+		});
+	}
+
+	await knex.schema.raw(`CREATE UNIQUE INDEX countries_unique_idx on dim_countries(country); `);
+
+	if (!(await knex.schema.hasTable("dim_sentiments"))) {
+		await knex.schema.createTable("dim_sentiments", (table) => {
+			table.increments();
+			table.string("sentiment", 20);
+			table.timestamps(false, true);
+		});
+	}
+
+	await knex.schema.raw(`CREATE UNIQUE INDEX sentiments_unique_idx on dim_sentiments(sentiment); `);
+
 
 	if (!(await knex.schema.hasTable("industry_rs"))) {
 		await knex.schema.createTable("industry_rs", (table) => {
@@ -70,7 +102,6 @@ export async function up(knex: Knex): Promise<void> {
 			table.integer("stock_id").unsigned().notNullable().references("stocks.id");
 			table.integer("date_id").unsigned().notNullable().references("dim_dates.id");
 			table.integer("year_quarter_id").unsigned().notNullable().references("dim_year_quarters.id");
-			table.string("hour");
 			table.decimal("eps_estimated", 10, 4);
 			table.decimal("eps_reported", 10, 4);
 			table.decimal("revenue_estimated", 14, 2);
@@ -78,14 +109,46 @@ export async function up(knex: Knex): Promise<void> {
 			table.timestamps(false, true);
 		});
 	}
+
+	await knex.schema.raw(`CREATE UNIQUE INDEX stock_earnings_idx on stock_earnings(stock_id, date_id, year_quarter_id); `);
+
+	if (!(await knex.schema.hasTable("economic_indicators"))) {
+		await knex.schema.createTable("economic_indicators", (table) => {
+			table.increments();
+			table.integer("type_id").unsigned().notNullable().references("dim_types.id");
+			table.integer("country_id").unsigned().notNullable().references("dim_countries.id");
+			table.integer("date_id").unsigned().notNullable().references("dim_dates.id");
+			table.decimal("stat", 12, 2);
+			table.timestamps(false, true);
+		});
+	}
+
+	await knex.schema.raw(`CREATE UNIQUE INDEX economic_indicators_idx on economic_indicators(type_id, country_id, date_id); `);
+
+	if (!(await knex.schema.hasTable("sentiment_indicators"))) {
+		await knex.schema.createTable("sentiment_indicators", (table) => {
+			table.increments();
+			table.integer("sentiment_id").unsigned().notNullable().references("dim_sentimentid");
+			table.integer("date_id").unsigned().notNullable().references("dim_dates.id");
+			table.decimal("stat", 10, 2);
+			table.timestamps(false, true);
+		});
+	}
+
+	await knex.schema.raw(`CREATE UNIQUE INDEX sentiment_indicators_idx on sentiment_indicators(sentiment_id, date_id); `);
 }
 
 export async function down(knex: Knex): Promise<void> {
+	await knex.schema.dropTableIfExists("sentiment_indicators");
+	await knex.schema.dropTableIfExists("economic_indicators");
 	await knex.schema.dropTableIfExists("stock_earnings");
 	await knex.schema.dropTableIfExists("stock_market_caps");
 	await knex.schema.dropTableIfExists("stock_rs");
 	await knex.schema.dropTableIfExists("stock_prices");
 	await knex.schema.dropTableIfExists("industry_rs");
-	await knex.schema.dropTableIfExists("dim_dates");
+	await knex.schema.dropTableIfExists("dim_types");
+	await knex.schema.dropTableIfExists("dim_countries");
+	await knex.schema.dropTableIfExists("dim_sentiments");
 	await knex.schema.dropTableIfExists("dim_year_quarters");
+	await knex.schema.dropTableIfExists("dim_dates");
 }

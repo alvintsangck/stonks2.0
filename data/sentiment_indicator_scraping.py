@@ -13,13 +13,15 @@ client = MongoClient('localhost',27017)
 
 db = client.stonks
 
-bullish_collection = db.bullish
+bullish_collection, bearish_collection, neutral_collection = db.bullish, db.bearish, db.neutral
 
-bearish_collection = db.bearish
+bullish_collection.drop()
+bearish_collection.drop()
+neutral_collection.drop()
 
-neutral_collection = db.neutral
+sentiment_collection = db.sentiment 
 
-def run(playwright: Playwright, link: String) -> list:
+def run(playwright: Playwright, type: String) -> list:
     browser = playwright.chromium.launch(headless=True)
     context = browser.new_context()
 
@@ -27,7 +29,9 @@ def run(playwright: Playwright, link: String) -> list:
     page = context.new_page()
 
     # Go to https://ycharts.com/indicators/us_investor_sentiment_bullish
-    page.goto(link)
+    page.goto(f"https://ycharts.com/indicators/us_investor_sentiment_{type}")
+
+    print(f"directing to https://ycharts.com/indicators/us_investor_sentiment_{type}...")
 
     sign_in(page)
 
@@ -49,6 +53,7 @@ def run(playwright: Playwright, link: String) -> list:
             date_str = table.query_selector('td').inner_text()
             percent = table.query_selector('.text-right').inner_text()
 
+            data["sentiment"] = type
             data["date"] = datetime.strptime(date_str, "%B %d, %Y")
             data["percent"] = float(percent.partition("%")[0])
 
@@ -60,6 +65,8 @@ def run(playwright: Playwright, link: String) -> list:
     # ---------------------
     context.close()
     browser.close()
+
+    print("finished scraping data")
 
     return data_list
 
@@ -81,7 +88,7 @@ def sign_in(page):
     time.sleep(2)
 
 def insertMongo(ls: List, collection_name: Collection):
-    print(f"{len(ls)} data scraped")
+    print(f"{len(ls)} data scraped, inserting into {str(collection_name)}")
     duplicates = len(ls) - len(set([item["date"] for item in ls]))
     if duplicates:
         print(f"There are {duplicates} duplicate data")
@@ -91,5 +98,9 @@ def insertMongo(ls: List, collection_name: Collection):
 
 
 with sync_playwright() as playwright:
-    bullish_list = run(playwright, "https://ycharts.com/indicators/us_investor_sentiment_bullish")
-    insertMongo(bullish_list, bullish_collection)
+    bullish_list = run(playwright, "bullish")
+    bearish_list = run(playwright, "bearish")
+    neutral_list = run(playwright, "neutral")
+    insertMongo(bullish_list, sentiment_collection)
+    insertMongo(bearish_list, sentiment_collection)
+    insertMongo(neutral_list, sentiment_collection)
