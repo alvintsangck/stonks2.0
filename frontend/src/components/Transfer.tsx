@@ -1,4 +1,4 @@
-import "../css/Deposit.css";
+import "../css/Transfer.css";
 import MetaMaskOnboarding from "@metamask/onboarding";
 import { useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
@@ -9,13 +9,13 @@ import { OnboardingButton } from "./OnboardingButton";
 import SwitchChianButton from "./SwitchChainButton";
 import { getChainIdThunk, getMetaMaskThunk } from "../redux/metaMask/thunk";
 import { getMetaMaskAction, getChainIdAction } from "../redux/metaMask/action";
-import TransferForm from "./TransferForm";
+import DepositForm from "./DepositForm";
+import { Helmet } from "react-helmet";
 
-export default function Payment() {
+export default function Transfer() {
 	const dispatch = useDispatch();
 	const account = useSelector((state: RootState) => state.metaMask.account);
 	const chainId = useSelector((state: RootState) => state.metaMask.chainId);
-	const balance = useSelector((state: RootState) => state.metaMask.balance);
 	const ethereum = window.ethereum;
 
 	function handleNewAccount(newAccount: string[]) {
@@ -30,7 +30,7 @@ export default function Payment() {
 		if (MetaMaskOnboarding.isMetaMaskInstalled()) {
 			dispatch(getMetaMaskThunk());
 			dispatch(getChainIdThunk());
-			dispatch(getBalanceThunk());
+
 			ethereum.on("accountsChanged", handleNewAccount);
 			ethereum.on("chainChanged", handleChainChanged);
 			return () => {
@@ -41,34 +41,49 @@ export default function Payment() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	useEffect(()=>{
+		dispatch(getBalanceThunk(account));
+	},[account])
+
 	return (
-		<Container className="deposit-container">
-			<Row className="align-items-center">
-				<Col lg={6} className="status-bar">
-					<div>MetaMask:{account ? " Connected" : <OnboardingButton />}</div>
-				</Col>
-				<Col lg={6} className="status-bar">
-					<div>Balance: {balance} STONK</div>
-				</Col>
-			</Row>
-			<Row className="align-items-center">
-				<Col lg={6} className="status-bar">
-					<div className="d-flex align-items-center">
-						<div>Current Chain: {getChainName(chainId)}</div>
-						{chainId !== 43113 && <SwitchChianButton />}
-					</div>
-				</Col>
-				<Col lg={6} className="status-bar">
-					<div className="d-flex align-items-center">
-						<div>Import token to MetaMask</div>
-						<button className="stonk-btn" onClick={addTokenAddress}>
-							import token
-						</button>
-					</div>
-				</Col>
-			</Row>
-			<TransferForm />
-		</Container>
+		<>
+			<Helmet>
+				<title>Transfer | Stonks</title>
+			</Helmet>
+			<Container className="deposit-container">
+				<Row className="justify-content-center">
+					<Col md={6} className="status-bar">
+						MetaMask:{account ? " Connected" : <OnboardingButton />}
+					</Col>
+					<Col md={6} className="status-bar">
+						Current Chain: {getChainName(chainId)} {chainId !== 43113 && <SwitchChianButton />}
+					</Col>
+				</Row>
+			</Container>
+			<Container className="form-container">
+				<Row className="justify-content-center">
+					<Col xs={3} className="form-btn active">
+						Deposit
+					</Col>
+					<Col xs={3} className="form-btn">
+						Withdraw
+					</Col>
+				</Row>
+				<Row className="justify-content-center">
+					<Col xs={6}>
+						<DepositForm />
+						<div className="d-flex align-items-center">
+							<div>
+								<span>Didn't see the token in MetaMask?</span>
+								<button className="stonk-btn" onClick={addTokenAddress}>
+									import here
+								</button>
+							</div>
+						</div>
+					</Col>
+				</Row>
+			</Container>
+		</>
 	);
 }
 

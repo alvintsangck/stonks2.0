@@ -1,0 +1,28 @@
+.status-bar {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 30px;
+}
+
+.deposit-container .status-bar button {
+	margin-left: 5px;
+}
+
+.form-btn {
+	background-color: #3146a1;
+	color: #ffffff;
+	cursor: pointer;
+	padding: 10px 10px;
+	text-align: center;
+	border-radius: 5px 5px 0 0;
+}
+
+.form-btn.active {
+	background-color: #273472;
+	color: #ffffff;
+}
+
+.form-container button {
+	margin-left: 5px;
+}
