@@ -283,13 +283,14 @@ export function switchChainThunk() {
 	};
 }
 
-export function getBalanceThunk(account: string) {
+export function getBalanceThunk() {
 	return async (dispatch: RootDispatch) => {
 		const provider = new ethers.providers.Web3Provider(window.ethereum);
+		const signer = provider.getSigner();
 		const contractAddress = "0x6baad065aa5173e16783d35f607265b5b2750264";
 		const contract = new Contract(contractAddress, abi, provider);
 		try {
-			const balance = await contract.balanceOf(account);
+			const balance = await contract.balanceOf(await signer.getAddress());
 			const calculatedBalance = ethers.utils.formatEther(balance);
 			dispatch(getBalanceAction(Number(calculatedBalance)));
 		} catch (error) {
