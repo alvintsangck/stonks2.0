@@ -113,17 +113,21 @@ def check_duplicates_and_insert(data_list: list, individual_data_list: list):
 #     run(playwright, "china_gdp_currencys", "indicator", "China")
 
 with sync_playwright() as playwright:
-    for indicator, url, i in zip(indicator_list, url_list, range(20)):
+    i = 1
+    for indicator, url in zip(indicator_list, url_list):
         for country, link in zip(country_list, url):
             run(playwright, link, indicator, country)
-            print(f"{i + 1} of 20 completed")
+            print(f"{i} of 20 completed")
+            i += 1
     print("data_list length:", len(data_list))
+    db.economicData.insert_many(data_list)
 
-keys = data_list[0].keys()
 
-with open('economic_indicators.csv', 'w', newline='') as output_file:
-    dict_writer = csv.DictWriter(output_file, keys)
-    dict_writer.writeheader()
-    dict_writer.writerows(data_list)
+# keys = data_list[0].keys()
+
+# with open('economic_indicators.csv', 'w', newline='') as output_file:
+#     dict_writer = csv.DictWriter(output_file, keys)
+#     dict_writer.writeheader()
+#     dict_writer.writerows(data_list)
 
 print(f"total time used = {time.perf_counter() // 60} minutes, {time.perf_counter() % 60} seconds")
