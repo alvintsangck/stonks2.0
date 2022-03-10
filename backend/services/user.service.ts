@@ -9,7 +9,7 @@ export class UserService {
 	async getUserByUsername(username: string) {
 		return (
 			await this.knex("users")
-				.select("id", "username", "email", "password", "avatar", "role", "deposit", "cash")
+				.select("id", "username", "email", "password", "avatar", "role")
 				.where("username", username)
 		)[0];
 	}
@@ -17,7 +17,7 @@ export class UserService {
 	async getUserByEmail(email: string) {
 		return (
 			await this.knex("users")
-				.select("id", "username", "email", "password", "avatar", "role", "deposit", "cash")
+				.select("id", "username", "email", "password", "avatar", "role")
 				.where("email", email)
 		)[0];
 	}
@@ -26,7 +26,7 @@ export class UserService {
 		return (
 			await this.knex("users")
 				.insert({ username, password, email })
-				.returning(["id", "username", "email", "avatar", "role", "deposit", "cash"])
+				.returning(["id", "username", "email", "avatar", "role"])
 		)[0];
 	}
 

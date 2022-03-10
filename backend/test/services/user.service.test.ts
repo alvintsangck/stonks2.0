@@ -11,9 +11,7 @@ describe("UserService", () => {
 		userService = new UserService(knex);
 		await knex("users").del();
 
-		await knex("users").insert([
-			{ username: "a", password: "1", email: "1@1.com", avatar: "p", role: "user", deposit: 10000, cash: 10000 },
-		]);
+		await knex("users").insert([{ username: "a", password: "1", email: "1@1.com", avatar: "p", role: "user" }]);
 	});
 
 	afterAll(async () => {
@@ -30,8 +28,6 @@ describe("UserService", () => {
 			email: "1@1.com",
 			avatar: "p",
 			role: "user",
-			deposit: "10000.00",
-			cash: "10000.00",
 		});
 	});
 
@@ -44,8 +40,6 @@ describe("UserService", () => {
 			email: "1@1.com",
 			avatar: "p",
 			role: "user",
-			deposit: "10000.00",
-			cash: "10000.00",
 		});
 	});
 
@@ -57,8 +51,6 @@ describe("UserService", () => {
 			email: "2@2.com",
 			avatar: "STONK.png",
 			role: "user",
-			deposit: "10000.00",
-			cash: "10000.00",
 		});
 	});
 });
