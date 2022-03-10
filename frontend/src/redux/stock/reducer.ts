@@ -16,8 +16,6 @@ export function stockReducer(state: StockState = initialState, action: StockActi
 		case "@@Stock/post_comment":
 			return { ...state, comments: state.comments.concat(action.comment) };
 		case "@@Stock/get_news":
-			console.log("re ", action.news);
-
 			return { ...state, news: action.news };
 		default:
 			return state;
