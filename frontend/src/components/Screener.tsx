@@ -1,4 +1,3 @@
-import "../css/Screener.css";
 import { Container } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import StockTable from "./StockTable";
