@@ -22,7 +22,7 @@
 		"express": "^4.17.3",
 		"express-session": "^1.17.2",
 		"grant": "^5.4.20",
-		"knex": "^1.0.3",
+		"knex": "0.95.15",
 		"multer": "^1.4.4",
 		"node-fetch": "2",
 		"pg": "^8.7.3",
