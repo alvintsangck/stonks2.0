@@ -5,7 +5,7 @@ import { getMetaMaskThunk } from "../redux/metaMask/thunk";
 
 import { RootState } from "../redux/store/state";
 
-const ONBOARD_TEXT = "Click here to install MetaMask!";
+const ONBOARD_TEXT = "Click here to install MetaMask";
 const CONNECT_TEXT = "Connect";
 
 export function OnboardingButton() {
