@@ -10,8 +10,6 @@ import { getNewsThunk } from "../redux/news/thunk";
 import { RootState } from "../redux/store/state";
 import LoadingSpinner from "./LoadingSpinner";
 
-
-
 export default function Home() {
 	const theme = useSelector((state: RootState) => state.theme.theme);
 	const news = useSelector((state: RootState) => state.news.news);
