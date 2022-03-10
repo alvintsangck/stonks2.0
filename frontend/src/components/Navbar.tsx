@@ -12,7 +12,7 @@ export default function NavBar() {
 	const theme = useSelector((state: RootState) => state.theme.theme);
 
 	return (
-		<nav className='nav-bar'>
+		<nav className="nav-bar">
 			<TickerTape colorTheme={theme as ColorTheme} copyrightStyles={{ parent: { display: "none" } }} />
 			<Container fluid>
 				<Row>
@@ -56,19 +56,19 @@ export default function NavBar() {
 				<Navbar.Collapse id="responsive-navbar-nav">
 					<Nav className="m-auto">
 						<NavLink to="/">
-							<span>Home</span>
+							<span className="nav-item">Home</span>
 						</NavLink>
 						<NavLink to="/watchlist">
-							<span>Watchlist</span>
+							<span className="nav-item">Watchlist</span>
 						</NavLink>
 						<NavLink to="/screener">
-							<span>Screener</span>
+							<span className="nav-item">Screener</span>
 						</NavLink>
 						<NavLink to="/portfolio">
-							<span>Portfolio</span>
+							<span className="nav-item">Portfolio</span>
 						</NavLink>
-						<NavLink to="/deposit">
-							<span>Payment</span>
+						<NavLink to="/transfer">
+							<span className="nav-item">Transfer</span>
 						</NavLink>
 					</Nav>
 				</Navbar.Collapse>

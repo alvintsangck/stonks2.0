@@ -1,0 +1,14 @@
+
+
+.transfer-input {
+	display: flex;
+	align-items: center;
+}
+
+.transfer-input input {
+	width: 50%;
+}
+
+.transfer-input span {
+    margin-left: 5px;
+}

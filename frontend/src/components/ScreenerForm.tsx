@@ -50,6 +50,7 @@ export default function ScreenerForm() {
 		minIndustryRank: 1,
 		maxIndustryRank: 197,
 	};
+	const { register, handleSubmit, reset, setValue, watch } = useForm<FormState>({ defaultValues });
 	const inputsArr: Input[][] = [
 		[
 			{ title: "Price ($)", name: "price", min: 0, max: 1000000 },
@@ -62,7 +63,6 @@ export default function ScreenerForm() {
 			{ title: "Industry Ranking (1-197)", name: "industryRank", min: 1, max: 197 },
 		],
 	];
-	const { register, handleSubmit, reset, setValue, watch } = useForm<FormState>({ defaultValues });
 
 	function onSubmit(data: FormState) {
 		dispatch(loadScreenResultThunk(data, addedIndustries, addedSectors));

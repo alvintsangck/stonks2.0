@@ -2,7 +2,7 @@ h4 {
 	margin-bottom: 0;
 }
 
-input[type="number"] {
+#screener-form input[type="number"] {
 	width: 110px;
 }
 
