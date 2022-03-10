@@ -3,7 +3,6 @@ import { history } from "./history";
 import { compose, applyMiddleware } from "redux";
 import logger from "redux-logger";
 import thunk from "redux-thunk";
-import { env } from "../../env";
 
 declare global {
 	/* tslint:disable:interface-name */
