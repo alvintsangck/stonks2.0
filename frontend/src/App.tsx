@@ -8,7 +8,7 @@ import NavBar from "./components/TopNavbar";
 import Portfolio from "./components/Portfolio";
 import Home from "./components/Home";
 import Watchlist from "./components/Watchlist";
-import Screener from "./components/Screeners";
+import Screener from "./components/Screener";
 import Stock from "./components/Stock";
 import Transfer from "./components/Transfer";
 
