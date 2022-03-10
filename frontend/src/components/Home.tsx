@@ -29,7 +29,7 @@ export default function Home() {
 			<Helmet>
 				<title>Home | Stonks</title>
 			</Helmet>
-			<Container fluid>
+			<Container>
 				<Row className="market-row">
 					<Col md={8}>
 						<Carousel>{isLoading ? <LoadingSpinner /> : bigNews.map(makeBigNewsElem)}</Carousel>
