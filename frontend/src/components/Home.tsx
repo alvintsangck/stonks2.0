@@ -4,12 +4,13 @@ import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
 import { ColorTheme, MarketOverview } from "react-ts-tradingview-widgets";
 import "../css/Home.css";
+import { env } from "../env";
 import { News } from "../redux/news/state";
 import { getNewsThunk } from "../redux/news/thunk";
 import { RootState } from "../redux/store/state";
 import LoadingSpinner from "./LoadingSpinner";
 
-const env = process.env.NODE_ENV === "development" ? process.env.REACT_APP_API_ORIGIN : process.env.REACT_API_SERVER;
+
 
 export default function Home() {
 	const theme = useSelector((state: RootState) => state.theme.theme);
