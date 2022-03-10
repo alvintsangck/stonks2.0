@@ -23,8 +23,7 @@ export default function Screener() {
 	];
 	const stocks = useSelector((state: RootState) => state.screener.stocks);
 	const isLoading = useSelector((state: RootState) => state.screener.isLoading);
-	console.log(stocks);
-	
+
 	return (
 		<>
 			<Helmet>
