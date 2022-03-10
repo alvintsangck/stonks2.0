@@ -8,7 +8,7 @@ import CommentForm from "./CommentForm";
 import StockButtons from "./StockButtons";
 import { Helmet } from "react-helmet";
 import { useEffect } from "react";
-import { getCommentsThunk, getStockNewsThunk, getStockThunk } from "../redux/stock/thunk";
+import { getCommentsThunk, getStockNewsThunk, getStockThunk } from "../redux/stocks/thunk";
 import { localTime } from "../helper";
 
 const env = process.env.REACT_APP_API_ORIGIN;

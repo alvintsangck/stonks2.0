@@ -1,4 +1,4 @@
-import { Stock } from "../stock/state";
+import { Stock } from "../stocks/state";
 
 export type Item = {
 	id?: number;

@@ -5,7 +5,7 @@ import { FormEvent, useState } from "react";
 import { Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { postCommentThunk } from "../redux/stock/thunk";
+import { postCommentThunk } from "../redux/stocks/thunk";
 import { RootState } from "../redux/store/state";
 
 export default function CommentForm() {
