@@ -23,6 +23,23 @@
 	color: #ffffff;
 }
 
-.form-container button {
+.transfer-form-container .col-6 {
+	border-radius: 0 0 5px 5px;
+	border: 1px solid #d3d3d3;
+	border-top: none;
+}
+
+.transfer-form-container .row:first-child .col-6 {
+	border-bottom: none;
+	border-radius: 0;
+}
+
+.import-bar > div {
+	padding: 20px 0;
+	text-align: center;
+}
+
+.import-bar button {
 	margin-left: 5px;
+	margin-top: 5px;
 }

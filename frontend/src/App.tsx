@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { ConnectedRouter } from "connected-react-router";
 import { history } from "./redux/store/history";
-import { Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import Footer from "./components/Footer";
 import NavBar from "./components/TopNavbar";
 import Portfolio from "./components/Portfolio";
@@ -18,12 +18,13 @@ function App() {
 			<NavBar />
 			<main>
 				<Switch>
-					<Route path="/" exact component={Home}></Route>
-					<Route path="/stocks/:ticker" component={Stock}></Route>
-					<Route path="/watchlist/:watchlistId?" component={Watchlist}></Route>
-					<Route path="/screener" component={Screener}></Route>
-					<Route path="/portfolio" component={Portfolio}></Route>
-					<Route path="/transfer" component={Transfer}></Route>
+					<Route path="/" exact component={Home} />
+					<Route path="/stocks/:ticker" component={Stock} />
+					<Route path="/watchlist/:watchlistId?" component={Watchlist} />
+					<Route path="/screener" component={Screener} />
+					<Route path="/portfolio" component={Portfolio} />
+					<Route path="/transfer/:method" component={Transfer} />
+					<Redirect from="/transfer" to="/transfer/deposit" />
 				</Switch>
 			</main>
 			<Footer />
