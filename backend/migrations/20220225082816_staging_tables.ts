@@ -33,7 +33,7 @@ export async function up(knex: Knex): Promise<void> {
 	if (!(await knex.schema.hasTable("staging_economic_indicators"))) {
 		await knex.schema.createTable("staging_economic_indicators", (table) => {
 			table.increments();
-			table.string("type", 30);
+			table.string("indicator", 30);
 			table.string("country", 20);
 			table.decimal("stat", 12, 2);
 			table.integer("year");
@@ -48,6 +48,18 @@ export async function up(knex: Knex): Promise<void> {
 			table.increments();
 			table.string("sentiment", 20);
 			table.decimal("stat", 10, 2);
+			table.integer("year");
+			table.integer("month");
+			table.integer("day");
+			table.timestamps(false, true);
+		});
+	}
+
+	if (!(await knex.schema.hasTable("staging_treasury_rates"))) {
+		await knex.schema.createTable("staging_treasury_rates", (table) => {
+			table.increments();
+			table.string("name", 20);
+			table.decimal("rate", 10, 2);
 			table.integer("year");
 			table.integer("month");
 			table.integer("day");
@@ -77,6 +89,7 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
 	// await knex.schema.raw(`DROP TRIGGER IF EXISTS stock_prices_trigger ON staging_stock_prices;`);
+	await knex.schema.dropTableIfExists("staging_treasury_rates");
 	await knex.schema.dropTableIfExists("staging_sentiment_indicators");
 	await knex.schema.dropTableIfExists("staging_economic_indicators");
 	await knex.schema.dropTableIfExists("staging_stock_earnings");

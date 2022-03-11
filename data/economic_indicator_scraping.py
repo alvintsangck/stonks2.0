@@ -8,6 +8,8 @@ client = MongoClient('localhost',27017)
 
 db = client.stonks
 
+db.economicData.drop()
+
 data_list = []
 
 country_list = ["US", "China", "Japan", "Germany", "UK"]
@@ -58,7 +60,7 @@ def run(playwright: Playwright, link: str, indicator: str, country: str):
             date_str = table.query_selector('td').inner_text()
             stat = table.query_selector('.text-right').inner_text()
 
-            data["type"] = indicator
+            data["indicator"] = indicator
             data["country"] = country
             data["date"] = datetime.strptime(date_str, "%B %d, %Y")
 

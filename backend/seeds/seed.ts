@@ -27,6 +27,10 @@ export async function seed(knex: Knex): Promise<void> {
 	let watchlistData = xlsx.utils.sheet_to_json(workbook.Sheets["watchlists"]);
 	let watchlistStockData = xlsx.utils.sheet_to_json(workbook.Sheets["watchlistStock"]);
 	let marketCaps = xlsx.utils.sheet_to_json(workbook.Sheets["stock_market_caps"]);
+	let sentimentData = xlsx.utils.sheet_to_json(workbook.Sheets["sentiments"]);
+	let countryData = xlsx.utils.sheet_to_json(workbook.Sheets["countries"]);
+	let indicatorData = xlsx.utils.sheet_to_json(workbook.Sheets["indicators"]);
+	let maturityPeriodData = xlsx.utils.sheet_to_json(workbook.Sheets["maturity_periods"]);
 
 	for (let user of userData) {
 		user.password = await hashPassword(user.password!.toString());
@@ -37,6 +41,18 @@ export async function seed(knex: Knex): Promise<void> {
 		// Deletes ALL existing entries
 		await txn("staging_stock_prices").del();
 		await txn.raw(`ALTER SEQUENCE staging_stock_prices_id_seq RESTART`);
+
+		await txn("treasury_rates").del();
+		await txn.raw(`ALTER SEQUENCE treasury_rates_id_seq RESTART`);
+		
+		await txn("economic_indicators").del();
+		await txn.raw(`ALTER SEQUENCE economic_indicators_id_seq RESTART`);
+
+		await txn("sentiment_indicators").del();
+		await txn.raw(`ALTER SEQUENCE sentiment_indicators_id_seq RESTART`);
+
+		await txn("stock_earnings").del();
+		await txn.raw(`ALTER SEQUENCE stock_earnings_id_seq RESTART`);
 
 		await txn("stock_market_caps").del();
 		await txn.raw(`ALTER SEQUENCE stock_market_caps_id_seq RESTART`);
@@ -58,6 +74,21 @@ export async function seed(knex: Knex): Promise<void> {
 		
 		await txn("dim_dates").del();
 		await txn.raw(`ALTER SEQUENCE dim_dates_id_seq RESTART`);
+
+		await txn("dim_sentiments").del();
+		await txn.raw(`ALTER SEQUENCE dim_sentiments_id_seq RESTART`);
+
+		await txn("dim_countries").del();
+		await txn.raw(`ALTER SEQUENCE dim_countries_id_seq RESTART`);
+
+		await txn("dim_indicators").del();
+		await txn.raw(`ALTER SEQUENCE dim_indicators_id_seq RESTART`);
+
+		await txn("dim_maturity_periods").del();
+		await txn.raw(`ALTER SEQUENCE dim_maturity_periods_id_seq RESTART`);
+
+		await txn("dim_year_quarters").del();
+		await txn.raw(`ALTER SEQUENCE dim_year_quarters_id_seq RESTART`);
 
 		await txn("portfolios").del();
 		await txn.raw(`ALTER SEQUENCE portfolios_id_seq RESTART`);
@@ -115,9 +146,8 @@ export async function seed(knex: Knex): Promise<void> {
 		
 		await txn("stock_market_caps").insert(marketCapsData);
 
-		let dateArr = getDates(new Date(2021,0,2), new Date(2025,0,2))
-		await txn("dim_dates").insert(dateArr)
-		console.log(dateArr[0]);
+		let dateArr = getDates(new Date(1900,0,2), new Date(2030,0,2))
+		await txn.batchInsert("dim_dates", dateArr, 10000);
 		
 		let newDateArr: any = []
 
@@ -125,7 +155,8 @@ export async function seed(knex: Knex): Promise<void> {
 			let date = new Date(dateArr[i]["year"], dateArr[i]["month"] - 1, dateArr[i]["day"])
 			newDateArr.push(date)
 		}
-		console.log(newDateArr[0], newDateArr[60]);
+
+		let shortDateArr = newDateArr.slice(44250, 44700)
 		
 		for (let i = 0; i < 22; i++) {
 			logger.debug(`reading chunk ${i}`);
@@ -141,7 +172,7 @@ export async function seed(knex: Knex): Promise<void> {
 				// console.log(psqlDate);
 				obj["stock_id"] = Number(stockMap[ticker]);
 				obj["price"] = price;
-				obj["date_id"] = newDateArr.map(Number).indexOf(+psqlDate) + 1
+				obj["date_id"] = shortDateArr.map(Number).indexOf(+psqlDate) + 44251
 				obj["created_at"] = psqlDate
 				return obj;
 			});
@@ -157,6 +188,10 @@ export async function seed(knex: Knex): Promise<void> {
 		await txn("user_history").insert([{ user_id: 1 }]);
 		await txn("user_history").insert([{ user_id: 2 }]);
 		await txn("user_history").insert([{ user_id: 3 }]);
+		await txn("dim_sentiments").insert(sentimentData);
+		await txn("dim_indicators").insert(indicatorData);
+		await txn("dim_countries").insert(countryData);
+		await txn("dim_maturity_periods").insert(maturityPeriodData);
 
 		await txn.commit();
 
