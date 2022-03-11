@@ -6,4 +6,4 @@ pymongo
 pyspark
 openpyxl
 finnhub-python
-psycopg2
+psycopg2-binary

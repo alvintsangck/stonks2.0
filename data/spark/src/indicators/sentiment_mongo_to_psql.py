@@ -36,7 +36,7 @@ packages = [
     "org.postgresql:postgresql:42.2.18"
 ]
 
-spark = SparkSession.builder.appName("Transform Recent change stream")\
+spark = SparkSession.builder.appName("sentiment_data_to_psql")\
         .master(f'spark://{SPARK_ADDRESS}:7077')\
         .config("spark.jars.packages",",".join(packages))\
         .config("spark.hadoop.fs.s3a.access.key",AWS_ACCESS_KEY)\
@@ -61,7 +61,6 @@ df = df.withColumn('year', F.year(df['date']))
 df = df.withColumn('month', F.month(df['date']))
 df = df.withColumn('day', F.dayofmonth(df['date']))
 df = df.withColumnRenamed('date', 'created_at')
-df = df.withColumnRenamed('percent', 'stat')
 df = df.drop('_id')
 df.show(5)
 

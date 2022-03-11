@@ -4,8 +4,6 @@ import time
 from datetime import datetime
 # import csv
 
-
-
 client = MongoClient('localhost',27017)
 
 db = client.stonks
@@ -46,7 +44,7 @@ def run(playwright: Playwright, type: str) -> list:
 
             data["sentiment"] = type
             data["date"] = datetime.strptime(date_str, "%B %d, %Y")
-            data["percent"] = float(percent.partition("%")[0])
+            data["stat"] = float(percent.partition("%")[0])
 
             data_list.append(data)
 

@@ -7,4 +7,4 @@ pyspark
 openpyxl
 finnhub-python
 datapackage
-psycopg2
+psycopg2-binary
