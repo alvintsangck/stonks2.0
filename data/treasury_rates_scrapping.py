@@ -100,7 +100,7 @@ with sync_playwright() as playwright:
     for indicator, url in zip(indicator_list, url_list):
             run(playwright, url, indicator)
             print(f"{i} of 10 completed")
-
+            i += 1
     print("data_list length:", len(data_list))
     db.treasuryRates.insert_many(data_list)
 

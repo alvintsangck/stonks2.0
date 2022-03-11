@@ -18,9 +18,6 @@ def execute_cursor():
 
     # cur.execute("select * from stocks limit 1")
 
-    # result = cur.fetchall()
-    # print(result)
-
 	# execute a statement
     cur.execute("""INSERT INTO sentiment_indicators (sentiment_id, date_id, stat, created_at) 
                 (select ds.id as sentiment_id, dd.id as date_id, ssi.stat, ssi.created_at 

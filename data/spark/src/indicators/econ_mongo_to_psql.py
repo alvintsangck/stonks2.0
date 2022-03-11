@@ -79,7 +79,7 @@ df.write.format('jdbc')\
 print(f"finsihed inserting time elapsed: {time.perf_counter() - start_time}")
 
 print("writing avro to S3")
-df.write.format('avro').save(os.path.join(f's3a://{AWS_BUCKET_NAME}/sentiment_data.avro'),mode="overwrite")
+df.write.format('avro').save(os.path.join(f's3a://{AWS_BUCKET_NAME}/economic_data.avro'),mode="overwrite")
 print(f"finsihed writing to S3. Time elapsed: {time.perf_counter() - start_time}")
 
 end_time = time.perf_counter()
