@@ -30,10 +30,10 @@ export default function Home() {
 			</Helmet>
 			<Container>
 				<Row className="market-row">
-					<Col md={8}>
+					<Col lg={8}>
 						<Carousel>{isLoading ? <LoadingSpinner /> : bigNews.map(makeBigNewsElem)}</Carousel>
 					</Col>
-					<Col md={4}>
+					<Col lg={4}>
 						<MarketOverview
 							colorTheme={theme as ColorTheme}
 							height="650px"
