@@ -1,6 +1,7 @@
 footer {
-    margin-top: 20px;
+	margin-top: 20px;
+	padding: 10px 0;
 	text-align: center;
-    background-color: #273472;
-    color: #ffffff;
+	background-color: #273472;
+	color: #ffffff;
 }

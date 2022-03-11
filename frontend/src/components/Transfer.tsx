@@ -41,9 +41,9 @@ export default function Transfer() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	useEffect(()=>{
-		dispatch(getBalanceThunk(account));
-	},[account])
+	useEffect(() => {
+		dispatch(getBalanceThunk());
+	}, [dispatch, account]);
 
 	return (
 		<>

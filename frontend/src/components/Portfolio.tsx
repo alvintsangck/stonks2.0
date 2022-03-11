@@ -1,9 +1,7 @@
+import "../css/Portfolio.css";
 import { Helmet } from "react-helmet";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/store/state";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import "../css/Portfolio.css";
 import { Table } from "react-bootstrap";
 
 ChartJS.register(ArcElement, Tooltip, Legend);

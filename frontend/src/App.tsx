@@ -4,7 +4,7 @@ import { ConnectedRouter } from "connected-react-router";
 import { history } from "./redux/store/history";
 import { Route, Switch } from "react-router-dom";
 import Footer from "./components/Footer";
-import NavBar from "./components/NavBar";
+import NavBar from "./components/TopNavbar";
 import Portfolio from "./components/Portfolio";
 import Home from "./components/Home";
 import Watchlist from "./components/Watchlist";

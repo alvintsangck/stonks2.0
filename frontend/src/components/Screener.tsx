@@ -1,4 +1,3 @@
-import "../css/Screener.css";
 import { Container } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import StockTable from "./StockTable";
@@ -24,8 +23,7 @@ export default function Screener() {
 	];
 	const stocks = useSelector((state: RootState) => state.screener.stocks);
 	const isLoading = useSelector((state: RootState) => state.screener.isLoading);
-	console.log(stocks);
-	
+
 	return (
 		<>
 			<Helmet>

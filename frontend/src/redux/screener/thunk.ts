@@ -37,7 +37,6 @@ export function loadScreenResultThunk(data: FormState, addedIndustries: Item[], 
 			includedSector: addedSectors.filter((item) => item.isInclude).map((item) => item.id),
 			excludedSector: addedSectors.filter((item) => !item.isInclude).map((item) => item.id),
 		};
-		console.log(obj);
 
 		const result = await callApi("/screen", "POST", obj);
 		if ("error" in result) {

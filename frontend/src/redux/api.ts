@@ -1,4 +1,4 @@
-const env = process.env.NODE_ENV === "development" ? process.env.REACT_APP_API_ORIGIN : process.env.REACT_API_SERVER;
+import { env } from "../env";
 
 export async function callApi(url: string, method: string = "GET", body?: any) {
 	try {
