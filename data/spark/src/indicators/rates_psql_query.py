@@ -19,18 +19,18 @@ def execute_cursor():
     # cur.execute("select * from stocks limit 1")
 
 	# execute a statement
-    cur.execute("""INSERT INTO sentiment_indicators (sentiment_id, date_id, stat, created_at) 
-                (select ds.id as sentiment_id, dd.id as date_id, ssi.stat, ssi.created_at 
-                from staging_sentiment_indicators ssi 
-                join dim_dates dd on dd."year" = ssi."year" and dd."month" = ssi."month" and dd."day" = ssi."day"
-                join dim_sentiments ds on ds.sentiment = ssi.sentiment
-                where ssi.updated_at in (select updated_at from staging_sentiment_indicators order by updated_at desc limit 1));""")
+    cur.execute("""INSERT INTO treasury_rates (maturity_period_id, date_id, rate, created_at) 
+                (select dmp.id as maturity_period_id, dd.id as date_id, str.rate , str.created_at 
+                from staging_treasury_rates str
+                join dim_dates dd on dd."year" = str."year" and dd."month" = str."month" and dd."day" = str."day"
+                join dim_maturity_periods dmp on dmp."name" = str."name"
+                where str.updated_at in (select updated_at from staging_treasury_rates order by updated_at desc limit 1));""")
        
     conn.commit()
 	# close the communication with the PostgreSQL
     cur.close()
 
-    print('Inserted into sentiment_indicators')
+    print('Inserted into treasury_rates')
 
 def close_connection():
     if conn is not None:

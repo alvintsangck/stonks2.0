@@ -8,25 +8,15 @@ client = MongoClient('localhost',27017)
 
 db = client.stonks
 
-db.economicData.drop()
+db.treasuryRates.drop()
 
 data_list = []
 
-country_list = ["US", "China", "Japan", "Germany", "UK"]
+indicator_list = ["1 Month", "3 Month", "6 Month", "1 Year", "2 Year", "3 Year", "5 Year", "7 Year", "10 Year", "20 Year", "30 Year"]
 
-indicator_list = ["Inflation Rate (%)", "Unemployment Rate (%)", "Population (Million)", "GDP (Billion USD)"]
+url_list = ["1_month", "3_month", "6_month", "1_year", "2_year", "3_year", "5_year", "7_year", "10_year", "20_year", "30_year"]
 
-inflation_url_list = ["us_inflation_rate", "china_inflation_rate", "japan_inflation_rate", "germany_inflation_rate", "uk_inflation_rate"]
-
-unemployment_url_list = ["us_unemployment_rate", "china_urban_survey_unemployment_rate", "japan_unemployment_rate", "germany_unemployment_rate", "uk_unemployment_rate"]
-
-population_url_list = ["us_total_population", "china_population", "japan_population", "germany_population", "united_kingdom_population"]
-
-gdp_url_list = ["us_real_gdp", "china_gdp_currencys", "japan_real_gdp_saar_chn_2012_currencys", "germany_gdp_currencys", "uk_gdp_sa_currencys"]
-
-url_list = [inflation_url_list, unemployment_url_list, population_url_list, gdp_url_list]
-
-def run(playwright: Playwright, link: str, indicator: str, country: str):
+def run(playwright: Playwright, link: str, indicator: str):
     browser = playwright.chromium.launch(headless=True)
     context = browser.new_context()
 
@@ -34,9 +24,9 @@ def run(playwright: Playwright, link: str, indicator: str, country: str):
     page = context.new_page()
 
     # Go to https://ycharts.com/indicators/us_investor_sentiment_bullish
-    page.goto(f"https://ycharts.com/indicators/{link}")
+    page.goto(f"https://ycharts.com/indicators/{link}_treasury_rate")
 
-    print(f"directing to https://ycharts.com/indicators/{link}...")
+    print(f"directing to https://ycharts.com/indicators/{link}_treasury_rate...")
 
     sign_in(page)
 
@@ -48,9 +38,11 @@ def run(playwright: Playwright, link: str, indicator: str, country: str):
 
     individual_data_list = []
 
+    empty_data = []
+
     for i in range(no_of_pages):
         
-        time.sleep(1.5)
+        time.sleep(1.8)
         
         tables = page.query_selector_all('yc-historical-data-table .table tbody tr')
 
@@ -60,20 +52,14 @@ def run(playwright: Playwright, link: str, indicator: str, country: str):
             date_str = table.query_selector('td').inner_text()
             stat = table.query_selector('.text-right').inner_text()
 
-            data["indicator"] = indicator
-            data["country"] = country
-            data["date"] = datetime.strptime(date_str, "%B %d, %Y")
+            if stat:
+                data["name"] = indicator
+                data["rate"] = float(stat.partition("%")[0])
+                data["date"] = datetime.strptime(date_str, "%B %d, %Y")
+                individual_data_list.append(data)
 
-            if "%" in stat:
-                data["stat"] = float(stat.partition("%")[0])
-            elif "M" in stat:
-                data["stat"] = float(stat.partition("M")[0])
-            elif "B" in stat:
-                data["stat"] = float(stat.partition("B")[0]) * 1000
-            elif "T" in stat:
-                data["stat"] = float(stat.partition("T")[0]) * 1000 * 1000
-
-            individual_data_list.append(data)
+            else:
+                empty_data.append(date_str)
 
         if i < no_of_pages - 1:
             page.locator("yc-historical-data-table >> text=Next").click()
@@ -81,6 +67,8 @@ def run(playwright: Playwright, link: str, indicator: str, country: str):
     # ---------------------
     context.close()
     browser.close()
+
+    print(f"for {indicator}, there's {len(empty_data)} empty data")
 
     check_duplicates_and_insert(data_list, individual_data_list)
 
@@ -106,30 +94,28 @@ def check_duplicates_and_insert(data_list: list, individual_data_list: list):
     print(f"{len(individual_data_list)} data scraped, checking duplicates")
     duplicates = len(individual_data_list) - len(set([item["date"] for item in individual_data_list]))
     if duplicates:
-        print(f"There are {duplicates} duplicate data")
+        print("!!!")
+        print(f"!!! There are {duplicates} duplicate data !!!")
+        print("!!!")
     else:
         data_list += individual_data_list
 
 
-# with sync_playwright() as playwright:
-#     run(playwright, "china_gdp_currencys", "indicator", "China")
-
 with sync_playwright() as playwright:
     i = 1
     for indicator, url in zip(indicator_list, url_list):
-        for country, link in zip(country_list, url):
-            run(playwright, link, indicator, country)
-            print(f"{i} of 20 completed")
+            run(playwright, url, indicator)
+            print(f"{i} of 11 completed")
             i += 1
     print("data_list length:", len(data_list))
-    db.economicData.insert_many(data_list)
+    db.treasuryRates.insert_many(data_list)
 
 
-# keys = data_list[0].keys()
+keys = data_list[0].keys()
 
-# with open('economic_indicators.csv', 'w', newline='') as output_file:
-#     dict_writer = csv.DictWriter(output_file, keys)
-#     dict_writer.writeheader()
-#     dict_writer.writerows(data_list)
+with open('treasury_rates_checking2.csv', 'w', newline='') as output_file:
+    dict_writer = csv.DictWriter(output_file, keys)
+    dict_writer.writeheader()
+    dict_writer.writerows(data_list)
 
 print(f"total time used = {time.perf_counter() // 60} minutes, {time.perf_counter() % 60} seconds")
