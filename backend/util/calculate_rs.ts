@@ -9,7 +9,7 @@ async function init() {
 	await calculateRs();
 	await knex.raw(`REFRESH MATERIALIZED VIEW industry_rs_view`);
 	await industryRs();
-	await knex.raw(`REFRESH MATERIALIZED VIEW screeners`);
+	// await knex.raw(`REFRESH MATERIALIZED VIEW screeners`);
 	knex.destroy();
 }
 
@@ -22,43 +22,36 @@ async function calculateRs() {
 
 	const russelPerf = performance(russel);
 
-	console.log(russelPerf);
+	// console.log(russelPerf);
 
 	let stockRsArr = [];
 
 	for (let stock of stockArr) {
 		let obj: StockRS = {
+			date_id: 0,
 			stock_id: 0,
 			off_year_high: 0,
 			relative_strength: 0,
 		};
 
 		let stockPerf = performance(stock);
+		obj.date_id = stock.date_id;
 		obj.stock_id = stock.stock_id;
 		obj.relative_strength = Number(percentChg(stockPerf, russelPerf).toFixed(2));
 		obj.off_year_high = -Number(percentChg(stock.price1, stock.year_high).toFixed(2));
 		stockRsArr.push(obj);
 	}
 
-	console.log(stockRsArr);
+	// console.log(stockRsArr);
 
-	await knex.raw(
-		/*sql*/
-		`create temporary table if not exists temp_stock_rs (
-		id serial primary key,
-		stock_id integer not null,
-		off_year_high decimal(10,2),
-		relative_strength decimal(10,2)
-	);
-	delete from temp_stock_rs;`
-	);
+	await knex("temp_stock_rs").del()
 
 	await knex.insert(stockRsArr).into("temp_stock_rs");
 
 	let resultArr = (
 		await knex.raw(
 			/*sql*/
-			`select stock_id, 
+			`select stock_id, date_id,
 			round(percent_rank() OVER (
 			ORDER BY relative_strength) * 100) as rs_rating
 			from temp_stock_rs
@@ -66,16 +59,18 @@ async function calculateRs() {
 		)
 	).rows;
 
+	console.log(resultArr[0]);
+
 	await knex.insert(resultArr).into("stock_rs");
 }
 
 async function industryRs() {
 	console.log("start calculating industry rs");
 
-	let industryRsArr = (
+	let industryRsArr: inductryRS[] = (
 		await knex.raw(
 			/*sql*/
-			`select id as "industry_id",
+		`select date_id, id as "industry_id",
 		round(industry_rs) as "rs_rating",
 		rank () over (
 		order by industry_rs desc) as "ranking"
@@ -105,6 +100,7 @@ function performance(stock: StockPrice) {
 }
 
 type StockPrice = {
+	date_id: number;
 	stock_id: number;
 	ticker: string;
 	year_high: number;
@@ -117,8 +113,16 @@ type StockPrice = {
 };
 
 type StockRS = {
+	date_id: number;
 	stock_id: number;
 	off_year_high: number;
 	relative_strength?: number;
 	rs_rating?: number;
 };
+
+type inductryRS = {
+	date_id: number;
+	industry_id: number;
+	rs_rating: number;
+	ranking: number;
+}

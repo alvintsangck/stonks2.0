@@ -173,8 +173,8 @@ export async function down(knex: Knex): Promise<void> {
 	await knex.schema.dropTableIfExists("stock_earnings");
 	await knex.schema.dropTableIfExists("stock_market_caps");
 	await knex.schema.dropTableIfExists("stock_rs");
-	await knex.schema.dropTableIfExists("stock_prices");
 	await knex.schema.dropTableIfExists("industry_rs");
+	await knex.schema.dropTableIfExists("stock_prices");
 	await knex.schema.dropTableIfExists("dim_maturity_periods");
 	await knex.schema.dropTableIfExists("dim_indicators");
 	await knex.schema.dropTableIfExists("dim_countries");

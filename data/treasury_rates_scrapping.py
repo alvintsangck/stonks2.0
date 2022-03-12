@@ -42,7 +42,7 @@ def run(playwright: Playwright, link: str, indicator: str):
 
     for i in range(no_of_pages):
         
-        time.sleep(1.5)
+        time.sleep(1.8)
         
         tables = page.query_selector_all('yc-historical-data-table .table tbody tr')
 
@@ -68,7 +68,7 @@ def run(playwright: Playwright, link: str, indicator: str):
     context.close()
     browser.close()
 
-    print(f"for {indicator}, there's no data for {empty_data}")
+    print(f"for {indicator}, there's {len(empty_data)} empty data")
 
     check_duplicates_and_insert(data_list, individual_data_list)
 
@@ -94,7 +94,9 @@ def check_duplicates_and_insert(data_list: list, individual_data_list: list):
     print(f"{len(individual_data_list)} data scraped, checking duplicates")
     duplicates = len(individual_data_list) - len(set([item["date"] for item in individual_data_list]))
     if duplicates:
-        print(f"There are {duplicates} duplicate data")
+        print("!!!")
+        print(f"!!! There are {duplicates} duplicate data !!!")
+        print("!!!")
     else:
         data_list += individual_data_list
 
