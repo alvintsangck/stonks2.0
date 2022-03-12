@@ -2,8 +2,12 @@ import { Knex } from "knex";
 import { Request } from "express";
 import { WatchlistController } from "../../controllers/watchlist.controller";
 import { WatchlistService } from "../../services/watchlist.service";
+import permit from "../../util/permit";
+import jwtSimple from "jwt-simple";
 
 jest.mock("../../services/watchlist.service");
+jest.mock("../../util/permit");
+jest.mock("jwt-simple");
 
 describe("WatchlistController", () => {
 	let controller: WatchlistController;
@@ -19,9 +23,10 @@ describe("WatchlistController", () => {
 		service.getAllWatchlistsName = jest.fn((userId) => Promise.resolve([{ id: 1, name: "a" }]));
 		service.addStock = jest.fn((watchlistId, stockId) => Promise.resolve({ message: "stock added" }));
 		service.deleteStock = jest.fn((watchlistId, stockId) => Promise.resolve({ message: "stock deleted" }));
-
 		controller = new WatchlistController(service);
 		req = { body: {}, session: { user: { id: 1 } }, params: {} } as any as Request;
+		permit.check as jest.Mock;
+		(jwtSimple.decode as jest.Mock).mockReturnValue({ id: 1 });
 	});
 
 	describe("GET /watchlist/all", () => {

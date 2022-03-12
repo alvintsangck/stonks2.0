@@ -3,8 +3,12 @@ import { CommentController } from "../../controllers/comment.controller";
 import { CommentService } from "../../services/comment.service";
 import { Server as SocketIO } from "socket.io";
 import { Request } from "express";
+import permit from "../../util/permit";
+import jwtSimple from "jwt-simple";
 
 jest.mock("../../services/comment.service");
+jest.mock("../../util/permit");
+jest.mock("jwt-simple");
 
 describe("CommentController", () => {
 	let controller: CommentController;
@@ -25,6 +29,8 @@ describe("CommentController", () => {
 		} as any as SocketIO;
 		controller = new CommentController(service, io);
 		req = { body: {}, session: {}, params: {} } as any as Request;
+		permit.check as jest.Mock;
+		(jwtSimple.decode as jest.Mock).mockReturnValue({ id: 1, username: "a", avatar: "p" });
 	});
 
 	describe("GET /Comment", () => {
@@ -70,7 +76,16 @@ describe("CommentController", () => {
 				userId: 1,
 				username: "a",
 			});
-			expect(result).toMatchObject({ message: "comment sent" });
+			expect(result).toMatchObject({
+				comment: {
+					avatar: "p",
+					content: "a",
+					createdAt: "1",
+					stockId: 1,
+					userId: 1,
+					username: "a",
+				},
+			});
 		});
 
 		test("throw error with string stockId", async () => {

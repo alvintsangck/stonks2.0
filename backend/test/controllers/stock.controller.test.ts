@@ -2,17 +2,19 @@ import { Knex } from "knex";
 import { StockController } from "../../controllers/stock.controller";
 import { StockService } from "../../services/stock.service";
 import { Request } from "express";
+import { UserService } from "../../services/user.service";
 
 jest.mock("../../services/stock.service");
 
 describe("StockController", () => {
 	let controller: StockController;
-	let service: StockService;
+	let stockService: StockService;
+	let userService: UserService
 	let req: Request;
 
 	beforeEach(function () {
-		service = new StockService({} as Knex);
-		service.getStockInfo = jest.fn((ticker) =>
+		stockService = new StockService({} as Knex);
+		stockService.getStockInfo = jest.fn((ticker) =>
 			Promise.resolve({
 				id: 1,
 				ticker: "A",
@@ -24,7 +26,7 @@ describe("StockController", () => {
 			})
 		);
 
-		controller = new StockController(service);
+		controller = new StockController(stockService, userService);
 		req = {
 			params: {},
 		} as any as Request;
@@ -34,7 +36,7 @@ describe("StockController", () => {
 		test("get stock info", async () => {
 			req.params = { ticker: "a" };
 			const result = await controller.getStockInfo(req);
-			expect(service.getStockInfo).toBeCalled();
+			expect(stockService.getStockInfo).toBeCalled();
 			expect(result).toMatchObject({
 				id: 1,
 				ticker: "A",
@@ -48,15 +50,15 @@ describe("StockController", () => {
 
 		test("throw error if invalid ticker", async () => {
 			req.params = { ticker: "" };
-			service.getStockInfo = jest.fn(() => Promise.resolve(null));
+			stockService.getStockInfo = jest.fn(() => Promise.resolve(null));
 			await expect(controller.getStockInfo(req)).rejects.toThrow("Invalid ticker");
 		});
 
 		test("throw error if no stock found", async () => {
 			req.params = { ticker: "abc" };
-			service.getStockInfo = jest.fn(() => Promise.resolve(null));
+			stockService.getStockInfo = jest.fn(() => Promise.resolve(null));
 			await expect(controller.getStockInfo(req)).rejects.toThrow("Stock not found");
-			expect(service.getStockInfo).toBeCalled();
+			expect(stockService.getStockInfo).toBeCalled();
 		});
 	});
 });
