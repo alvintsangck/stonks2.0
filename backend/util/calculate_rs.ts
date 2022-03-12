@@ -9,7 +9,7 @@ async function init() {
 	await calculateRs();
 	await knex.raw(`REFRESH MATERIALIZED VIEW industry_rs_view`);
 	await industryRs();
-	// await knex.raw(`REFRESH MATERIALIZED VIEW screeners`);
+	await knex.raw(`REFRESH MATERIALIZED VIEW screeners`);
 	knex.destroy();
 }
 
