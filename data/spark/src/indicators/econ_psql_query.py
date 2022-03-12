@@ -29,7 +29,7 @@ def execute_cursor():
                 sei.updated_at in (select updated_at from staging_economic_indicators order by updated_at desc limit 1));""")
                 
     cur.execute("""INSERT INTO economic_indicators (indicator_id, country_id, date_id, stat, created_at) 
-                (select di.id as indicator_id, dc.id as country_id, dd.id as date_id, (sei.stat/100) as stat, sei.created_at 
+                (select di.id as indicator_id, dc.id as country_id, dd.id as date_id, (sei.stat/1000) as stat, sei.created_at 
                 from staging_economic_indicators sei 
                 join dim_dates dd on dd.year = sei.year and dd.month = sei.month and dd.day = sei.day
                 join dim_countries dc on dc.country = sei.country
