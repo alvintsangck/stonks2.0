@@ -34,6 +34,7 @@ export default function ScreenerForm() {
 	const dispatch = useDispatch();
 	const addedIndustries = useSelector((state: RootState) => state.screener.addedIndustries);
 	const addedSectors = useSelector((state: RootState) => state.screener.addedSectors);
+	const stocks = useSelector((state:RootState)=>state.screener.stocks)
 	const [radioSector, setRadioSector] = useState("include");
 	const [radioIndustry, setRadioIndustry] = useState("include");
 	const defaultValues = {
@@ -137,7 +138,7 @@ export default function ScreenerForm() {
 			/>
 			<Row className="screen-result">
 				<Col xs={6}>
-					<h4>Number of stocks found:</h4>
+					<h4>Number of stocks found: {stocks.length}</h4>
 				</Col>
 				<Col xs={3}>
 					<button type="submit" className="stonk-btn result-btn" form="screener-form">
