@@ -3,7 +3,7 @@ import { ScreenerController } from "./controllers/screener.controller";
 import { StockController } from "./controllers/stock.controller";
 import { UserController } from "./controllers/user.controller";
 import { WatchlistController } from "./controllers/watchlist.controller";
-// import { isLoggedIn } from "./middlewares/guard";
+import { isLoggedIn } from "./middlewares/guard";
 import { CommentService } from "./services/comment.service";
 import { ScreenerService } from "./services/screener.service";
 import { StockService } from "./services/stock.service";
@@ -17,7 +17,7 @@ export function attachApi(app: Express, io: SocketIO.Server) {
 	let userService = new UserService(knex);
 	let userController = new UserController(userService);
 	let stockService = new StockService(knex);
-	let stockController = new StockController(stockService);
+	let stockController = new StockController(stockService, userService);
 	let commentService = new CommentService(knex);
 	let commentController = new CommentController(commentService, io);
 	let screenerService = new ScreenerService(knex);
@@ -29,5 +29,5 @@ export function attachApi(app: Express, io: SocketIO.Server) {
 	app.use(stockController.router);
 	app.use(commentController.router);
 	app.use(screenerController.router);
-	app.use( watchlistController.router);
+	app.use(isLoggedIn, watchlistController.router);
 }

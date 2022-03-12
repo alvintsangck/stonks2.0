@@ -7,13 +7,14 @@ import { isLoggedIn } from "../middlewares/guard";
 import crypto from "crypto";
 import { logger } from "../util/logger";
 import { wrapControllerMethod } from "../util/helper";
+import jwt from "../util/jwt";
+import jwtSimple from "jwt-simple";
 
 export class UserController {
 	constructor(private userService: UserService) {
 		this.router.get("/user", this.get);
 		this.router.post("/user", wrapControllerMethod(this.register));
-		this.router.put("/user/update", multerSingle, wrapControllerMethod(this.updateUser));
-		this.router.post("/user/trade", this.tradeStockCtrl);
+		this.router.put("/user", isLoggedIn, multerSingle, wrapControllerMethod(this.updateUser));
 		this.router.post("/user/login", wrapControllerMethod(this.login));
 		this.router.get("/user/login/google", this.loginGoogle);
 		this.router.get("/user/logout", isLoggedIn, this.logout);
@@ -27,29 +28,23 @@ export class UserController {
 	};
 
 	login = async (req: Request) => {
-		let { username, password } = req.body;
+		if (!req.body.username || !req.body.password) {
+			throw new HttpError(401, "Invalid username or password.");
+		}
+		const { username, password } = req.body;
 		let foundUser: User;
-		logger.debug("%o", req.body);
 
 		/@/.test(username)
 			? (foundUser = await this.userService.getUserByEmail(username))
 			: (foundUser = await this.userService.getUserByUsername(username));
 
-		if (!foundUser) throw new HttpError(400, "Invalid username or password.");
-		logger.debug("check !found");
-
-		let isPasswordValid = await checkPassword(password, foundUser.password!);
-		if (!isPasswordValid) {
-			logger.debug("check !password");
+		if (!foundUser || !(await checkPassword(password, foundUser.password))) {
 			throw new HttpError(400, "Invalid username or password.");
 		}
-
-		delete foundUser["password"];
-		logger.debug("%o", foundUser);
-
-		req.session && (req.session["user"] = foundUser);
-
-		return { message: `User ${foundUser.username} logged in.` };
+		const { password: foundPassword, ...user } = foundUser;
+		const payload = { ...user };
+		const token = jwtSimple.encode(payload, jwt.jwtSecret);
+		return token;
 	};
 
 	register = async (req: Request) => {
@@ -108,31 +103,6 @@ export class UserController {
 
 	getPortfolio = async (req: Request) => {
 		return await this.userService.getUserPortfolio(Number(req.session["user"].id));
-	};
-
-	tradeStockCtrl = async (req: Request) => {
-		let portfolio = await this.userService.getUserPortfolio(Number(req.session["user"].id));
-		let { ticker, price, share, status } = req.body;
-		console.log("received", status);
-
-		if (Number(share) == 0 || !Number.isInteger(Number(share))) {
-			throw new HttpError(400, "Number must be an integer greater than zero.");
-		}
-		if (status === "sell") {
-			let sellShare = Number(share);
-			if (portfolio.shares - sellShare < 0) {
-				throw new HttpError(400, "Sell more than portfolio have");
-			}
-			share = share * -1;
-		} else if (status === "buy") {
-			let buyPrice = parseInt(price);
-			let buyStock = parseInt(share);
-			if (buyPrice * buyStock > portfolio.cash) {
-				throw new HttpError(400, "not enough cash");
-			}
-		}
-		await this.userService.tradeStockServ(Number(req.session["user"].id), ticker, price, share);
-		return;
 	};
 
 	async validateInput(req: Request) {

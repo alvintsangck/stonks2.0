@@ -1,3 +1,11 @@
+declare global {
+	namespace Express {
+		interface Request {
+			user?: User;
+		}
+	}
+}
+
 export class HttpError extends Error {
 	constructor(public status: number, public message: string) {
 		super(message);
@@ -8,10 +16,9 @@ export type User = {
 	id: number;
 	username: string;
 	email: string;
-	password?: string;
+	password: string;
 	avatar: string;
 	role: string;
-	balance: number;
 };
 
 export type GoogleInfo = {
@@ -53,7 +60,7 @@ export type UserComment = {
 export enum Table {
 	users = "users",
 	watchlist = "watchlist",
-	watchlistStock = 'watchlist-stock'
+	watchlistStock = "watchlist-stock",
 }
 
 // for xlsx Data
