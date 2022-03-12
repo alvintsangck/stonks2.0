@@ -12,9 +12,9 @@ db.treasuryRates.drop()
 
 data_list = []
 
-indicator_list = ["1 Month", "3 Month", "6 Month", "1 Year", "3 Year", "5 Year", "7 Year", "10 Year", "20 Year", "30 Year"]
+indicator_list = ["1 Month", "3 Month", "6 Month", "1 Year", "2 Year", "3 Year", "5 Year", "7 Year", "10 Year", "20 Year", "30 Year"]
 
-url_list = ["1_month", "3_month", "6_month", "1_year", "3_year", "5_year", "7_year", "10_year", "20_year", "30_year"]
+url_list = ["1_month", "3_month", "6_month", "1_year", "2_year", "3_year", "5_year", "7_year", "10_year", "20_year", "30_year"]
 
 def run(playwright: Playwright, link: str, indicator: str):
     browser = playwright.chromium.launch(headless=True)
@@ -113,7 +113,7 @@ with sync_playwright() as playwright:
 
 keys = data_list[0].keys()
 
-with open('treasury_rates_checking.csv', 'w', newline='') as output_file:
+with open('treasury_rates_checking2.csv', 'w', newline='') as output_file:
     dict_writer = csv.DictWriter(output_file, keys)
     dict_writer.writeheader()
     dict_writer.writerows(data_list)
