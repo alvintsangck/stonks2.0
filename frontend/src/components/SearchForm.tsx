@@ -18,7 +18,6 @@ export function SearchForm() {
 
 	return (
 		<Form onSubmit={onSubmit} className="search-form">
-			<Form.Group>
 				<Form.Control
 					type="search"
 					placeholder="Enter a symbol"
@@ -26,7 +25,6 @@ export function SearchForm() {
 					value={ticker}
 					onChange={(e) => setTicker(e.target.value.toUpperCase())}
 				/>
-			</Form.Group>
 			<button type="submit" className="form-control search-btn">
 				<FontAwesomeIcon icon={faSearch} className="" />
 			</button>
