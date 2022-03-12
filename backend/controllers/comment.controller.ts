@@ -25,10 +25,9 @@ export class CommentController {
 	post = async (req: Request) => {
 		const token = permit.check(req);
 		const user: User = jwtSimple.decode(token, jwt.jwtSecret);
-		console.log(user);
-		
-		const userId: number = Number(user.id);
 		if (user.id <= 0) throw new HttpError(400, "User not exist");
+
+		const userId: number = Number(user.id);
 
 		const stockId: number = Number(req.params.stockId);
 		if (Number.isNaN(stockId) || stockId <= 0) throw new HttpError(400, "Stock not exist");
