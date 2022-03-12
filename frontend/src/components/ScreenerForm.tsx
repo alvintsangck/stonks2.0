@@ -140,12 +140,12 @@ export default function ScreenerForm() {
 				<Col xs={6}>
 					<h4>Number of stocks found: {stocks.length}</h4>
 				</Col>
-				<Col xs={3}>
+				<Col xs={4}>
 					<button type="submit" className="stonk-btn result-btn" form="screener-form">
 						View Screen Results
 					</button>
 				</Col>
-				<Col xs={3}>
+				<Col xs={2}>
 					<button className="stonk-btn result-btn" onClick={() => resetForm()}>
 						Reset
 					</button>
