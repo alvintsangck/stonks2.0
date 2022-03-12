@@ -8,7 +8,7 @@ client = MongoClient('localhost',27017)
 
 db = client.stonks
 
-# db.treasuryRates.drop()
+db.treasuryRates.drop()
 
 data_list = []
 
@@ -38,6 +38,8 @@ def run(playwright: Playwright, link: str, indicator: str):
 
     individual_data_list = []
 
+    empty_data = []
+
     for i in range(no_of_pages):
         
         time.sleep(1.5)
@@ -56,12 +58,17 @@ def run(playwright: Playwright, link: str, indicator: str):
                 data["date"] = datetime.strptime(date_str, "%B %d, %Y")
                 individual_data_list.append(data)
 
+            else:
+                empty_data.append(date_str)
+
         if i < no_of_pages - 1:
             page.locator("yc-historical-data-table >> text=Next").click()
 
     # ---------------------
     context.close()
     browser.close()
+
+    print(f"for {indicator}, there's no data for {empty_data}")
 
     check_duplicates_and_insert(data_list, individual_data_list)
 
@@ -92,9 +99,6 @@ def check_duplicates_and_insert(data_list: list, individual_data_list: list):
         data_list += individual_data_list
 
 
-# with sync_playwright() as playwright:
-#     run(playwright, "china_gdp_currencys", "indicator", "China")
-
 with sync_playwright() as playwright:
     i = 1
     for indicator, url in zip(indicator_list, url_list):
@@ -105,11 +109,11 @@ with sync_playwright() as playwright:
     db.treasuryRates.insert_many(data_list)
 
 
-# keys = data_list[0].keys()
+keys = data_list[0].keys()
 
-# with open('treasury_rates_scraping.csv', 'w', newline='') as output_file:
-#     dict_writer = csv.DictWriter(output_file, keys)
-#     dict_writer.writeheader()
-#     dict_writer.writerows(data_list)
+with open('treasury_rates_checking.csv', 'w', newline='') as output_file:
+    dict_writer = csv.DictWriter(output_file, keys)
+    dict_writer.writeheader()
+    dict_writer.writerows(data_list)
 
 print(f"total time used = {time.perf_counter() // 60} minutes, {time.perf_counter() % 60} seconds")
