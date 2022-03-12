@@ -69,7 +69,7 @@ export default function ScreenerItem({ radioIndustry, radioSector, setRadioIndus
 								checked={radioSector === btn.value}
 								onClick={() => setRadioSector(btn.value)}
 							>
-								{btn.value}
+								{btn.value[0].toUpperCase() + btn.value.substring(1, btn.value.length)}
 							</ToggleButton>
 						))}
 						<button className="stonk-btn reset-btn" onClick={resetSector}>
@@ -113,7 +113,7 @@ export default function ScreenerItem({ radioIndustry, radioSector, setRadioIndus
 								checked={radioIndustry === btn.value}
 								onClick={() => setRadioIndustry(btn.value)}
 							>
-								{btn.value}
+								{btn.value[0].toUpperCase() + btn.value.substring(1, btn.value.length)}
 							</ToggleButton>
 						))}
 						<button className="stonk-btn reset-btn" onClick={resetIndustry}>
