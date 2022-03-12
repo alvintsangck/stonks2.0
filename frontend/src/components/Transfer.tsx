@@ -11,11 +11,16 @@ import { getChainIdThunk, getMetaMaskThunk } from "../redux/metaMask/thunk";
 import { getMetaMaskAction, getChainIdAction } from "../redux/metaMask/action";
 import DepositForm from "./DepositForm";
 import { Helmet } from "react-helmet";
+import { useParams } from "react-router";
+import WithdrawalForm from "./WithdrawalForm";
+import { Link } from "react-router-dom";
+import { push } from "connected-react-router";
 
 export default function Transfer() {
 	const dispatch = useDispatch();
 	const account = useSelector((state: RootState) => state.metaMask.account);
 	const chainId = useSelector((state: RootState) => state.metaMask.chainId);
+	const { method } = useParams<{ method: string }>();
 	const ethereum = window.ethereum;
 
 	function handleNewAccount(newAccount: string[]) {
@@ -48,7 +53,7 @@ export default function Transfer() {
 	return (
 		<>
 			<Helmet>
-				<title>Transfer | Stonks</title>
+				<title>{method[0].toUpperCase() + method.substring(1, method.length)} | Stonks</title>
 			</Helmet>
 			<Container className="deposit-container">
 				<Row className="justify-content-center">
@@ -59,26 +64,37 @@ export default function Transfer() {
 						Current Chain: {getChainName(chainId)} {chainId !== 43113 && <SwitchChianButton />}
 					</Col>
 				</Row>
-			</Container>
-			<Container className="form-container">
-				<Row className="justify-content-center">
-					<Col xs={3} className="form-btn active">
+				<Row className="d-flex justify-content-center">
+					<Col
+						xs={3}
+						className={"form-btn" + (method === "deposit" ? " active" : "")}
+						onClick={() => dispatch(push("/transfer/deposit"))}
+					>
 						Deposit
 					</Col>
-					<Col xs={3} className="form-btn">
+					<Col
+						xs={3}
+						className={"form-btn" + (method === "withdrawal" ? " active" : "")}
+						onClick={() => dispatch(push("/transfer/withdrawal"))}
+					>
 						Withdraw
 					</Col>
 				</Row>
+			</Container>
+			<Container className="transfer-form-container">
 				<Row className="justify-content-center">
-					<Col xs={6}>
-						<DepositForm />
-						<div className="d-flex align-items-center">
-							<div>
-								<span>Didn't see the token in MetaMask?</span>
-								<button className="stonk-btn" onClick={addTokenAddress}>
-									import here
-								</button>
-							</div>
+					<Col xs={6} className="px-0">
+						{method === "deposit" && <DepositForm />}
+						{method === "withdrawal" && <WithdrawalForm />}
+					</Col>
+				</Row>
+				<Row className="justify-content-center import-bar">
+					<Col xs={6} className="px-0">
+						<div>
+							<div>Didn't see the token in MetaMask?</div>
+							<button className="stonk-btn" onClick={addTokenAddress}>
+								import here
+							</button>
 						</div>
 					</Col>
 				</Row>

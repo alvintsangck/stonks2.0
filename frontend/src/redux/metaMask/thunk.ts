@@ -298,3 +298,34 @@ export function getBalanceThunk() {
 		}
 	};
 }
+
+export function depositThunk(amount: string) {
+	return async (dispatch: RootDispatch) => {
+		const provider = new ethers.providers.Web3Provider(window.ethereum);
+		const signer = provider.getSigner();
+		const contractAddress = "0x6baad065aa5173e16783d35f607265b5b2750264";
+		const contract = new Contract(contractAddress, abi, signer);
+		const tx = await contract.transfer(
+			"0xcb72b2bb1407137eBD0994099992354fb7116081",
+			ethers.utils.parseUnits(amount, "ether")
+		);
+
+		const a = await tx.wait();
+	};
+}
+
+export function withdrawalThunk(amount: string) {
+	return async (dispatch: RootDispatch) => {
+		const provider = new ethers.providers.Web3Provider(window.ethereum);
+		const signer = provider.getSigner();
+		const contractAddress = "0x6baad065aa5173e16783d35f607265b5b2750264";
+		const contract = new Contract(contractAddress, abi, signer);
+
+		const tx = await contract.transfer(
+			"0xcb72b2bb1407137eBD0994099992354fb7116081",
+			ethers.utils.parseUnits(amount, "ether")
+		);
+
+		const a = await tx.wait();
+	};
+}

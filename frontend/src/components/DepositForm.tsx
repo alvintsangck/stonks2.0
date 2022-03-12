@@ -3,25 +3,26 @@ import { Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store/state";
 import { useForm } from "react-hook-form";
+import { depositThunk } from "../redux/metaMask/thunk";
 
 type FormState = {
-	deposit: number;
+	deposit: string;
 };
 
 export default function TransferForm() {
 	const dispatch = useDispatch();
 	const balance = useSelector((state: RootState) => state.metaMask.balance);
-	const { watch, handleSubmit, register, reset, setValue } = useForm<FormState>({ defaultValues: { deposit: 0 } });
+	const { watch, handleSubmit, register, reset, setValue } = useForm<FormState>({ defaultValues: { deposit: "0" } });
 
-	function onSubmit() {
-		dispatch(1);
+	function onSubmit(data: FormState) {
+		dispatch(depositThunk(data.deposit));
 		reset();
 	}
 
 	function validateValue(e: any) {
 		const value = Number(e.target.value);
-		if (value <= 0) setValue("deposit", 0);
-		if (value >= balance) setValue("deposit", balance);
+		if (value <= 0) setValue("deposit", "0");
+		if (value >= balance) setValue("deposit", balance.toString());
 	}
 
 	return (
@@ -31,17 +32,11 @@ export default function TransferForm() {
 				<Form.Label>Deposit Amount</Form.Label>
 			</Form.Group>
 			<Form.Group className="transfer-input">
-				<Form.Control
-					type="number"
-					{...register("deposit", { valueAsNumber: true })}
-					min="0"
-					max={balance}
-					onBlur={validateValue}
-				/>
+				<Form.Control type="number" {...register("deposit")} min="0" max={balance} onBlur={validateValue} />
 				<span>STONK</span>
 			</Form.Group>
 			<Form.Group>
-				<span>= {watch("deposit") > 0 ? watch("deposit") : 0} USD</span>
+				<span>= {Number(watch("deposit")) > 0 ? watch("deposit") : 0} USD</span>
 			</Form.Group>
 			<button className="stonk-btn" type="submit">
 				Deposit
