@@ -36,15 +36,16 @@ export default function WatchlistModal({ isShow, setIsShow }: Props) {
 			</Modal.Header>
 			<Modal.Body>
 				<ListGroup>
-					{watchlists.map(({ id, name }) => (
-						<ListGroup.Item
-							className={watchlistId === id ? "active" : ""}
-							onClick={() => setWatchlistId(id)}
-							key={id}
-						>
-							{name}
-						</ListGroup.Item>
-					))}
+					{watchlists.length > 0 &&
+						watchlists.map(({ id, name }) => (
+							<ListGroup.Item
+								className={watchlistId === id ? "active" : ""}
+								onClick={() => setWatchlistId(id)}
+								key={id}
+							>
+								{name}
+							</ListGroup.Item>
+						))}
 				</ListGroup>
 			</Modal.Body>
 			<Modal.Footer>
