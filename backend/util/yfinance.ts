@@ -1,6 +1,6 @@
 import yahooFinance from "yahoo-finance2";
-import { knex } from "./util/db";
-import { makeMap } from "./util/helper";
+import { knex } from "./db";
+import { makeMap } from "./helper";
 
 getYahooFinanceData();
 
