@@ -68,6 +68,10 @@
 	text-decoration: underline;
 }
 
+.comment-date {
+	margin-left: 5px;
+}
+
 .comment {
 	width: 100%;
 }
