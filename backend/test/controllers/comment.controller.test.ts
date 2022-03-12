@@ -55,7 +55,6 @@ describe("CommentController", () => {
 
 	describe("POST /Comment", () => {
 		beforeEach(function () {
-			req.session["user"] = { id: 1, username: "a", avatar: "p" };
 			req.body = { content: "a" };
 			req.params = { stockId: "1" };
 		});

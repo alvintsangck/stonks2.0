@@ -4,7 +4,9 @@ import { isLoggedIn } from "../middlewares/guard";
 import { HttpError, User, UserComment } from "../util/models";
 import SocketIO from "socket.io";
 import { wrapControllerMethod } from "../util/helper";
-
+import jwt from "../util/jwt";
+import permit from "../util/permit";
+import jwtSimple from "jwt-simple";
 export class CommentController {
 	constructor(private commentService: CommentService, private io: SocketIO.Server) {
 		this.router.get("/comment/:stockId", wrapControllerMethod(this.get));
@@ -21,12 +23,17 @@ export class CommentController {
 	};
 
 	post = async (req: Request) => {
-		const user: User = req.session["user"];
+		const token = permit.check(req);
+		const user: User = jwtSimple.decode(token, jwt.jwtSecret);
+		console.log(user);
+		
 		const userId: number = Number(user.id);
-		const stockId: number = Number(req.params.stockId);
-		const content: string = req.body.content.replace(/\s+/g, "");
+		if (user.id <= 0) throw new HttpError(400, "User not exist");
 
+		const stockId: number = Number(req.params.stockId);
 		if (Number.isNaN(stockId) || stockId <= 0) throw new HttpError(400, "Stock not exist");
+
+		const content: string = req.body.content.replace(/\s+/g, "");
 		if (!content) throw new HttpError(400, "Comment cannot be empty");
 		if (content.length > 200) throw new HttpError(400, "Comment exceed maximum length");
 
@@ -35,6 +42,6 @@ export class CommentController {
 
 		const comment = { ...insertComment, username: user.username, avatar: user.avatar, createdAt };
 		this.io.to(stockId.toString()).emit("comment", comment);
-		return { message: "comment sent" };
+		return { comment };
 	};
 }

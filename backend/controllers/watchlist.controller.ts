@@ -1,7 +1,10 @@
 import express, { Request } from "express";
 import { WatchlistService } from "../services/watchlist.service";
 import { wrapControllerMethod } from "../util/helper";
-import { HttpError } from "../util/models";
+import { HttpError, User } from "../util/models";
+import jwtSimple from "jwt-simple";
+import jwt from "../util/jwt";
+import permit from "../util/permit";
 
 export class WatchlistController {
 	constructor(private watchlistService: WatchlistService) {
@@ -17,7 +20,11 @@ export class WatchlistController {
 	router = express.Router();
 
 	getAllWatchlistsName = async (req: Request) => {
-		return await this.watchlistService.getAllWatchlistsName(Number(1));
+		const token = permit.check(req);
+		const user: User = jwtSimple.decode(token, jwt.jwtSecret);
+
+		if (user.id <= 0) throw new HttpError(400, "User not exist");
+		return await this.watchlistService.getAllWatchlistsName(user.id);
 	};
 
 	get = async (req: Request) => {
@@ -29,9 +36,12 @@ export class WatchlistController {
 
 	post = async (req: Request) => {
 		const name = String(req.body.name).replace(/\s+/g, "");
-
 		if (name === "") throw new HttpError(400, "Watchlist name cannot be empty");
-		return await this.watchlistService.createWatchlist(1, name);
+		const token = permit.check(req);
+		const user: User = jwtSimple.decode(token, jwt.jwtSecret);
+		if (user.id <= 0) throw new HttpError(400, "User not exist");
+
+		return await this.watchlistService.createWatchlist(user.id, name);
 	};
 
 	put = async (req: Request): Promise<{ message: string }> => {

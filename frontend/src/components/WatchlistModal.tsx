@@ -12,10 +12,11 @@ type Props = {
 };
 
 export default function WatchlistModal({ isShow, setIsShow }: Props) {
+	const dispatch = useDispatch();
 	const watchlists = useSelector((state: RootState) => state.watchlist.watchlists);
+	const user = useSelector((state: RootState) => state.auth.user);
 	const [watchlistId, setWatchlistId] = useState(0);
 	const { ticker } = useParams<{ ticker: string }>();
-	const dispatch = useDispatch();
 
 	const hideModal = () => setIsShow(false);
 
@@ -26,8 +27,10 @@ export default function WatchlistModal({ isShow, setIsShow }: Props) {
 	};
 
 	useEffect(() => {
-		dispatch(getAllWatchlistsThunk());
-	}, [dispatch]);
+		if (user) {
+			dispatch(getAllWatchlistsThunk());
+		}
+	}, [dispatch, user]);
 
 	return (
 		<Modal show={isShow} onHide={hideModal} centered>

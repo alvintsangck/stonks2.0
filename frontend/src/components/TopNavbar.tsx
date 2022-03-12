@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { RootState } from "../redux/store/state";
 import "../css/NavBar.css";
@@ -6,8 +6,10 @@ import { Col, Container, Dropdown, Nav, Navbar, Row } from "react-bootstrap";
 import { SearchForm } from "./SearchForm";
 import { ColorTheme, TickerTape } from "react-ts-tradingview-widgets";
 import { env } from "../env";
+import { logoutThunk } from "../redux/auth/thunk";
 
 export default function NavBar() {
+	const dispatch = useDispatch();
 	const user = useSelector((state: RootState) => state.auth.user);
 	const theme = useSelector((state: RootState) => state.theme.theme);
 
@@ -15,7 +17,7 @@ export default function NavBar() {
 		<nav className="nav-bar">
 			<TickerTape colorTheme={theme as ColorTheme} copyrightStyles={{ parent: { display: "none" } }} />
 			<Container fluid>
-				<Row className='align-items-center'>
+				<Row className="align-items-center">
 					<Col md={3}>
 						{!user && (
 							<div className="login">
@@ -30,16 +32,20 @@ export default function NavBar() {
 						{user && (
 							<Dropdown>
 								<Dropdown.Toggle className="user-avatar-btn">
-									<img className="user-avatar" src={`${env}/${user.payload.avatar}`} alt="user-avatar" />
+									<img
+										className="user-avatar"
+										src={`${env}/${user.payload.avatar}`}
+										alt="user-avatar"
+									/>
 								</Dropdown.Toggle>
 								<Dropdown.Menu>
 									<Dropdown.Item>
 										{/* <NavLink className="dropdown-item" to="/setting"> */}
-											User Setting
+										User Setting
 										{/* </NavLink> */}
 									</Dropdown.Item>
 									<Dropdown.Item>Change Theme</Dropdown.Item>
-									<Dropdown.Item>Log Out</Dropdown.Item>
+									<Dropdown.Item onClick={() => dispatch(logoutThunk())}>Log Out</Dropdown.Item>
 								</Dropdown.Menu>
 							</Dropdown>
 						)}

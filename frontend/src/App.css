@@ -29,18 +29,6 @@ body.dark {
 	cursor: pointer;
 }
 
-.user-only {
-	display: none;
-}
-
-.user-role .user-only {
-	display: block;
-}
-
-.user-role .non-user {
-	display: none;
-}
-
 .stonk-btn {
 	background: transparent;
 	transition: all 0.3s ease;

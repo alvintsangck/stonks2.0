@@ -12,20 +12,14 @@ import jwtSimple from "jwt-simple";
 
 export class UserController {
 	constructor(private userService: UserService) {
-		this.router.get("/user", this.get);
 		this.router.post("/user", wrapControllerMethod(this.register));
 		this.router.put("/user", isLoggedIn, multerSingle, wrapControllerMethod(this.updateUser));
 		this.router.post("/user/login", wrapControllerMethod(this.login));
 		this.router.get("/user/login/google", this.loginGoogle);
-		this.router.get("/user/logout", isLoggedIn, this.logout);
 		this.router.get("/user/portfolio", isLoggedIn, wrapControllerMethod(this.getPortfolio));
 	}
 
 	router = express.Router();
-
-	get = (req: Request, res: Response) => {
-		req.session && req.session["user"] ? res.json({ user: req.session["user"] }) : res.json({ user: null });
-	};
 
 	login = async (req: Request) => {
 		if (!req.body.username || !req.body.password) {
@@ -41,23 +35,22 @@ export class UserController {
 		if (!foundUser || !(await checkPassword(password, foundUser.password))) {
 			throw new HttpError(400, "Invalid username or password.");
 		}
+
 		const { password: foundPassword, ...user } = foundUser;
+		logger.info("%o", user);
 		const payload = { ...user };
 		const token = jwtSimple.encode(payload, jwt.jwtSecret);
-		return token;
+		return { token };
 	};
 
 	register = async (req: Request) => {
-		let error = await this.validateInput(req);
-		if (error) {
-			throw error;
-		}
+		const error = await this.validateInput(req);
+		if (error) throw error;
 		let { username, email, password } = req.body;
 		password = await hashPassword(password.toString());
 
 		let user: User = await this.userService.addUser(username, password, email);
-		req.session && (req.session["user"] = user);
-		return { message: `user ${user.username} registered` };
+		return { user };
 	};
 
 	updateUser = async (req: Request) => {
@@ -65,10 +58,7 @@ export class UserController {
 		const userId = req.session["user"].id;
 		let filename = req.file ? req.file.filename : null;
 
-		if (password != confirmPassword) {
-			logger.debug("check !password");
-			throw new HttpError(400, "Invalid password.");
-		}
+		if (password != confirmPassword) throw new HttpError(400, "Invalid password.");
 		let hashedPassword = password ? await hashPassword(password) : null;
 		!username && (username = null);
 
@@ -77,8 +67,8 @@ export class UserController {
 	};
 
 	loginGoogle = async (req: Request, res: Response) => {
-		let accessToken = req.session?.["grant"].response.access_token;
-		let googleUserInfo = await this.userService.getGoogleInfo(accessToken);
+		const accessToken = req.session?.["grant"].response.access_token;
+		const googleUserInfo = await this.userService.getGoogleInfo(accessToken);
 		let foundUser: User = await this.userService.getUserByEmail(googleUserInfo.email);
 		if (!foundUser) {
 			let googleAccount = {
@@ -92,13 +82,8 @@ export class UserController {
 				googleAccount.email
 			);
 		}
-		req.session["user"] = foundUser;
-		res.redirect("/portfolio.html");
-	};
-
-	logout = (req: Request, res: Response) => {
-		delete req.session["user"];
-		res.redirect("/index.html");
+		// req.session["user"] = foundUser;
+		// res.redirect("/portfolio.html");
 	};
 
 	getPortfolio = async (req: Request) => {
@@ -110,15 +95,11 @@ export class UserController {
 
 		let whiteSpace = /^\s+/;
 		if (username.match(whiteSpace) || email.match(whiteSpace) || password.match(whiteSpace)) {
-			return new HttpError(400, "Cannot into space.");
+			return new HttpError(400, "Cannot be empty.");
 		}
 
-		if (username.match(/@/)) {
-			return new HttpError(400, "Cannot use @ in username.");
-		}
-		if (password !== confirmPassword) {
-			return new HttpError(400, "The passwords you entered do not match.");
-		}
+		if (username.match(/@/)) return new HttpError(400, "Cannot use @ in username.");
+		if (password !== confirmPassword) return new HttpError(400, "The passwords you entered do not match.");
 
 		let user = await this.userService.getUserByUsername(username);
 		if (user) return new HttpError(400, "Username has been used.");

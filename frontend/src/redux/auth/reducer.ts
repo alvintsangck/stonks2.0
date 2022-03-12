@@ -1,22 +1,38 @@
 import { AuthAction } from "./action";
-import { AuthState } from "./state";
+import { AuthState, JWTPayload, User } from "./state";
+import jwtDecode from "jwt-decode";
 
-const initialState = {
-	user: {},
-	error: null,
+function getUser(token: string | null): User | null {
+	if (!token) return null;
+	try {
+		const payload: JWTPayload = jwtDecode(token);
+		return { payload, token };
+	} catch (error) {
+		console.log(error);
+		return null;
+	}
+}
+
+const token = localStorage.getItem("token");
+
+const initialState: AuthState = {
+	user: getUser(token),
+	error: "",
 };
 
-export function authReducer(state: AuthState = initialState, action: AuthAction) {
+export function authReducer(state: AuthState = initialState, action: AuthAction): AuthState {
 	switch (action.type) {
-		case "@@Auth/login":
-			return { ...state, error: null };
+		case "@@Auth/login": {
+			return { ...state, user: getUser(action.token), error: "" };
+		}
 		case "@@Auth/logout":
-			return { ...state, error: null };
-		case "@@Auth/register":
-			return { ...state, error: null };
+			return { ...state, user: null, error: "" };
+		case "@@Auth/register": {
+			return { ...state, user: getUser(action.token), error: "" };
+		}
 		case "@@Auth/apiFailed":
-			return { ...state, error: action.action };
+			return { ...state, error: action.msg };
 		default:
-			return { ...state, error: null };
+			return state;
 	}
 }

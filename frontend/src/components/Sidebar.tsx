@@ -13,8 +13,8 @@ type Props = {
 
 function Sidebar({ lists, currentListId }: Props) {
 	const dispatch = useDispatch();
-	const deleteWatchlist = (listId: number, name:string) => {
-		dispatch(deleteWatchlistThunk(listId,name));
+	const deleteWatchlist = (listId: number, name: string) => {
+		dispatch(deleteWatchlistThunk(listId, name));
 		if (currentListId === listId) {
 			dispatch(push(`/watchlist/${lists[0].id}`));
 		}
@@ -23,16 +23,17 @@ function Sidebar({ lists, currentListId }: Props) {
 		<>
 			<AddForm name="My Lists" placeholder="watchlist" onAdd={addWatchlistThunk} />
 			<div className="section">
-				{lists.map((list) => (
-					<div key={list.id} className={list.id === currentListId ? "selected" : ""}>
-						<div onClick={() => dispatch(getWatchlistThunk(list.id))}>
-							<span>{list.name}</span>
+				{lists.length > 0 &&
+					lists.map((list) => (
+						<div key={list.id} className={list.id === currentListId ? "selected" : ""}>
+							<div onClick={() => dispatch(getWatchlistThunk(list.id))}>
+								<span>{list.name}</span>
+							</div>
+							<div>
+								<FontAwesomeIcon icon={faTimes} onClick={() => deleteWatchlist(list.id, list.name)} />
+							</div>
 						</div>
-						<div>
-							<FontAwesomeIcon icon={faTimes} onClick={() => deleteWatchlist(list.id, list.name)} />
-						</div>
-					</div>
-				))}
+					))}
 			</div>
 		</>
 	);

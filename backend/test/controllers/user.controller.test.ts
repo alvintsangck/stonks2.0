@@ -24,12 +24,11 @@ describe("UserController", () => {
 			password: "123",
 			email: "",
 			avatar: "",
-			balance: 0,
 			role: "user",
 		};
 		service = new UserService({} as Knex);
 		service.getUserByUsername = jest.fn((username) => Promise.resolve(user));
-		service.getUserByEmail = jest.fn((email) => Promise.resolve({ username:email, password: user.password }));
+		service.getUserByEmail = jest.fn((email) => Promise.resolve({ username: email, password: user.password }));
 		service.addUser = jest.fn((username, password, email) => Promise.resolve());
 		jest.spyOn(service, "getGoogleInfo").mockImplementation(async (accessToken) => user);
 
@@ -47,19 +46,6 @@ describe("UserController", () => {
 		// resStatusSpy = jest.spyOn(res, "status");
 		resJsonSpy = jest.spyOn(res, "json");
 		resRedirectSpy = jest.spyOn(res, "redirect");
-	});
-
-	describe("GET /user", () => {
-		test("get with user logged in", async () => {
-			req.session["user"] = { id: 1 };
-			controller.get(req, res);
-			expect(resJsonSpy).toBeCalledWith({ user: { id: 1 } });
-		});
-
-		test("get without user logged in", async () => {
-			controller.get(req, res);
-			expect(resJsonSpy).toBeCalledWith({ user: null });
-		});
 	});
 
 	describe("POST /user", () => {
@@ -97,18 +83,6 @@ describe("UserController", () => {
 		test("throw error with invalid password", async () => {
 			(checkPassword as jest.Mock).mockReturnValue(false);
 			await expect(controller.login(req)).rejects.toThrowError("Invalid username or password.");
-		});
-	});
-
-	describe("POST /user/login/google", () => {
-		test.todo("loginGoogle");
-	});
-
-	describe("POST /user/logout", () => {
-		test("logout", () => {
-			controller.logout(req, res);
-			expect(req.session["user"]).toBeUndefined();
-			expect(resRedirectSpy).toBeCalled();
 		});
 	});
 

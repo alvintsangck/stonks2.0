@@ -1,4 +1,4 @@
-textarea {
+#comment-form textarea {
 	resize: none;
 }
 
@@ -11,5 +11,5 @@ textarea {
 	padding: 0;
 	border: none;
 	background-color: transparent;
-    margin-left: 5px;
+	margin-left: 5px;
 }

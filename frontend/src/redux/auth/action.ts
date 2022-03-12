@@ -1,12 +1,17 @@
-export const loginAction = () => ({ type: "@@Auth/login" as const });
+export const loginAction = (token: string) => ({
+	type: "@@Auth/login" as const,
+	token,
+});
 
 export const logoutAction = () => ({ type: "@@Auth/logout" as const });
 
-export const registerAction = () => ({ type: "@@Auth/register" as const });
+export const registerAction = (token: string) => ({
+	type: "@@Auth/register" as const,
+	token,
+});
 
-export const authApiFailedAction = (action: string, msg: string) => ({
+export const authApiFailedAction = (msg: string) => ({
 	type: "@@Auth/apiFailed" as const,
-	action,
 	msg,
 });
 
