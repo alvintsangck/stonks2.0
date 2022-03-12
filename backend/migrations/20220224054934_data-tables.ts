@@ -66,17 +66,6 @@ export async function up(knex: Knex): Promise<void> {
 
 	await knex.schema.raw(`CREATE UNIQUE INDEX maturity_periods_idx on dim_maturity_periods(name,period); `);
 
-
-	if (!(await knex.schema.hasTable("industry_rs"))) {
-		await knex.schema.createTable("industry_rs", (table) => {
-			table.increments();
-			table.integer("industry_id").unsigned().notNullable().references("industries.id");
-			table.integer("rs_rating").unsigned();
-			table.integer("ranking").unsigned();
-			table.timestamps(false, true);
-		});
-	}
-
 	if (!(await knex.schema.hasTable("stock_prices"))) {
 		await knex.schema.createTable("stock_prices", (table) => {
 			table.increments();
@@ -89,14 +78,30 @@ export async function up(knex: Knex): Promise<void> {
 
 	await knex.schema.raw(`CREATE UNIQUE INDEX stock_prices_idx on stock_prices(stock_id, date_id); `);
 
+	if (!(await knex.schema.hasTable("industry_rs"))) {
+		await knex.schema.createTable("industry_rs", (table) => {
+			table.increments();
+			table.integer("industry_id").unsigned().notNullable().references("industries.id");
+			table.integer("date_id").unsigned().notNullable().references("dim_dates.id");
+			table.integer("rs_rating").unsigned();
+			table.integer("ranking").unsigned();
+			table.timestamps(false, true);
+		});
+	}
+
+	await knex.schema.raw(`CREATE UNIQUE INDEX industry_rs_idx on industry_rs(industry_id, date_id); `);
+
 	if (!(await knex.schema.hasTable("stock_rs"))) {
 		await knex.schema.createTable("stock_rs", (table) => {
 			table.increments();
+			table.integer("date_id").unsigned().notNullable().references("dim_dates.id");
 			table.integer("stock_id").unsigned().notNullable().references("stocks.id");
 			table.integer("rs_rating").unsigned();
 			table.timestamps(false, true);
 		});
 	}
+
+	await knex.schema.raw(`CREATE UNIQUE INDEX stock_rs_idx on stock_rs(stock_id, date_id); `);
 
 	if (!(await knex.schema.hasTable("stock_market_caps"))) {
 		await knex.schema.createTable("stock_market_caps", (table) => {
