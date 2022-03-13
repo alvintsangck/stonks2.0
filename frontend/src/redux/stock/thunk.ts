@@ -1,3 +1,4 @@
+import { push } from "connected-react-router";
 import { defaultErrorSwal } from "../../components/ReactSwal";
 import { callApi } from "../api";
 import { RootDispatch } from "../store/action";
@@ -7,7 +8,7 @@ export function getStockThunk(ticker: string) {
 	return async (dispatch: RootDispatch) => {
 		const result = await callApi(`/stocks/${ticker}`);
 		if ("error" in result) {
-			defaultErrorSwal(result.error);
+			dispatch(push("/404"));
 		} else {
 			dispatch(getStockAction(result));
 		}

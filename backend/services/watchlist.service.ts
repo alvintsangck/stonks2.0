@@ -1,12 +1,13 @@
 import { Knex } from "knex";
 import { camelCaseKeys } from "../util/helper";
+import { Stock } from "../util/models";
 
 export class WatchlistService {
 	constructor(private knex: Knex) {}
 
-	async getWatchlist(watchlistId: number): Promise<{}> {
+	async getWatchlist(watchlistId: number): Promise<Stock[]> {
 		const stocks = createStockArr(await this.queryWatchlist(watchlistId));
-		return { watchlistId, stocks };
+		return stocks;
 	}
 
 	async createWatchlist(userId: number, name: string): Promise<number> {
@@ -66,7 +67,7 @@ export class WatchlistService {
 	}
 }
 
-function createStockArr(queryArr: any[]): {} {
+function createStockArr(queryArr: any[]): Stock[] {
 	let stocksArr: any[] = [];
 	for (let i = 0; i < queryArr.length; i += 2) {
 		stocksArr.push({

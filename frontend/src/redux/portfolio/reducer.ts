@@ -1,16 +1,15 @@
 import { PortfolioAction } from "./action";
 import { PortfolioState } from "./state";
 
-const initialState = {
-	user: {},
-	error: null,
+const initialState: PortfolioState = {
+	portfolio: [],
 };
 
 export function portfolioReducer(state: PortfolioState = initialState, action: PortfolioAction) {
 	switch (action.type) {
-		case "@@User/portfolio":
-			return { ...state, error: null };
+		case "@@Portfolio/get":
+			return {portfolio: action.portfolio};
 		default:
-			return { ...state, error: null };
+			return state
 	}
 }

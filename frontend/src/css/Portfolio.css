@@ -1,40 +1,17 @@
-.portfolio-brief {
-    padding-top: 5em;
-    padding-bottom: 5em;
-}
-
 .account-brief {
-    font-size: x-large;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-right: 30px;
+	font-size: x-large;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding-right: 30px;
 }
 
 .brief-info {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding-bottom: 50px;
+	display: flex;
+	justify-content: space-between;
+	padding-bottom: 50px;
 }
 
 .brief-value {
-    font-weight: bolder;
-}
-
-.portfolio-table {
-    overflow-x: auto;
-}
-
-.portfolio-table th,
-.portfolio-table td {
-    /* border: 1px solid black; */
-    text-align: left;
-    padding: 8px;
-}
-
-.portfolio-container {
-    margin-top: 30px;
-    padding-bottom: 20px;
-    border-radius: 15px;
+	font-weight: bolder;
 }

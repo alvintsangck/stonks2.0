@@ -31,7 +31,8 @@ export class WatchlistController {
 		const watchlistId = Number(req.params.watchlistId);
 
 		if (Number.isNaN(watchlistId) || watchlistId <= 0) throw new HttpError(400, "Watchlist not exist");
-		return await this.watchlistService.getWatchlist(watchlistId);
+		const stocks =  await this.watchlistService.getWatchlist(watchlistId);
+		return {watchlistId, stocks}
 	};
 
 	post = async (req: Request) => {

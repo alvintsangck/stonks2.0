@@ -9,6 +9,7 @@ import { logger } from "../util/logger";
 import { wrapControllerMethod } from "../util/helper";
 import jwt from "../util/jwt";
 import jwtSimple from "jwt-simple";
+import permit from "../util/permit";
 
 export class UserController {
 	constructor(private userService: UserService) {
@@ -17,6 +18,7 @@ export class UserController {
 		this.router.post("/user/login", wrapControllerMethod(this.login));
 		this.router.get("/user/login/google", this.loginGoogle);
 		this.router.get("/user/portfolio", isLoggedIn, wrapControllerMethod(this.getPortfolio));
+		this.router.get("/user/balance", isLoggedIn, wrapControllerMethod(this.getBalance));
 	}
 
 	router = express.Router();
@@ -71,15 +73,10 @@ export class UserController {
 		const googleUserInfo = await this.userService.getGoogleInfo(accessToken);
 		let foundUser: User = await this.userService.getUserByEmail(googleUserInfo.email);
 		if (!foundUser) {
-			let googleAccount = {
-				username: googleUserInfo.name.concat(Date.now()),
-				password: await hashPassword(crypto.randomBytes(20).toString("hex")),
-				email: googleUserInfo.email,
-			};
 			foundUser = await this.userService.addUser(
-				googleAccount.username,
-				googleAccount.password,
-				googleAccount.email
+				googleUserInfo.name.concat(Date.now()),
+				await hashPassword(crypto.randomBytes(20).toString("hex")),
+				googleUserInfo.email
 			);
 		}
 		// req.session["user"] = foundUser;
@@ -87,7 +84,20 @@ export class UserController {
 	};
 
 	getPortfolio = async (req: Request) => {
-		return await this.userService.getUserPortfolio(Number(req.session["user"].id));
+		const token = permit.check(req);
+		const user: User = jwtSimple.decode(token, jwt.jwtSecret);
+		if (user.id <= 0) throw new HttpError(400, "User not exist");
+		const portfolio = await this.userService.getUserPortfolio(user.id);
+		return { portfolio };
+	};
+
+	getBalance = async (req: Request) => {
+		const token = permit.check(req);
+		const user: User = jwtSimple.decode(token, jwt.jwtSecret);
+		if (user.id <= 0) throw new HttpError(400, "User not exist");
+
+		const { deposit, cash } = await this.userService.getBalance(user.id);
+		return { deposit, cash };
 	};
 
 	async validateInput(req: Request) {

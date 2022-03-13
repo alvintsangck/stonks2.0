@@ -1,7 +1,7 @@
 import "../css/CommentForm.css";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { postCommentThunk } from "../redux/stock/thunk";
@@ -14,7 +14,7 @@ export default function CommentForm() {
 	const user = useSelector((state: RootState) => state.auth.user);
 	const [comment, setComment] = useState("");
 
-	async function onSubmit(e: FormEvent<HTMLFormElement>) {
+	async function onSubmit(e: any) {
 		e.preventDefault();
 		if (stock) {
 			dispatch(postCommentThunk(stock.id, comment));
@@ -33,6 +33,7 @@ export default function CommentForm() {
 				value={comment}
 				onChange={(e) => setComment(e.target.value)}
 				onClick={(e) => !user && dispatch(push("/login"))}
+				onKeyUp={(e) => e.key === "Enter" && onSubmit(e)}
 			/>
 			<Form.Group>
 				<span className="comment-count">0</span>

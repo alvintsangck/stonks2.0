@@ -45,9 +45,12 @@ export type Industry = {
 
 export type Stock = {
 	id: number;
+	ticker: string;
 	name: string;
-	industry_id: number;
-	sector_id: number;
+	price?: number;
+	prevPrice?: number;
+	industryName?: string;
+	sectorName?: string;
 };
 
 export type UserComment = {
@@ -57,17 +60,34 @@ export type UserComment = {
 	avatar?: string;
 };
 
+export type Portfolio = {
+	id: number;
+	ticker: string;
+	name: string;
+	price: number;
+	shares: number;
+	avgCost: number;
+	totalCost: number;
+	marketValue: number;
+	profit: number;
+	profitPercentage: number;
+};
+
 export enum Table {
 	users = "users",
 	watchlist = "watchlist",
-	watchlistStock = "watchlist-stock",
+	watchlistStock = "watchlist_stock",
 }
 
 // for xlsx Data
 export type UserData = Omit<User, "id"> & { email: string };
 export type SectorData = Omit<Sector, "id">;
 export type IndustryData = Omit<Industry, "id">;
-export type StockData = Omit<Stock, "id">;
+export type StockData = {
+	name: string;
+	industry_id: number;
+	sector_id: number;
+};
 export type RawIndustryData = {
 	name: string;
 	sector: string;

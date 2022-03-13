@@ -1,7 +1,7 @@
-import camelcaseKeys from "camelcase-keys";
 import { Knex } from "knex";
 import fetch from "node-fetch";
 import { camelCaseKeys, makeMap } from "../util/helper";
+import { Portfolio } from "../util/models";
 
 export class UserService {
 	constructor(private knex: Knex) {}
@@ -42,7 +42,7 @@ export class UserService {
 		return result;
 	}
 
-	async getUserPortfolio(userId: number) {
+	async getUserPortfolio(userId: number): Promise<Portfolio[]> {
 		let queryPortfolioArr = await this.queryPortfolio(userId);
 
 		let stockMap = queryPortfolioArr.reduce((prev: {}, next: {}) => {
@@ -58,10 +58,15 @@ export class UserService {
 		let stockPriceArr = await this.queryStockPrice(queryString.slice(0, -4));
 		let stockPriceMap = stockPriceArr.reduce(makeMap, {});
 
-		return queryPortfolioArr.map((row: {}) => {
+		return queryPortfolioArr.map((row: any) => {
 			return {
-				...row,
+				stockId: row.stockId,
+				ticker: row.ticker,
+				name: row.name,
 				price: stockPriceMap[row["stockId"]],
+				shares: row.shares,
+				avgCost: row.avgCost,
+				totalCost: row.totalCost,
 				marketValue: (row["shares"] * stockPriceMap[row["stockId"]]).toFixed(2),
 				profit: (row["shares"] * stockPriceMap[row["stockId"]] - row["totalCost"]).toFixed(2),
 				profitPercentage: `${(
@@ -77,7 +82,7 @@ export class UserService {
 			(
 				await this.knex.raw(
 					/*sql*/
-					`select s.ticker, s.name stock_name, p.stock_id,
+					`select s.ticker, s.name , p.stock_id,
 					sum(p.position_size) shares, 
 					round(sum(p.position_size * p.unit_cost) / sum(p.position_size),2) avg_cost,
 					round(sum(p.position_size * p.unit_cost), 2) total_cost
@@ -93,19 +98,6 @@ export class UserService {
 		);
 	}
 
-	async queryUserCash(userId: number) {
-		return camelcaseKeys(
-			await this.knex.raw(
-				/*sql*/
-				`select h.cash, h.deposit, h.created_at
-					from user_history u
-					join users u on h.user_id=u.id
-					where u.id = ?
-					order by h.created_at desc`[userId]
-			)
-		).rows;
-	}
-
 	async queryStockPrice(queryString: string) {
 		return camelCaseKeys(
 			(
@@ -118,8 +110,6 @@ export class UserService {
 		);
 	}
 	async updateSetting(username: string, hashedPassword: any, filename: any, userId: number) {
-		console.log("username", username);
-
 		return camelCaseKeys(
 			await this.knex.raw(
 				/*sql*/
@@ -132,24 +122,25 @@ export class UserService {
 		);
 	}
 
-	async tradeStockServ(userId: number, ticker: string, price: number, share: number) {
-		let stockId = await this.knex("stocks").select("id").where("ticker", "=", ticker);
-		console.log("service", stockId, userId, price, share);
-
-		await this.knex("portfolios").insert({
-			user_id: userId,
-			stock_id: stockId[0]["id"],
-			position_size: share,
-			unit_cost: price,
-		});
-		return;
+	async getBalance(userId: number): Promise<{ deposit: number; cash: number }> {
+		const balance = await this.knex("user_history")
+			.select("deposit", "cash")
+			.where("user_id", userId)
+			.orderBy("created_at", "desc")
+			.limit(1);
+		return balance[0];
 	}
-}
 
-// .join("users", "portfolios.user_id", "users.id")
-// .join("stocks", "portfolios.stock_id", "stocks.id")
-// .join("industries", "stocks.industry_id", "industries.id")
-// .join("sectors", "stocks.sector_id", "sectors.id")
-// .select(this.knex.raw("sum(portfolios.position_size *portfolios.unit_cost) as cost"),"stocks.ticker", "stocks.name as stockName", "portfolios.position_size", "portfolios.unit_cost")
-// .where("users.id", "=", userId)
-// .orderBy("stocks.ticker", "asc")
+	// async tradeStockServ(userId: number, ticker: string, price: number, share: number) {
+	// 	let stockId = await this.knex("stocks").select("id").where("ticker", "=", ticker);
+	// 	console.log("service", stockId, userId, price, share);
+
+	// 	await this.knex("portfolios").insert({
+	// 		user_id: userId,
+	// 		stock_id: stockId[0]["id"],
+	// 		position_size: share,
+	// 		unit_cost: price,
+	// 	});
+	// 	return;
+	// }
+}

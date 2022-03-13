@@ -11,6 +11,7 @@ export class CommentService {
 				.select("u.username", "u.avatar", "c.content", "c.created_at")
 				.join("users as u", "u.id", "c.user_id")
 				.where("c.stock_id", stockId)
+				.orderBy("created_at")
 		);
 	}
 

@@ -63,7 +63,10 @@ export default function Watchlist() {
 						{isLoading ? (
 							<LoadingSpinner />
 						) : (
-							<StockTable headings={tableHeadings} content={calculatedStocks} />
+							<StockTable
+								headings={tableHeadings}
+								content={calculatedStocks.map(({ id, ...obj }) => obj)}
+							/>
 						)}
 					</Col>
 				</Row>
@@ -74,25 +77,22 @@ export default function Watchlist() {
 
 function loadStocks(stocks: Stock[], watchlistId: number, watchlistName: string, dispatch: Function) {
 	return stocks.map((stock) => {
-		if (stock) {
-			const deleteInfo = {
-				watchlistId,
-				stockId: stock.id,
-				ticker: stock.ticker,
-				watchlistName,
-			};
-			//load into table
-			const change = stock.price - stock.prevPrice!;
-			return {
-				id: stock.id,
-				ticker: stock.ticker,
-				name: stock.name,
-				price: stock.price,
-				change: change.toFixed(2),
-				changePercentage: ((change / stock.prevPrice!) * 100).toFixed(2) + "%",
-				deleteBtn: <FontAwesomeIcon icon={faTimes} onClick={() => dispatch(deleteStockThunk(deleteInfo))} />,
-			};
-		}
-		return null;
+		const deleteInfo = {
+			watchlistId,
+			stockId: stock.id,
+			ticker: stock.ticker,
+			watchlistName,
+		};
+		//load into table
+		const change = stock.price - stock.prevPrice!;
+		return {
+			id: stock.id,
+			ticker: stock.ticker,
+			name: stock.name,
+			price: stock.price,
+			change: change.toFixed(2),
+			changePercentage: ((change / stock.prevPrice!) * 100).toFixed(2) + "%",
+			deleteBtn: <FontAwesomeIcon icon={faTimes} onClick={() => dispatch(deleteStockThunk(deleteInfo))} />,
+		};
 	});
 }
