@@ -32,8 +32,8 @@ export class CommentController {
 		const stockId: number = Number(req.params.stockId);
 		if (Number.isNaN(stockId) || stockId <= 0) throw new HttpError(400, "Stock not exist");
 
-		const content: string = req.body.content.replace(/\s+/g, "");
-		if (!content) throw new HttpError(400, "Comment cannot be empty");
+		const content: string = req.body.content;
+		if (!content.replace(/\s+/g, "")) throw new HttpError(400, "Comment cannot be empty");
 		if (content.length > 200) throw new HttpError(400, "Comment exceed maximum length");
 
 		const insertComment: UserComment = { userId, stockId, content };

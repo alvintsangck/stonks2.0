@@ -4,21 +4,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { AdvancedRealTimeChart, ColorTheme, FundamentalData, SymbolInfo } from "react-ts-tradingview-widgets";
 import { RootState } from "../redux/store/state";
 import { useParams } from "react-router";
-import CommentForm from "./CommentForm";
 import StockButtons from "./StockButtons";
 import { Helmet } from "react-helmet";
 import { useEffect } from "react";
 import { getCommentsThunk, getStockNewsThunk, getStockThunk } from "../redux/stock/thunk";
 import { localTime } from "../helper";
-
-const env = process.env.REACT_APP_API_ORIGIN;
+import Comments from "./Comments";
 
 export default function Stock() {
 	const dispatch = useDispatch();
 	const theme = useSelector((state: RootState) => state.theme.theme);
 	const stock = useSelector((state: RootState) => state.stock.stock);
 	const news = useSelector((state: RootState) => state.stock.news);
-	const comments = useSelector((state: RootState) => state.stock.comments);
+
 	const { ticker } = useParams<{ ticker: string }>();
 
 	useEffect(() => {
@@ -86,24 +84,7 @@ export default function Stock() {
 								))}
 							</div>
 						</div>
-						<div className="comment-container">
-							<h3>Comments</h3>
-							<div className="comment-section">
-								{comments.map((comment, i) => (
-									<div className="comment-wrap" key={i}>
-										<img className="avatar" src={`${env}/${comment.avatar}`} alt="avatar" />
-										<div className="content">
-											<div>
-												<span className="username">{comment.username}</span>
-												<span className="comment-date">{localTime(comment.createdAt)}</span>
-											</div>
-											<div className="content">{comment.content}</div>
-										</div>
-									</div>
-								))}
-							</div>
-							<CommentForm />
-						</div>
+						<Comments />
 					</Col>
 				</Row>
 			</Container>
