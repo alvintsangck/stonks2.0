@@ -19,6 +19,7 @@ export async function up(knex: Knex): Promise<void> {
 			table.string("ticker", 20);
 			table.integer("earning_year");
 			table.integer("earning_quarter");
+			table.string("release_time", 20);
 			table.decimal("eps_estimated", 10, 4);
 			table.decimal("eps_reported", 10, 4);
 			table.decimal("revenue_estimated", 14, 2);

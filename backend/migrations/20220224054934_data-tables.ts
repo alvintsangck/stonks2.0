@@ -118,6 +118,7 @@ export async function up(knex: Knex): Promise<void> {
 			table.integer("date_id").unsigned().notNullable().references("dim_dates.id");
 			table.integer("stock_id").unsigned().notNullable().references("stocks.id");
 			table.integer("year_quarter_id").unsigned().notNullable().references("dim_year_quarters.id");
+			table.string("release_time", 20);
 			table.decimal("eps_estimated", 10, 4);
 			table.decimal("eps_reported", 10, 4);
 			table.decimal("revenue_estimated", 14, 2);
