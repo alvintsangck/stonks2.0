@@ -8,6 +8,7 @@ import { env } from "../env";
 import { logoutThunk } from "../redux/auth/thunk";
 import { toggleThemeAction } from "../redux/theme/action";
 import { TickerTape } from "react-tradingview-embed";
+import { push } from "connected-react-router";
 
 export default function NavBar() {
 	const dispatch = useDispatch();
@@ -16,7 +17,7 @@ export default function NavBar() {
 
 	return (
 		<nav className="nav-bar">
-			<TickerTape widgetProps={{colorTheme:theme}} />
+			<TickerTape widgetProps={{ colorTheme: theme }} />
 			<Container fluid>
 				<Row className="align-items-center">
 					<Col md={3}>
@@ -40,6 +41,9 @@ export default function NavBar() {
 									/>
 								</Dropdown.Toggle>
 								<Dropdown.Menu>
+									<Dropdown.Item onClick={() => dispatch(push(`/portfolio`))}>
+										{user.payload.username}
+									</Dropdown.Item>
 									<Dropdown.Item>
 										{/* <NavLink className="dropdown-item" to="/setting"> */}
 										User Setting
