@@ -15,3 +15,12 @@
 .brief-value {
 	font-weight: bolder;
 }
+
+.portfolio-container .button-container {
+	display: flex;
+	justify-content: space-around;
+}
+
+.portfolio-container button.stonk-btn {
+	width: 40%;
+}

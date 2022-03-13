@@ -40,8 +40,9 @@ nav .container-fluid {
 }
 
 .user-avatar-btn {
-	background-color: transparent;
-	border: none;
+	background-color: transparent !important;
+	border: none !important;
+	box-shadow: none !important;
 }
 
 .user-avatar-btn::after {
@@ -68,6 +69,10 @@ nav .container-fluid {
 
 .brand-name a:hover {
 	color: #000000;
+}
+
+.dark .brand-name a:hover {
+	color: #ffffff;
 }
 
 .brand-name div {

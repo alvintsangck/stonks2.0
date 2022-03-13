@@ -25,7 +25,7 @@ export function SearchForm() {
 					value={ticker}
 					onChange={(e) => setTicker(e.target.value.toUpperCase())}
 				/>
-			<button type="submit" className="form-control search-btn">
+			<button type="submit" className="search-btn">
 				<FontAwesomeIcon icon={faSearch} className="" />
 			</button>
 		</Form>

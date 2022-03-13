@@ -16,6 +16,10 @@
 	border: 1px solid rgba(0, 0, 0, 0.125);
 }
 
+.dark .screen-list {
+	border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
 .screen-list > div {
 	width: 100%;
 	cursor: pointer;
@@ -24,7 +28,7 @@
 .dark .screen-list > div {
 	color: #ffffff;
 	background-color: #000000;
-	border: 1px solid rgba(255,255,255,0.3)
+	border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .select-industry-list,
