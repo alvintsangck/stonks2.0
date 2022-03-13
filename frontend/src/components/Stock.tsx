@@ -38,7 +38,7 @@ export default function Stock() {
 			<Container fluid className="stock-container">
 				<Row>
 					<Col md={8} className="stock-info">
-						<SymbolInfo widgetProps={{ symbol: ticker, colorTheme: theme }} />
+						<SymbolInfo widgetProps={{ symbol: ticker, colorTheme: theme, width: "100%" }} />
 					</Col>
 				</Row>
 				<Row>
@@ -56,7 +56,7 @@ export default function Stock() {
 								}}
 							/>
 						</div>
-						<FundamentalData widgetProps={{ symbol: ticker, colorTheme: theme }} />
+						<FundamentalData widgetProps={{ symbol: ticker, colorTheme: theme, width: "100%" }} />
 					</Col>
 					<Col md={4}>
 						<StockButtons />

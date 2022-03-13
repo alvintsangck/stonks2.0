@@ -8,6 +8,13 @@ body {
 	min-height: 100vh;
 }
 
+.tape-section {
+	position: sticky;
+	top: 0;
+	left: 0;
+	z-index: 100;
+}
+
 main {
 	flex: 1;
 }
@@ -17,11 +24,22 @@ main {
 	color: rgba(255, 255, 255, 0.9);
 }
 
+.dark a {
+	color: rgba(255, 255, 255, 0.9);
+}
+
 .dark .table {
-	color: rgba(255, 255, 255, 0.8);
+	color: rgba(255, 255, 255, 0.9);
 	--bs-table-striped-color: rgba(255, 255, 255, 0.8);
 	--bs-table-hover-color: #ffffff;
 	--bs-table-hover-bg: rgba(255, 255, 255, 0.075);
+}
+
+.dark input,
+.dark textarea {
+	background-color: #000000;
+	color: rgba(255, 255, 255, 0.9);
+	border: 1px solid #ffffff;
 }
 
 /* user */

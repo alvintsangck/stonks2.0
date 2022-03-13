@@ -16,7 +16,7 @@ export default function DefaultContainer() {
 	const theme = useSelector((state: RootState) => state.theme.theme);
 
 	return (
-		<div className={theme === "light" ? "" : "dark"} id="app">
+		<div className={theme} id="app">
 			<NavBar />
 			<main>
 				<Switch>

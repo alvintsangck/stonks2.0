@@ -1,5 +1,6 @@
 #comment-form textarea {
 	resize: none;
+	border-radius: 25px;
 }
 
 #comment-form div:last-child {

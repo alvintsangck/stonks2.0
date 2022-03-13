@@ -7,7 +7,6 @@ import { SearchForm } from "./SearchForm";
 import { env } from "../env";
 import { logoutThunk } from "../redux/auth/thunk";
 import { toggleThemeAction } from "../redux/theme/action";
-import { TickerTape } from "react-tradingview-embed";
 import { push } from "connected-react-router";
 
 export default function NavBar() {
@@ -17,10 +16,9 @@ export default function NavBar() {
 
 	return (
 		<nav className="nav-bar">
-			<TickerTape widgetProps={{ colorTheme: theme }} />
 			<Container fluid>
 				<Row className="align-items-center">
-					<Col md={3}>
+					<Col xs={3}>
 						{!user && (
 							<div className="login">
 								<NavLink className="non-user" to="/login">
@@ -40,7 +38,7 @@ export default function NavBar() {
 										alt="user-avatar"
 									/>
 								</Dropdown.Toggle>
-								<Dropdown.Menu>
+								<Dropdown.Menu variant={theme}>
 									<Dropdown.Item onClick={() => dispatch(push(`/portfolio`))}>
 										{user.payload.username}
 									</Dropdown.Item>
@@ -57,36 +55,33 @@ export default function NavBar() {
 							</Dropdown>
 						)}
 					</Col>
-					<Col md={6} className="brand-name">
+					<Col xs={6} className="brand-name">
 						<NavLink to="/">
 							<span>STONKS</span>
 							<div>Tecky Academy</div>
 						</NavLink>
 					</Col>
-					<Col md={3} className="search-bar">
+					<Col xs={3} className="search-bar">
 						<SearchForm />
 					</Col>
 				</Row>
 			</Container>
-			<Navbar collapseOnSelect expand="md" className="blue" variant="dark">
+			<Navbar collapseOnSelect expand="md" className="blue" variant='dark'>
 				<Navbar.Toggle aria-controls="responsive-navbar-nav" />
 				<Navbar.Collapse id="responsive-navbar-nav">
 					<Nav className="m-auto">
-						<NavLink to="/">
-							<span className="nav-item">Home</span>
-						</NavLink>
-						<NavLink to="/watchlist">
-							<span className="nav-item">Watchlist</span>
-						</NavLink>
-						<NavLink to="/screener">
-							<span className="nav-item">Screener</span>
-						</NavLink>
-						<NavLink to="/portfolio">
-							<span className="nav-item">Portfolio</span>
-						</NavLink>
-						<NavLink to="/transfer">
-							<span className="nav-item">Transfer</span>
-						</NavLink>
+						<Nav.Link href="#" onClick={()=>dispatch(push("/"))}>
+								<span className="nav-item">Home</span>
+						</Nav.Link>
+						<Nav.Link href="#" onClick={()=>dispatch(push("/watchlist"))}>
+								<span className="nav-item">Watchlist</span>
+						</Nav.Link>
+						<Nav.Link href="#" onClick={()=>dispatch(push("/screener"))}>
+								<span className="nav-item">Screener</span>
+						</Nav.Link>
+						<Nav.Link href="#" onClick={()=>dispatch(push("/portfolio"))}>
+								<span className="nav-item">Portfolio</span>
+						</Nav.Link>
 					</Nav>
 				</Navbar.Collapse>
 			</Navbar>
