@@ -22,7 +22,7 @@ async function calculateRs() {
 
 	const russelPerf = performance(russel);
 
-	// console.log(russelPerf);
+	console.log(russelPerf);
 
 	let stockRsArr = [];
 

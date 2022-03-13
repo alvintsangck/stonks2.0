@@ -1,7 +1,11 @@
 import psycopg2
-from spark.src.psql_config.config import config
 from datetime import datetime, timedelta
 import yfinance as yf
+import os
+import sys
+os.chdir("/opt/bitnami/spark/src/")
+sys.path.append('psql_config/')
+from config import config
 
 #check if market is opened
 end = datetime.now()
@@ -37,7 +41,7 @@ def execute_cursor():
                 join stocks s on s.ticker = ssp.ticker
                 join dim_dates dd on dd."year" = ssp."year" and dd."month" = ssp."month" and dd."day" = ssp."day" 
                 where ssp.created_at in (select created_at from staging_stock_prices order by created_at desc limit 1)) on conflict(stock_id, date_id) 
-	 			DO UPDATE set updated_at = NOW();""")
+	 			DO UPDATE set price = EXCLUDED.price, updated_at = NOW();""")
        
     conn.commit()
 	# close the communication with the PostgreSQL
