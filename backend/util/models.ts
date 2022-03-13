@@ -45,9 +45,12 @@ export type Industry = {
 
 export type Stock = {
 	id: number;
+	ticker: string;
 	name: string;
-	industry_id: number;
-	sector_id: number;
+	price?: number;
+	prevPrice?: number;
+	industryName?: string;
+	sectorName?: string;
 };
 
 export type UserComment = {
@@ -80,7 +83,11 @@ export enum Table {
 export type UserData = Omit<User, "id"> & { email: string };
 export type SectorData = Omit<Sector, "id">;
 export type IndustryData = Omit<Industry, "id">;
-export type StockData = Omit<Stock, "id">;
+export type StockData = {
+	name: string;
+	industry_id: number;
+	sector_id: number;
+};
 export type RawIndustryData = {
 	name: string;
 	sector: string;
