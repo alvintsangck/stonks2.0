@@ -103,7 +103,11 @@ export default function Portfolio() {
 						<canvas className="shares-holding" height="100" width="100"></canvas>
 					</Col>
 				</Row>
-				<StockTable headings={tableHeadings} content={portfolio.map(({ stockId, ...obj }) => obj)} />
+				<StockTable
+					headings={tableHeadings}
+					contents={portfolio.map(({ stockId, ...obj }) => obj)}
+					isLoading={false}
+				/>
 			</Container>
 		</>
 	);

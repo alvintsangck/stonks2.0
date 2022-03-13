@@ -12,7 +12,6 @@ import { RootState } from "../redux/store/state";
 import StockTable from "./StockTable";
 import { useParams } from "react-router-dom";
 import { Stock } from "../redux/stock/state";
-import LoadingSpinner from "./LoadingSpinner";
 
 export default function Watchlist() {
 	const dispatch = useDispatch();
@@ -59,15 +58,11 @@ export default function Watchlist() {
 					</Col>
 					<Col md={9}>
 						<AddForm name={currentWatchlistName} placeholder="stock" onAdd={addStock} />
-
-						{isLoading ? (
-							<LoadingSpinner />
-						) : (
-							<StockTable
-								headings={tableHeadings}
-								content={calculatedStocks.map(({ id, ...obj }) => obj)}
-							/>
-						)}
+						<StockTable
+							headings={tableHeadings}
+							contents={calculatedStocks.map(({ id, ...obj }) => obj)}
+							isLoading={isLoading}
+						/>
 					</Col>
 				</Row>
 			</Container>

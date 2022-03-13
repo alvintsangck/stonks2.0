@@ -4,7 +4,6 @@ import StockTable from "./StockTable";
 import ScreenerForm from "./ScreenerForm";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store/state";
-import LoadingSpinner from "./LoadingSpinner";
 
 export default function Screener() {
 	const tableHeadings: string[] = [
@@ -33,11 +32,11 @@ export default function Screener() {
 				<ScreenerForm />
 			</Container>
 			<Container fluid>
-				{isLoading ? (
-					<LoadingSpinner />
-				) : (
-					<StockTable headings={tableHeadings} content={stocks.map(({ id, ...obj }) => obj)} />
-				)}
+				<StockTable
+					headings={tableHeadings}
+					contents={stocks.map(({ id, ...obj }) => obj)}
+					isLoading={isLoading}
+				/>
 			</Container>
 		</>
 	);
