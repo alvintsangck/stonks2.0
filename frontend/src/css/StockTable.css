@@ -1,3 +1,13 @@
+.stock-table {
+	position: relative;
+}
+
+.loading-container {
+	position: absolute;
+	left: 45%;
+	top: 400%;
+}
+
 .table-responsive {
 	overflow-y: auto;
 	height: 600px;
