@@ -71,7 +71,7 @@
 }
 
 .login-container {
-	/* background-image: url(/stonk_bg.webp); */
+	background-image: url(../image/stonk_bg.webp);
 	background-color: #000000;
 	background-repeat: no-repeat;
 	background-size: cover;
