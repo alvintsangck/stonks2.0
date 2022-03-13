@@ -13,7 +13,6 @@ import DepositForm from "./DepositForm";
 import { Helmet } from "react-helmet";
 import { useParams } from "react-router";
 import WithdrawalForm from "./WithdrawalForm";
-import { Link } from "react-router-dom";
 import { push } from "connected-react-router";
 
 export default function Transfer() {

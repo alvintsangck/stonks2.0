@@ -17,7 +17,7 @@ export function attachApi(app: Express, io: SocketIO.Server) {
 	let userService = new UserService(knex);
 	let userController = new UserController(userService);
 	let stockService = new StockService(knex);
-	let stockController = new StockController(stockService, userService);
+	let stockController = new StockController(stockService);
 	let commentService = new CommentService(knex);
 	let commentController = new CommentController(commentService, io);
 	let screenerService = new ScreenerService(knex);

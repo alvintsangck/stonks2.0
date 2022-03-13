@@ -310,7 +310,7 @@ export function depositThunk(amount: string) {
 			ethers.utils.parseUnits(amount, "ether")
 		);
 
-		const a = await tx.wait();
+		await tx.wait();
 	};
 }
 
@@ -326,6 +326,6 @@ export function withdrawalThunk(amount: string) {
 			ethers.utils.parseUnits(amount, "ether")
 		);
 
-		const a = await tx.wait();
+		await tx.wait();
 	};
 }

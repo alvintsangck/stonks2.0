@@ -1,36 +1,41 @@
+import { push } from "connected-react-router";
+import { LoginFormState } from "../../components/LoginForm";
 import { callApi } from "../api";
 import { RootDispatch } from "../store/action";
 import { authApiFailedAction, loginAction, logoutAction, registerAction } from "./action";
 
-export function loginThunk() {
+export function loginThunk(data: LoginFormState, pathname: string) {
 	return async (dispatch: RootDispatch) => {
-		const result = await callApi("/user/login", "POST");
+		const result = await callApi("/user/login", "POST", data);
 		if ("error" in result) {
-			dispatch(authApiFailedAction("log in", result.error));
+			dispatch(authApiFailedAction(result.error));
 		} else {
-			dispatch(loginAction());
+			const { token } = result;
+			localStorage.setItem("token", token);
+			dispatch(loginAction(token));
+			dispatch(push(pathname));
 		}
 	};
 }
 
 export function logoutThunk() {
-	return async (dispatch: RootDispatch) => {
-		const result = await callApi("/user/logout", "GET");
-		if ("error" in result) {
-			dispatch(authApiFailedAction("log out", result.error));
-		} else {
-			dispatch(logoutAction());
-		}
+	return (dispatch: RootDispatch) => {
+		localStorage.removeItem("token");
+		dispatch(logoutAction());
+		dispatch(push("/"));
 	};
 }
 
-export function registerThunk() {
+export function registerThunk(data: any, pathname: string) {
 	return async (dispatch: RootDispatch) => {
-		const result = await callApi("/user/register", "POST");
+		const result = await callApi("/user/register", "POST", data);
 		if ("error" in result) {
-			dispatch(authApiFailedAction("log in", result.error));
+			dispatch(authApiFailedAction(result.error));
 		} else {
-			dispatch(registerAction());
+			const { token } = result;
+			localStorage.setItem("token", token);
+			dispatch(registerAction(token));
+			dispatch(push(pathname));
 		}
 	};
 }

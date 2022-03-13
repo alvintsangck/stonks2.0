@@ -1,15 +1,15 @@
 @import url("https://fonts.googleapis.com/css?family=Montserrat:400,800");
 
-h1 {
+.login-container h1 {
 	font-weight: bold;
 	margin: 0;
 }
 
-h2 {
+.login-container h2 {
 	text-align: center;
 }
 
-p {
+.login-container p {
 	font-size: 14px;
 	font-weight: 100;
 	line-height: 20px;
@@ -17,14 +17,14 @@ p {
 	margin: 20px 0 30px;
 }
 
-a {
+.login-container a {
 	color: #333;
 	font-size: 14px;
 	text-decoration: none;
 	margin: 15px 0;
 }
 
-button {
+.login-container button {
 	border-radius: 20px;
 	border: 1px solid #3263dc;
 	background-color: #3263dc;
@@ -37,20 +37,21 @@ button {
 	transition: transform 80ms ease-in;
 }
 
-button:active {
+.login-container button:active {
 	transform: scale(0.95);
 }
 
-button:focus {
+.login-container button:focus {
 	outline: none;
 }
 
-button.ghost {
+.login-container button.ghost {
 	background-color: transparent;
 	border-color: #ffffff;
 }
 
-form {
+#register-form,
+#login-form {
 	background-color: #ffffff;
 	display: flex;
 	align-items: center;
@@ -61,7 +62,7 @@ form {
 	text-align: center;
 }
 
-input {
+.login-container input {
 	background-color: #eee;
 	border: none;
 	padding: 8px 12px;
@@ -69,8 +70,9 @@ input {
 	width: 100%;
 }
 
-.container-fluid {
-	background-image: url(/stonk_bg.webp);
+.login-container {
+	/* background-image: url(/stonk_bg.webp); */
+	background-color: #000000;
 	background-repeat: no-repeat;
 	background-size: cover;
 	display: flex;
@@ -134,23 +136,6 @@ input {
 		opacity: 1;
 		z-index: 5;
 	}
-}
-
-#avatar-input {
-	padding: 5px;
-}
-
-#terms-checkbox {
-	width: 20px;
-}
-
-.tos {
-	display: flex;
-	align-items: center;
-}
-
-.tos span {
-	font-size: 12px;
 }
 
 .overlay-container {
@@ -219,49 +204,3 @@ input {
 .right-panel-active .overlay-right {
 	transform: translateX(20%);
 }
-
-.social-container {
-	margin: 20px 0;
-}
-
-.social-container a {
-	border: 1px solid #dddddd;
-	border-radius: 50%;
-	display: inline-flex;
-	justify-content: center;
-	align-items: center;
-	margin: 0 5px;
-	height: 40px;
-	width: 40px;
-}
-
-#avatar-preview {
-	width: 130px;
-	height: 130px;
-	border-radius: 100%;
-}
-
-/* footer {
-	background-color: #222;
-	color: #fff;
-	font-size: 14px;
-	bottom: 0;
-	position: fixed;
-	left: 0;
-	right: 0;
-	text-align: center;
-	z-index: 999;
-}
-
-footer p {
-	margin: 10px 0;
-}
-
-footer i {
-	color: red;
-}
-
-footer a {
-	color: #3c97bf;
-	text-decoration: none;
-} */

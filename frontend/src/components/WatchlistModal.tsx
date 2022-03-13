@@ -12,10 +12,11 @@ type Props = {
 };
 
 export default function WatchlistModal({ isShow, setIsShow }: Props) {
+	const dispatch = useDispatch();
 	const watchlists = useSelector((state: RootState) => state.watchlist.watchlists);
+	const user = useSelector((state: RootState) => state.auth.user);
 	const [watchlistId, setWatchlistId] = useState(0);
 	const { ticker } = useParams<{ ticker: string }>();
-	const dispatch = useDispatch();
 
 	const hideModal = () => setIsShow(false);
 
@@ -26,8 +27,10 @@ export default function WatchlistModal({ isShow, setIsShow }: Props) {
 	};
 
 	useEffect(() => {
-		dispatch(getAllWatchlistsThunk());
-	}, [dispatch]);
+		if (user) {
+			dispatch(getAllWatchlistsThunk());
+		}
+	}, [dispatch, user]);
 
 	return (
 		<Modal show={isShow} onHide={hideModal} centered>
@@ -36,15 +39,16 @@ export default function WatchlistModal({ isShow, setIsShow }: Props) {
 			</Modal.Header>
 			<Modal.Body>
 				<ListGroup>
-					{watchlists.map(({ id, name }) => (
-						<ListGroup.Item
-							className={watchlistId === id ? "active" : ""}
-							onClick={() => setWatchlistId(id)}
-							key={id}
-						>
-							{name}
-						</ListGroup.Item>
-					))}
+					{watchlists.length > 0 &&
+						watchlists.map(({ id, name }) => (
+							<ListGroup.Item
+								className={watchlistId === id ? "active" : ""}
+								onClick={() => setWatchlistId(id)}
+								key={id}
+							>
+								{name}
+							</ListGroup.Item>
+						))}
 				</ListGroup>
 			</Modal.Body>
 			<Modal.Footer>

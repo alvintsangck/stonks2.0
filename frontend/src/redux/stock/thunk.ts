@@ -25,13 +25,13 @@ export function getCommentsThunk(stockId: number) {
 	};
 }
 
-export function postCommentThunk(stockId: number, comment: string) {
+export function postCommentThunk(stockId: number, content: string) {
 	return async (dispatch: RootDispatch) => {
-		const result = await callApi(`/comment/${stockId}`, "POST", { comment });
+		const result = await callApi(`/comment/${stockId}`, "POST", { content });
 		if ("error" in result) {
 			defaultErrorSwal(result.error);
 		} else {
-			dispatch(postCommentAction(result));
+			dispatch(postCommentAction(result.comment));
 		}
 	};
 }

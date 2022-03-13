@@ -13,7 +13,7 @@ a {
 
 /* Login */
 nav .container-fluid {
-	padding: 16px 60px 0;
+	padding: 16px 60px;
 	background-color: #ffffff;
 }
 
@@ -42,8 +42,8 @@ nav .container-fluid {
 }
 
 .user-avatar {
-	height: 80px;
-	width: 80px;
+	height: 60px;
+	width: 60px;
 }
 
 .brand-name {
@@ -53,7 +53,6 @@ nav .container-fluid {
 	font-weight: 700;
 	font-size: 20px;
 	line-height: 1.2;
-	margin-bottom: 30px;
 }
 
 .brand-name a:hover {

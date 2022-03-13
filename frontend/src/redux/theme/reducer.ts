@@ -2,12 +2,8 @@ import { ThemeAction } from "./action";
 import { ThemeState } from "./state";
 
 const initialState = {
-	theme: getTheme(),
+	theme: localStorage.getItem("theme") || "light",
 };
-
-function getTheme() {
-	return localStorage.getItem("theme") || "light";
-}
 
 export function themeReducerLogic(state: ThemeState, action: ThemeAction) {
 	switch (action.type) {

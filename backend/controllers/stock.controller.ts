@@ -3,11 +3,10 @@ import { StockService } from "../services/stock.service";
 import { HttpError } from "../util/models";
 import yahooFinance from "yahoo-finance2";
 import { wrapControllerMethod } from "../util/helper";
-import { UserService } from "../services/user.service";
 import { isLoggedIn } from "../middlewares/guard";
 
 export class StockController {
-	constructor(private stockService: StockService, private userService: UserService) {
+	constructor(private stockService: StockService) {
 		this.router.get("/stocks/:ticker", wrapControllerMethod(this.getStockInfo));
 		this.router.get("/stocks/:ticker/price", wrapControllerMethod(this.getStockPrice));
 		this.router.get("/stocks/:ticker/news", wrapControllerMethod(this.getStockNews));
@@ -38,27 +37,27 @@ export class StockController {
 	};
 
 	trade = async (req: Request) => {
-		let portfolio = await this.userService.getUserPortfolio(Number(req.session["user"].id));
-		let { ticker, price, share, status } = req.body;
-		console.log("received", status);
+		// let portfolio = await this.userService.getUserPortfolio(Number(req.session["user"].id));
+		// let { ticker, price, share, status } = req.body;
+		// console.log("received", status);
 
-		if (Number(share) == 0 || !Number.isInteger(Number(share))) {
-			throw new HttpError(400, "Number must be an integer greater than zero.");
-		}
-		if (status === "sell") {
-			let sellShare = Number(share);
-			if (portfolio.shares - sellShare < 0) {
-				throw new HttpError(400, "Sell more than portfolio have");
-			}
-			share = share * -1;
-		} else if (status === "buy") {
-			let buyPrice = parseInt(price);
-			let buyStock = parseInt(share);
-			if (buyPrice * buyStock > portfolio.cash) {
-				throw new HttpError(400, "not enough cash");
-			}
-		}
-		await this.userService.tradeStockServ(Number(req.session["user"].id), ticker, price, share);
+		// if (Number(share) == 0 || !Number.isInteger(Number(share))) {
+		// 	throw new HttpError(400, "Number must be an integer greater than zero.");
+		// }
+		// if (status === "sell") {
+		// 	let sellShare = Number(share);
+		// 	if (portfolio.shares - sellShare < 0) {
+		// 		throw new HttpError(400, "Sell more than portfolio have");
+		// 	}
+		// 	share = share * -1;
+		// } else if (status === "buy") {
+		// 	let buyPrice = parseInt(price);
+		// 	let buyStock = parseInt(share);
+		// 	if (buyPrice * buyStock > portfolio.cash) {
+		// 		throw new HttpError(400, "not enough cash");
+		// 	}
+		// }
+		// await this.userService.tradeStockServ(Number(req.session["user"].id), ticker, price, share);
 		return;
 	};
 }

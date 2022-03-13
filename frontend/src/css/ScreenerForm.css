@@ -9,6 +9,7 @@
 .result-btn {
 	padding: 10px 20px;
 	text-transform: uppercase;
+	width: 100%;
 }
 
 .reset-btn {
