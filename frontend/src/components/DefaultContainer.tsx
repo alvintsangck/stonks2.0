@@ -1,10 +1,10 @@
 import { Switch, Route, Redirect } from "react-router";
-import { Screener } from "react-ts-tradingview-widgets";
 import Footer from "./Footer";
 import Home from "./Home";
 import NoMatch from "./NoMatch";
 import Portfolio from "./Portfolio";
 import PrivateRoute from "./PrivateRoute";
+import Screener from "./Screener";
 import Stock from "./Stock";
 import NavBar from "./TopNavbar";
 import Transfer from "./Transfer";
@@ -21,12 +21,11 @@ export default function DefaultContainer() {
 					<PrivateRoute path="/watchlist/:watchlistId?" component={Watchlist} />
 					<Route path="/screener" component={Screener} />
 					<PrivateRoute path="/portfolio" component={Portfolio} />
-					<Route component={NoMatch} />
-				</Switch>
-				<Switch>
 					<PrivateRoute path="/transfer/:method" component={Transfer} />
 					<Redirect from="/transfer" to="/transfer/deposit" />
+					<Route component={NoMatch} />
 				</Switch>
+				<Switch></Switch>
 			</main>
 			<Footer />
 		</>
