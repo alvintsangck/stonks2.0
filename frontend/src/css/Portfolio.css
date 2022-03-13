@@ -1,8 +1,3 @@
-.portfolio-brief {
-	padding-top: 5em;
-	padding-bottom: 5em;
-}
-
 .account-brief {
 	font-size: x-large;
 	display: flex;
@@ -13,7 +8,6 @@
 
 .brief-info {
 	display: flex;
-	flex-direction: row;
 	justify-content: space-between;
 	padding-bottom: 50px;
 }

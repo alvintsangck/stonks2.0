@@ -58,10 +58,15 @@ export class UserService {
 		let stockPriceArr = await this.queryStockPrice(queryString.slice(0, -4));
 		let stockPriceMap = stockPriceArr.reduce(makeMap, {});
 
-		return queryPortfolioArr.map((row: {}) => {
+		return queryPortfolioArr.map((row: any) => {
 			return {
-				...row,
+				stockId: row.stockId,
+				ticker: row.ticker,
+				name: row.name,
 				price: stockPriceMap[row["stockId"]],
+				shares: row.shares,
+				avgCost: row.avgCost,
+				totalCost: row.totalCost,
 				marketValue: (row["shares"] * stockPriceMap[row["stockId"]]).toFixed(2),
 				profit: (row["shares"] * stockPriceMap[row["stockId"]] - row["totalCost"]).toFixed(2),
 				profitPercentage: `${(

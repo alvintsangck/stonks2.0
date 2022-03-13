@@ -74,7 +74,7 @@ export default function Portfolio() {
 			<Container className="portfolio-container">
 				<Row className="portfolio-brief">
 					<Col md={6} className="account-brief">
-						<div className="acco-value brief-info">
+						<div className="brief-info">
 							Market Value
 							<span className="account-value brief-value">
 								$
