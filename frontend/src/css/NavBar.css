@@ -17,6 +17,10 @@ nav .container-fluid {
 	background-color: #ffffff;
 }
 
+.dark nav .container-fluid {
+	background-color: #000000;
+}
+
 .login {
 	display: flex;
 	justify-content: center;
@@ -55,6 +59,10 @@ nav .container-fluid {
 	line-height: 1.2;
 }
 
+.dark .brand-name a {
+	color: #ffffff;
+}
+
 .brand-name a:hover {
 	color: #000000;
 }
@@ -63,6 +71,10 @@ nav .container-fluid {
 	font-size: 12px;
 	font-weight: 500;
 	color: rgba(0, 0, 0, 0.3);
+}
+
+.dark .brand-name div {
+	color: rgba(255, 255, 255, 0.6);
 }
 
 /* Bottom Bar */

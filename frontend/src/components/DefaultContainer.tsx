@@ -1,4 +1,6 @@
+import { useSelector } from "react-redux";
 import { Switch, Route, Redirect } from "react-router";
+import { RootState } from "../redux/store/state";
 import Footer from "./Footer";
 import Home from "./Home";
 import NoMatch from "./NoMatch";
@@ -11,8 +13,11 @@ import Transfer from "./Transfer";
 import Watchlist from "./Watchlist";
 
 export default function DefaultContainer() {
+	const theme = useSelector((state: RootState) => state.theme.theme);
+	console.log(theme);
+
 	return (
-		<>
+		<div className={theme === "light" ? "" : "dark"}>
 			<NavBar />
 			<main>
 				<Switch>
@@ -28,6 +33,6 @@ export default function DefaultContainer() {
 				<Switch></Switch>
 			</main>
 			<Footer />
-		</>
+		</div>
 	);
 }

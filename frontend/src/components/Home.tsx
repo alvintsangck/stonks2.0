@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Carousel, Col, Container, Row } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
-import { ColorTheme, MarketOverview } from "react-ts-tradingview-widgets";
+import { MarketOverview } from "react-tradingview-embed";
 import "../css/Home.css";
 import { env } from "../env";
 import { News } from "../redux/news/state";
@@ -22,6 +22,7 @@ export default function Home() {
 		dispatch(getNewsThunk());
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+	console.log(theme);
 
 	return (
 		<>
@@ -34,12 +35,7 @@ export default function Home() {
 						<Carousel>{isLoading ? <LoadingSpinner /> : bigNews.map(makeBigNewsElem)}</Carousel>
 					</Col>
 					<Col lg={4}>
-						<MarketOverview
-							colorTheme={theme as ColorTheme}
-							height="650px"
-							width="100%"
-							copyrightStyles={{ parent: { display: "none" } }}
-						/>
+						<MarketOverview widgetProps={{ colorTheme: theme }} />
 					</Col>
 				</Row>
 				<Row className="news-header">

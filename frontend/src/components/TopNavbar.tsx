@@ -4,9 +4,10 @@ import { RootState } from "../redux/store/state";
 import "../css/NavBar.css";
 import { Col, Container, Dropdown, Nav, Navbar, Row } from "react-bootstrap";
 import { SearchForm } from "./SearchForm";
-import { ColorTheme, TickerTape } from "react-ts-tradingview-widgets";
 import { env } from "../env";
 import { logoutThunk } from "../redux/auth/thunk";
+import { toggleThemeAction } from "../redux/theme/action";
+import { TickerTape } from "react-tradingview-embed";
 
 export default function NavBar() {
 	const dispatch = useDispatch();
@@ -15,7 +16,7 @@ export default function NavBar() {
 
 	return (
 		<nav className="nav-bar">
-			<TickerTape colorTheme={theme as ColorTheme} copyrightStyles={{ parent: { display: "none" } }} />
+			<TickerTape widgetProps={{colorTheme:theme}} />
 			<Container fluid>
 				<Row className="align-items-center">
 					<Col md={3}>
@@ -44,7 +45,9 @@ export default function NavBar() {
 										User Setting
 										{/* </NavLink> */}
 									</Dropdown.Item>
-									<Dropdown.Item>Change Theme</Dropdown.Item>
+									<Dropdown.Item onClick={() => dispatch(toggleThemeAction())}>
+										Change Theme
+									</Dropdown.Item>
 									<Dropdown.Item onClick={() => dispatch(logoutThunk())}>Log Out</Dropdown.Item>
 								</Dropdown.Menu>
 							</Dropdown>
