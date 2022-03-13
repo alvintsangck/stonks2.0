@@ -23,8 +23,7 @@ export default function LoginForm() {
 
 	function onSubmit(data: LoginFormState) {
 		if (data.username && data.password) {
-			const { from } = location.state || { pathname: "/portfolio" };
-			dispatch(loginThunk(data, from.pathname));
+			dispatch(loginThunk(data, location.state? location.state.from.pathname : "/portfolio"));
 		} else {
 			defaultErrorSwal("username or password cannot be empty");
 		}
