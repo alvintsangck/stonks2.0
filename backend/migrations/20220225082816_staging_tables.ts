@@ -68,6 +68,25 @@ export async function up(knex: Knex): Promise<void> {
 		});
 	}
 
+	await knex.schema.raw(
+		`CREATE OR REPLACE FUNCTION insert_stock_earnings() RETURNS trigger AS $$
+			BEGIN
+	
+				INSERT INTO stock_earnings (date_id, stock_id, year_quarter_id, release_time, eps_estimated, eps_reported, revenue_estimated, revenue_reported)
+				(select dd.id, s.id, dyq.id, NEW.release_time, NEW.eps_estimated, NEW.eps_reported, NEW.revenue_estimated, NEW.revenue_reported
+				from dim_dates as dd, dim_year_quarters as dyq, stocks as s
+				where dd."year" = NEW.year and dd."month" = NEW.month and dd."day" = NEW.day 
+				and dyq."year" = NEW.earning_year and dyq.quarter = NEW.earning_quarter 
+				and s.ticker = NEW.ticker);
+	
+				return NEW;
+			END
+		$$ LANGUAGE plpgsql;
+	
+		CREATE TRIGGER stock_earnings_trigger AFTER INSERT ON staging_stock_earnings FOR EACH ROW EXECUTE PROCEDURE insert_stock_earnings();
+		`
+	);
+
 	// await knex.schema.raw(
 	// 	`CREATE OR REPLACE FUNCTION insert_stock_prices() RETURNS trigger AS $$
 	// 		DECLARE
@@ -89,7 +108,7 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-	// await knex.schema.raw(`DROP TRIGGER IF EXISTS stock_prices_trigger ON staging_stock_prices;`);
+	await knex.schema.raw(`DROP TRIGGER IF EXISTS stock_earnings_trigger ON staging_stock_earnings;`);
 	await knex.schema.dropTableIfExists("staging_treasury_rates");
 	await knex.schema.dropTableIfExists("staging_sentiment_indicators");
 	await knex.schema.dropTableIfExists("staging_economic_indicators");

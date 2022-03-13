@@ -1,11 +1,12 @@
 
+import os
 import finnhub
 import csv
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from pymongo import MongoClient
 
-client = MongoClient('localhost',27017)
+client = MongoClient('mongodb',27017)
 
 db = client.stonks
 
@@ -24,6 +25,7 @@ data1 = finnhub_client.earnings_calendar(_from=start, to="2022-02-24",symbol="",
 data2 = finnhub_client.earnings_calendar(_from="2022-02-25", to=ytd,symbol="", international=False)
 data3 = finnhub_client.earnings_calendar(_from=today, to=end,symbol="", international=False)
 
+os.chdir("/opt/bitnami/spark/src/earnings")
 with open('sp500_constituent.csv') as f:
     reader = csv.DictReader(f)
     items = list(reader)
