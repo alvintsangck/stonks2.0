@@ -22,7 +22,6 @@ export default function Home() {
 		dispatch(getNewsThunk());
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-	console.log(theme);
 
 	return (
 		<>

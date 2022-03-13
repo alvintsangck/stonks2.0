@@ -14,10 +14,9 @@ import Watchlist from "./Watchlist";
 
 export default function DefaultContainer() {
 	const theme = useSelector((state: RootState) => state.theme.theme);
-	console.log(theme);
 
 	return (
-		<div className={theme === "light" ? "" : "dark"}>
+		<div className={theme === "light" ? "" : "dark"} id="app">
 			<NavBar />
 			<main>
 				<Switch>
@@ -30,7 +29,6 @@ export default function DefaultContainer() {
 					<Redirect from="/transfer" to="/transfer/deposit" />
 					<Route component={NoMatch} />
 				</Switch>
-				<Switch></Switch>
 			</main>
 			<Footer />
 		</div>

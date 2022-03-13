@@ -14,6 +14,7 @@ import { Helmet } from "react-helmet";
 import { useParams } from "react-router";
 import WithdrawalForm from "./WithdrawalForm";
 import { push } from "connected-react-router";
+import { defaultErrorSwal } from "./ReactSwal";
 
 export default function Transfer() {
 	const dispatch = useDispatch();
@@ -123,6 +124,6 @@ async function addTokenAddress() {
 			},
 		});
 	} catch (error) {
-		console.log(error);
+		defaultErrorSwal(error);
 	}
 }
