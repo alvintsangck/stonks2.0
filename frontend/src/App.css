@@ -66,15 +66,9 @@ main {
 	width: 100%;
 	transition: 800ms ease all;
 }
-
-.dark .stonk-btn {
-	background-color: #ffffff;
-	color: #000;
-}
 .dark .stonk-btn:hover {
 	background-color: transparent;
 	color: #ffffff;
-	/* border: 2px solid ; */
 }
 .dark .stonk-btn:before,
 .dark .stonk-btn:after {
