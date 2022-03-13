@@ -10,6 +10,12 @@ export const registerAction = (token: string) => ({
 	token,
 });
 
+export const getBalanceAction = (deposit: number, cash: number) => ({
+	type: "@@Auth/balance" as const,
+	deposit,
+	cash,
+});
+
 export const authApiFailedAction = (msg: string) => ({
 	type: "@@Auth/apiFailed" as const,
 	msg,
@@ -19,4 +25,5 @@ export type AuthAction =
 	| ReturnType<typeof loginAction>
 	| ReturnType<typeof logoutAction>
 	| ReturnType<typeof registerAction>
+	| ReturnType<typeof getBalanceAction>
 	| ReturnType<typeof authApiFailedAction>;

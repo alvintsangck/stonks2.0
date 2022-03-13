@@ -17,6 +17,7 @@ const token = localStorage.getItem("token");
 
 const initialState: AuthState = {
 	user: getUser(token),
+	balance: { deposit: 0, cash: 0 },
 	error: "",
 };
 
@@ -30,6 +31,9 @@ export function authReducer(state: AuthState = initialState, action: AuthAction)
 		case "@@Auth/register": {
 			return { ...state, user: getUser(action.token), error: "" };
 		}
+		case "@@Auth/balance":
+			const { deposit, cash } = action;
+			return { ...state, balance: { deposit, cash }, error: "" };
 		case "@@Auth/apiFailed":
 			return { ...state, error: action.msg };
 		default:

@@ -57,10 +57,23 @@ export type UserComment = {
 	avatar?: string;
 };
 
+export type Portfolio = {
+	id: number;
+	ticker: string;
+	name: string;
+	price: number;
+	shares: number;
+	avgCost: number;
+	totalCost: number;
+	marketValue: number;
+	profit: number;
+	profitPercentage: number;
+};
+
 export enum Table {
 	users = "users",
 	watchlist = "watchlist",
-	watchlistStock = "watchlist-stock",
+	watchlistStock = "watchlist_stock",
 }
 
 // for xlsx Data

@@ -2,96 +2,109 @@ import "../css/Portfolio.css";
 import { Helmet } from "react-helmet";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import { Table } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/store/state";
+import { useEffect, useMemo } from "react";
+import { getPortfolioThunk } from "../redux/portfolio/thunk";
+import StockTable from "./StockTable";
+import { getBalanceThunk } from "../redux/auth/thunk";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const ChartData = {
-	labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-	datasets: [
-		{
-			label: "# of Votes",
-			data: [12, 19, 3, 5, 2, 3],
-			backgroundColor: [
-				"rgba(255, 99, 132, 0.2)",
-				"rgba(54, 162, 235, 0.2)",
-				"rgba(255, 206, 86, 0.2)",
-				"rgba(75, 192, 192, 0.2)",
-				"rgba(153, 102, 255, 0.2)",
-				"rgba(255, 159, 64, 0.2)",
-			],
-			borderColor: [
-				"rgba(255, 99, 132, 1)",
-				"rgba(54, 162, 235, 1)",
-				"rgba(255, 206, 86, 1)",
-				"rgba(75, 192, 192, 1)",
-				"rgba(153, 102, 255, 1)",
-				"rgba(255, 159, 64, 1)",
-			],
-			borderWidth: 1,
-		},
-	],
-};
-
 export default function Portfolio() {
-	// const dispatch = useDispatch();
-	// const user = useSelector((state: RootState)=>state.auth);
-	// const theme = useSelector((state: RootState) => state.theme.theme);
+	const dispatch = useDispatch();
+	const portfolio = useSelector((state: RootState) => state.portfolio.portfolio);
+	const deposit = useSelector((state: RootState) => state.auth.balance.deposit);
+	const tableHeadings = [
+		"ticker",
+		"company name",
+		"price",
+		"share(s)",
+		"unit cost",
+		"total cost",
+		"market value",
+		"profit/loss",
+		"profit/loss%",
+	];
+	const ChartData = {
+		labels: portfolio.map((stock) => stock.name),
+		datasets: [
+			{
+				label: "number of shares",
+				data: portfolio.map((stock) => stock.shares),
+				backgroundColor: [
+					"rgba(255, 99, 132, 0.2)",
+					"rgba(54, 162, 235, 0.2)",
+					"rgba(255, 206, 86, 0.2)",
+					"rgba(75, 192, 192, 0.2)",
+					"rgba(153, 102, 255, 0.2)",
+					"rgba(255, 159, 64, 0.2)",
+				],
+				borderColor: [
+					"rgba(255, 99, 132, 1)",
+					"rgba(54, 162, 235, 1)",
+					"rgba(255, 206, 86, 1)",
+					"rgba(75, 192, 192, 1)",
+					"rgba(153, 102, 255, 1)",
+					"rgba(255, 159, 64, 1)",
+				],
+				borderWidth: 1,
+			},
+		],
+	};
+
+	useEffect(() => {
+		dispatch(getPortfolioThunk());
+		dispatch(getBalanceThunk());
+	}, [dispatch]);
+
+	const profit = useMemo(
+		() =>
+			portfolio.map((stock) => stock.marketValue).reduce((prev, next) => Number(prev) + Number(next), 0) -
+			Number(deposit),
+		[portfolio, deposit]
+	);
+
 	return (
-		<div>
+		<>
 			<Helmet>
-				<title>Portfolio | stonks</title>
+				<title>Portfolio | Stonks</title>
 			</Helmet>
-			<div className="container portfolio-container">
-				<div className="row portfolio-brief">
-					<div className="col-md-6 account-brief">
+			<Container className="portfolio-container">
+				<Row className="portfolio-brief">
+					<Col md={6} className="account-brief">
 						<div className="acco-value brief-info">
-							Market Value <span className="account-value brief-value">123</span>
+							Market Value
+							<span className="account-value brief-value">
+								$
+								{portfolio.length > 0
+									? portfolio
+											.map((stock) => stock.marketValue)
+											.reduce((prev, next) => Number(prev) + Number(next), 0)
+									: 0}
+							</span>
 						</div>
 						<div className="accu-value brief-info">
-							Accumulate Profit/Loss <span className="accumulate-profit brief-value">123</span>
+							Accumulate Profit/Loss
+							<span className="accumulate-profit brief-value">
+								${portfolio.length > 0 ? profit.toFixed(2) : 0}
+							</span>
 						</div>
 						<div className="accu-percent brief-info">
-							Accumulate Profit/Loss% <span className="accumulate-percentage brief-value">123</span>
+							Accumulate Profit/Loss%
+							<span className="accumulate-percentage brief-value">
+								{portfolio.length > 0 ? ((profit / deposit) * 100).toFixed(2) + "%" : 0}
+							</span>
 						</div>
-					</div>
-					<div className="col-md-6">
+					</Col>
+					<Col md={6}>
 						<Doughnut data={ChartData} />
 						<canvas className="shares-holding" height="100" width="100"></canvas>
-					</div>
-				</div>
-				<div className="row portfolio-detail">
-					<div className="portfolio-table col-md-12 col-sm-12 col-xs-12">
-						<Table responsive striped hover className="portfo-table table table-striped table-hover">
-							<thead>
-								<tr>
-									<th>Ticker</th>
-									<th>Company Name</th>
-									<th>Price(now price)</th>
-									<th>Share(s)</th>
-									<th>Avg. Unit Cost(sum (share* buy-sell unit cost) / shares)</th>
-									<th>Total Cost(share * avg unit cost)</th>
-									<th>Market Value(share * now price)</th>
-									<th>Profit/Loss(mk v - tt c)</th>
-									<th>Profit/Loss%((mk v -tt c) /tt c *100%)</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									{Array.from({ length: 9 }).map((_, index) => (
-										<td key={index}>Table cell {index}</td>
-									))}
-								</tr>
-								<tr>
-									{Array.from({ length: 9 }).map((_, index) => (
-										<td key={index}>Table cell {index}</td>
-									))}
-								</tr>
-							</tbody>
-						</Table>
-					</div>
-				</div>
-			</div>
-		</div>
+					</Col>
+				</Row>
+				<StockTable headings={tableHeadings} content={portfolio.map(({ stockId, ...obj }) => obj)} />
+			</Container>
+		</>
 	);
 }

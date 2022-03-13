@@ -6,6 +6,11 @@ export type JWTPayload = {
 	role: string;
 };
 
+export type Balance = {
+	deposit: number;
+	cash: number;
+};
+
 export type User = {
 	token: string;
 	payload: JWTPayload;
@@ -13,5 +18,6 @@ export type User = {
 
 export type AuthState = {
 	user: User | null;
+	balance: Balance;
 	error: string;
 };
