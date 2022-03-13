@@ -31,7 +31,7 @@ export default function Home() {
 			<Container>
 				<Row className="market-row">
 					<Col lg={8}>
-						<Carousel>{isLoading ? <LoadingSpinner /> : bigNews.map(makeBigNewsElem)}</Carousel>
+						{isLoading ? <LoadingSpinner /> : <Carousel> {bigNews.map(makeBigNewsElem)}</Carousel>}
 					</Col>
 					<Col lg={4}>
 						<MarketOverview widgetProps={{ colorTheme: theme }} />
