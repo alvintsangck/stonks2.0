@@ -20,18 +20,23 @@ export default function Home() {
 
 	useEffect(() => {
 		dispatch(getNewsThunk());
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [dispatch]);
 
 	return (
 		<>
 			<Helmet>
 				<title>Home | Stonks</title>
 			</Helmet>
-			<Container>
+			<Container className="home-container">
 				<Row className="market-row">
 					<Col lg={8}>
-						{isLoading ? <LoadingSpinner /> : <Carousel> {bigNews.map(makeBigNewsElem)}</Carousel>}
+						{isLoading ? (
+							<div className="loading-container">
+								<LoadingSpinner />
+							</div>
+						) : (
+							<Carousel> {bigNews.map(makeBigNewsElem)}</Carousel>
+						)}
 					</Col>
 					<Col lg={4}>
 						<MarketOverview widgetProps={{ colorTheme: theme }} />
