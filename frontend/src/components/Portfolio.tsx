@@ -9,6 +9,7 @@ import { useEffect, useMemo } from "react";
 import { getPortfolioThunk } from "../redux/portfolio/thunk";
 import StockTable from "./StockTable";
 import { getBalanceThunk } from "../redux/auth/thunk";
+import { push } from "connected-react-router";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -96,6 +97,10 @@ export default function Portfolio() {
 							<span className="accumulate-percentage brief-value">
 								{portfolio.length > 0 ? ((profit / deposit) * 100).toFixed(2) + "%" : 0}
 							</span>
+						</div>
+						<div className="button-container">
+							<button className="stonk-btn" onClick={()=>dispatch(push('/transfer/deposit'))}>Deposit</button>
+							<button className="stonk-btn" onClick={()=>dispatch(push('/transfer/withdrawal'))}>Withdraw</button>
 						</div>
 					</Col>
 					<Col md={6}>
