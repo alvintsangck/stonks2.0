@@ -89,6 +89,26 @@ export async function up(knex: Knex): Promise<void> {
 		`
 	);
 
+	await knex.schema.raw(
+		`CREATE OR REPLACE FUNCTION insert_treasury_rates() RETURNS trigger AS $$
+			BEGIN
+		
+				INSERT INTO treasury_rates (date_id, maturity_period_id, rate, created_at)
+				(select dd.id, dmp.id, NEW.rate, NEW.created_at
+				from dim_dates as dd, dim_maturity_periods as dmp
+				where dd."year" = NEW.year and dd."month" = NEW.month and dd."day" = NEW.day 
+				and dmp."name" = NEW.name) 
+				on conflict (date_id, maturity_period_id)
+				DO UPDATE set updated_at = NOW();
+		
+				return NEW;
+			END
+		$$ LANGUAGE plpgsql;
+		
+		CREATE TRIGGER treasury_rates_trigger AFTER INSERT ON staging_treasury_rates FOR EACH ROW EXECUTE PROCEDURE insert_treasury_rates();
+		`
+	);
+
 	// await knex.schema.raw(
 	// 	`CREATE OR REPLACE FUNCTION insert_stock_prices() RETURNS trigger AS $$
 	// 		DECLARE
@@ -110,6 +130,7 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
+	await knex.schema.raw(`DROP TRIGGER IF EXISTS treasury_rates_trigger ON staging_treasury_rates;`);
 	await knex.schema.raw(`DROP TRIGGER IF EXISTS stock_earnings_trigger ON staging_stock_earnings;`);
 	await knex.schema.dropTableIfExists("staging_treasury_rates");
 	await knex.schema.dropTableIfExists("staging_sentiment_indicators");
