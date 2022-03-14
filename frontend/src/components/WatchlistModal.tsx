@@ -17,9 +17,7 @@ export default function WatchlistModal({ isShow, setIsShow }: Props) {
 	const user = useSelector((state: RootState) => state.auth.user);
 	const [watchlistId, setWatchlistId] = useState(0);
 	const { ticker } = useParams<{ ticker: string }>();
-
 	const hideModal = () => setIsShow(false);
-
 	const addStock = () => {
 		dispatch(addStockThunk(watchlistId, ticker));
 		setWatchlistId(0);
