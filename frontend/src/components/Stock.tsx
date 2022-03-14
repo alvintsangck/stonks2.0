@@ -16,7 +16,6 @@ export default function Stock() {
 	const theme = useSelector((state: RootState) => state.theme.theme);
 	const stock = useSelector((state: RootState) => state.stock.stock);
 	const news = useSelector((state: RootState) => state.stock.news);
-
 	const { ticker } = useParams<{ ticker: string }>();
 
 	useEffect(() => {
