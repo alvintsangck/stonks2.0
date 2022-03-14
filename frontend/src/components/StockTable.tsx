@@ -15,12 +15,10 @@ type Props = {
 function StockTable({ headings, contents, isLoading }: Props) {
 	const dispatch = useDispatch();
 	function toStock(e: any, ticker: string) {
-		if (e.target.children[0] === undefined) {
+		if (e.target.children[0] === undefined && e.target.tagName === "TD") {
 			dispatch(push(`/stocks/${ticker}`));
 		}
 	}
-
-
 
 	return (
 		<Table responsive hover className="stock-table">
