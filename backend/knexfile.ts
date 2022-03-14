@@ -28,10 +28,10 @@ const knexConfigs = {
 	production: {
 		client: "pg",
 		connection: {
-			host: env.AWS_HOST,
+			host: process.env.AWS_HOST,
 			database: process.env.POSTGRES_DB,
-			user: env.POSTGRES_USER,
-			password: env.POSTGRES_PASSWORD,
+			user: process.env.POSTGRES_USER,
+			password: process.env.POSTGRES_PASSWORD,
 		},
 		pool: {
 			min: 2,
