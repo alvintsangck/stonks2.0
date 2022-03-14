@@ -76,7 +76,7 @@ export class UserService {
 			};
 		});
 	}
-
+	// get portfolio
 	async queryPortfolio(userId: number) {
 		return camelCaseKeys(
 			(
@@ -97,7 +97,7 @@ export class UserService {
 			).rows
 		);
 	}
-
+	//get stock price in portfolio
 	async queryStockPrice(queryString: string) {
 		return camelCaseKeys(
 			(
@@ -123,24 +123,11 @@ export class UserService {
 	}
 
 	async getBalance(userId: number): Promise<{ deposit: number; cash: number }> {
-		const balance = await this.knex("user_history")
+		const balance = await this.knex<{ deposit: number; cash: number }>("user_history")
 			.select("deposit", "cash")
 			.where("user_id", userId)
 			.orderBy("created_at", "desc")
 			.limit(1);
 		return balance[0];
 	}
-
-	// async tradeStockServ(userId: number, ticker: string, price: number, share: number) {
-	// 	let stockId = await this.knex("stocks").select("id").where("ticker", "=", ticker);
-	// 	console.log("service", stockId, userId, price, share);
-
-	// 	await this.knex("portfolios").insert({
-	// 		user_id: userId,
-	// 		stock_id: stockId[0]["id"],
-	// 		position_size: share,
-	// 		unit_cost: price,
-	// 	});
-	// 	return;
-	// }
 }
