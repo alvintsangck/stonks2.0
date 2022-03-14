@@ -16,8 +16,12 @@ export function getNewsThunk() {
 				}
 			);
 			const result = await res.json();
-			const news = result.data;
-			dispatch(getNewsAction(news));
+			if (res.ok) {
+				const news = result.data;
+				dispatch(getNewsAction(news));
+			} else {
+				dispatch(getNewsAction([]));
+			}
 		} catch (error) {
 			console.log(error);
 		}
