@@ -13,10 +13,12 @@ import LoadingSpinner from "./LoadingSpinner";
 export default function Home() {
 	const theme = useSelector((state: RootState) => state.theme.theme);
 	const news = useSelector((state: RootState) => state.news.news);
+	console.log(news);
+	
 	const isLoading = useSelector((state: RootState) => state.news.isLoading);
 	const dispatch = useDispatch();
-	const bigNews = news.slice(0, 3);
-	const smallNews = news.slice(3);
+	const bigNews = news.length > 0 ? news.slice(0, 3) : [];
+	const smallNews = news.length > 0 ? news.slice(3) : [];
 
 	useEffect(() => {
 		dispatch(getNewsThunk());
