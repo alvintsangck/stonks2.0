@@ -46,7 +46,9 @@ function StockTable({ headings, contents, isLoading }: Props) {
 						);
 					})
 				) : (
-					<div className="loading-container">Your table is empty</div>
+					<tr className="loading-container">
+						<td className=" empty">Your table is empty</td>
+					</tr>
 				)}
 			</tbody>
 		</Table>

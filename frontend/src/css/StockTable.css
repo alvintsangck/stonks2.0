@@ -44,3 +44,7 @@ th {
 .stock-table > :not(:first-child) {
 	border-top: none;
 }
+
+.stock-table .empty {
+	border: none;
+}
