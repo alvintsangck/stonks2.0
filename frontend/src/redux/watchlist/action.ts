@@ -6,9 +6,8 @@ export const getAllWatchlistsAction = (watchlists: Watchlist[]) => ({
 	watchlists,
 });
 
-export const getWatchlistAction = (watchlistId: number, stocks: Stock[]) => ({
+export const getWatchlistAction = ( stocks: Stock[]) => ({
 	type: "@@Watchlist/get" as const,
-	watchlistId,
 	stocks,
 });
 

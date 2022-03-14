@@ -1,9 +1,14 @@
-img {
-	width: 100%;
-}
-
 .market-row {
 	margin-bottom: 20px;
+}
+
+.market-row .col-md-8 {
+	position: relative;
+}
+
+.market-row .loading-container {
+	left: 30%;
+	top: 60%;
 }
 
 .market-row img {
@@ -53,7 +58,7 @@ img {
 	position: relative;
 }
 
-.small-news img{
+.small-news img {
 	height: 200px;
 }
 

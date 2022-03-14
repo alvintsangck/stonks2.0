@@ -10,8 +10,8 @@ import { newsReducer } from "../news/reducer";
 import { screenerReducer } from "../screener/reducer";
 import { stockReducer } from "../stock/reducer";
 import { metaMaskReducer } from "../metaMask/reducer";
-
-export const rootReducer = combineReducers<RootState>({
+import { RootAction } from "./action";
+const appReducer = combineReducers<RootState>({
 	auth: authReducer,
 	news: newsReducer,
 	screener: screenerReducer,
@@ -22,3 +22,11 @@ export const rootReducer = combineReducers<RootState>({
 	portfolio: portfolioReducer,
 	router: connectRouter(history),
 });
+
+export const rootReducer = (state: ReturnType<typeof appReducer> | undefined, action: RootAction) => {
+	if (action.type === "@@Auth/logout") {
+		return appReducer(undefined, action);
+	} else {
+		return appReducer(state, action);
+	}
+};

@@ -1,7 +1,6 @@
 import "../css/Stock.css";
 import { Col, Container, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { AdvancedRealTimeChart, ColorTheme, FundamentalData, SymbolInfo } from "react-ts-tradingview-widgets";
 import { RootState } from "../redux/store/state";
 import { useParams } from "react-router";
 import StockButtons from "./StockButtons";
@@ -10,6 +9,7 @@ import { useEffect } from "react";
 import { getCommentsThunk, getStockNewsThunk, getStockThunk } from "../redux/stock/thunk";
 import { localTime } from "../helper";
 import Comments from "./Comments";
+import { AdvancedChart, FundamentalData, SymbolInfo } from "react-tradingview-embed";
 
 export default function Stock() {
 	const dispatch = useDispatch();
@@ -38,36 +38,25 @@ export default function Stock() {
 			<Container fluid className="stock-container">
 				<Row>
 					<Col md={8} className="stock-info">
-						<SymbolInfo
-							symbol={ticker}
-							colorTheme={theme as ColorTheme}
-							copyrightStyles={{ parent: { display: "none" } }}
-							width="100%"
-						></SymbolInfo>
+						<SymbolInfo widgetProps={{ symbol: ticker, colorTheme: theme, width: "100%" }} />
 					</Col>
 				</Row>
 				<Row>
 					<Col md={8}>
 						<div className="stock-graph">
-							<AdvancedRealTimeChart
-								symbol={ticker}
-								theme={theme as ColorTheme}
-								copyrightStyles={{ parent: { display: "none" } }}
-								width="100%"
-								height="100%"
-								interval="D"
-								allow_symbol_change={false}
-								hide_side_toolbar={true}
-								save_image={false}
-								withdateranges={false}
-							></AdvancedRealTimeChart>
+							<AdvancedChart
+								widgetProps={{
+									symbol: ticker,
+									theme: theme,
+									interval: "D",
+									allow_symbol_change: false,
+									hide_side_toolbar: true,
+									save_image: false,
+									withdateranges: false,
+								}}
+							/>
 						</div>
-						<FundamentalData
-							symbol={ticker}
-							colorTheme={theme as ColorTheme}
-							copyrightStyles={{ parent: { display: "none" } }}
-							width="100%"
-						></FundamentalData>
+						<FundamentalData widgetProps={{ symbol: ticker, colorTheme: theme, width: "100%" }} />
 					</Col>
 					<Col md={4}>
 						<StockButtons />

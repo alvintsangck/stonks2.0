@@ -32,8 +32,7 @@ export function getWatchlistThunk(watchlistId: number | null) {
 		if ("error" in result) {
 			defaultErrorSwal(result.error);
 		} else {
-			const { watchlistId, stocks } = result;
-			dispatch(getWatchlistAction(watchlistId, stocks));
+			dispatch(getWatchlistAction(result.stocks));
 		}
 	};
 }

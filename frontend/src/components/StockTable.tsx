@@ -4,17 +4,18 @@ import { useDispatch } from "react-redux";
 import { push } from "connected-react-router";
 import { Stock } from "../redux/stock/state";
 import { Portfolio } from "../redux/portfolio/state";
+import LoadingSpinner from "./LoadingSpinner";
 
 type Props = {
 	headings: string[];
-	content: Array<Omit<Stock, "id"> | Omit<Portfolio, "stockId">>;
+	contents: Array<Omit<Stock, "id"> | Omit<Portfolio, "stockId">>;
+	isLoading: boolean;
 };
 
-function StockTable({ headings, content: contents }: Props) {
+function StockTable({ headings, contents, isLoading }: Props) {
 	const dispatch = useDispatch();
-
 	function toStock(e: any, ticker: string) {
-		if (e.target.children[0] === undefined) {
+		if (e.target.children[0] === undefined && e.target.tagName === "TD") {
 			dispatch(push(`/stocks/${ticker}`));
 		}
 	}
@@ -29,16 +30,26 @@ function StockTable({ headings, content: contents }: Props) {
 				</tr>
 			</thead>
 			<tbody>
-				{contents.map((content, i) => {
-					const values = Object.values(content);
-					return (
-						<tr key={i} onClick={(e) => toStock(e, content.ticker)}>
-							{values.map((value: any, i) => (
-								<td key={i}>{value}</td>
-							))}
-						</tr>
-					);
-				})}
+				{isLoading ? (
+					<div className="loading-container">
+						<LoadingSpinner />
+					</div>
+				) : contents.length > 0 ? (
+					contents.map((content, i) => {
+						const values = Object.values(content);
+						return (
+							<tr key={i} onClick={(e) => toStock(e, content.ticker)}>
+								{values.map((value: any, i) => (
+									<td key={i}>{value}</td>
+								))}
+							</tr>
+						);
+					})
+				) : (
+					<tr className="loading-container">
+						<td className=" empty">Your table is empty</td>
+					</tr>
+				)}
 			</tbody>
 		</Table>
 	);

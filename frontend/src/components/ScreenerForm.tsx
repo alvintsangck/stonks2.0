@@ -34,7 +34,7 @@ export default function ScreenerForm() {
 	const dispatch = useDispatch();
 	const addedIndustries = useSelector((state: RootState) => state.screener.addedIndustries);
 	const addedSectors = useSelector((state: RootState) => state.screener.addedSectors);
-	const stocks = useSelector((state:RootState)=>state.screener.stocks)
+	const stocks = useSelector((state: RootState) => state.screener.stocks);
 	const [radioSector, setRadioSector] = useState("include");
 	const [radioIndustry, setRadioIndustry] = useState("include");
 	const defaultValues = {
@@ -94,10 +94,10 @@ export default function ScreenerForm() {
 		<>
 			<Form id="screener-form" onSubmit={handleSubmit(onSubmit)}>
 				<Row>
-					{inputsArr.map((inputs) => (
-						<Col lg={6}>
+					{inputsArr.map((inputs, i) => (
+						<Col lg={6} key={i}>
 							{inputs.map(({ title, name, min, max }) => (
-								<Form.Group className="screener-items">
+								<Form.Group className="screener-items" key={name}>
 									<h4>{title}</h4>
 									<div>
 										<Form.Control

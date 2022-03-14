@@ -2,26 +2,48 @@ body {
 	background-color: rgb(255, 255, 255);
 }
 
-#root {
+img {
+	width: 100%;
+}
+
+#app {
 	display: flex;
 	flex-direction: column;
 	min-height: 100vh;
+}
+
+.tape-section {
+	position: sticky;
+	top: 0;
+	left: 0;
+	z-index: 100;
 }
 
 main {
 	flex: 1;
 }
 
-body.dark {
+.dark {
 	background-color: #000000;
 	color: rgba(255, 255, 255, 0.9);
 }
 
+.dark a {
+	color: rgba(255, 255, 255, 0.9);
+}
+
 .dark .table {
-	color: rgba(255, 255, 255, 0.8);
+	color: rgba(255, 255, 255, 0.9);
 	--bs-table-striped-color: rgba(255, 255, 255, 0.8);
 	--bs-table-hover-color: #ffffff;
 	--bs-table-hover-bg: rgba(255, 255, 255, 0.075);
+}
+
+.dark input,
+.dark textarea {
+	background-color: #000000;
+	color: rgba(255, 255, 255, 0.9);
+	border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 /* user */
@@ -66,15 +88,9 @@ body.dark {
 	width: 100%;
 	transition: 800ms ease all;
 }
-
-.dark .stonk-btn {
-	background-color: #ffffff;
-	color: #000;
-}
 .dark .stonk-btn:hover {
 	background-color: transparent;
 	color: #ffffff;
-	/* border: 2px solid ; */
 }
 .dark .stonk-btn:before,
 .dark .stonk-btn:after {

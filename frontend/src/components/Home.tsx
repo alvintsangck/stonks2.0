@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Carousel, Col, Container, Row } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
-import { ColorTheme, MarketOverview } from "react-ts-tradingview-widgets";
+import { MarketOverview } from "react-tradingview-embed";
 import "../css/Home.css";
 import { env } from "../env";
 import { News } from "../redux/news/state";
@@ -13,33 +13,35 @@ import LoadingSpinner from "./LoadingSpinner";
 export default function Home() {
 	const theme = useSelector((state: RootState) => state.theme.theme);
 	const news = useSelector((state: RootState) => state.news.news);
+	console.log(news);
+	
 	const isLoading = useSelector((state: RootState) => state.news.isLoading);
 	const dispatch = useDispatch();
-	const bigNews = news.slice(0, 3);
-	const smallNews = news.slice(3);
+	const bigNews = news.length > 0 ? news.slice(0, 3) : [];
+	const smallNews = news.length > 0 ? news.slice(3) : [];
 
 	useEffect(() => {
 		dispatch(getNewsThunk());
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [dispatch]);
 
 	return (
 		<>
 			<Helmet>
 				<title>Home | Stonks</title>
 			</Helmet>
-			<Container>
+			<Container className="home-container">
 				<Row className="market-row">
 					<Col lg={8}>
-						<Carousel>{isLoading ? <LoadingSpinner /> : bigNews.map(makeBigNewsElem)}</Carousel>
+						{isLoading ? (
+							<div className="loading-container">
+								<LoadingSpinner />
+							</div>
+						) : (
+							<Carousel> {bigNews.map(makeBigNewsElem)}</Carousel>
+						)}
 					</Col>
 					<Col lg={4}>
-						<MarketOverview
-							colorTheme={theme as ColorTheme}
-							height="650px"
-							width="100%"
-							copyrightStyles={{ parent: { display: "none" } }}
-						/>
+						<MarketOverview widgetProps={{ colorTheme: theme }} />
 					</Col>
 				</Row>
 				<Row className="news-header">
@@ -74,7 +76,7 @@ function makeSmallNewsElem(news: News, i: number) {
 	const rawContent = extractContent(news.attributes.content);
 	const index = "Getty Images ";
 	const content = rawContent?.slice(rawContent.indexOf(index) + index.length);
-	const image = news.attributes.gettyImageUrl || `${env}/stonk_bg.webp`;
+	const image = news.attributes.gettyImageUrl || `${env.url}/stonk_bg.webp`;
 	return (
 		<Col md={3} key={i}>
 			<div className="small-news">

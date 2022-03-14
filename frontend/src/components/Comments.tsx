@@ -13,7 +13,7 @@ export default function Comments() {
 			<div className="comment-section">
 				{comments.map((comment, i) => (
 					<div className="comment-wrap" key={i}>
-						<img className="avatar" src={`${env}/${comment.avatar}`} alt="avatar" />
+						<img className="avatar" src={`${env.url}/${comment.avatar}`} alt="avatar" />
 						<div className="content">
 							<div>
 								<span className="username">{comment.username}</span>

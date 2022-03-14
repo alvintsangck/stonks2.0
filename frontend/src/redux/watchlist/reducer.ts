@@ -4,7 +4,7 @@ import { WatchlistState } from "./state";
 const initialState: WatchlistState = {
 	watchlists: [],
 	stocks: [],
-	isLoading: true,
+	isLoading: false,
 };
 
 export function watchlistReducer(state: WatchlistState = initialState, action: WatchlistAction) {

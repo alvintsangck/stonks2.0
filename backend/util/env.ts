@@ -14,7 +14,7 @@ const env = {
 	GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
 	GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 	PORT: process.env.PORT || 8080,
-	SECRET: process.env.SECRET!,
+	SECRET: process.env.SECRET || "stonks",
 	NODE_ENV: process.env.NODE_ENV || "development",
 	WINSTON_LEVEL: process.env.NODE_ENV == "development" ? "debug" : "info",
 };

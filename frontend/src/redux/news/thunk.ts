@@ -11,13 +11,17 @@ export function getNewsThunk() {
 					method: "GET",
 					headers: {
 						"x-rapidapi-host": "seeking-alpha.p.rapidapi.com",
-						"x-rapidapi-key": "682db5aceamshb889cb938933b9bp159351jsna47daa8ade2e",
+						"x-rapidapi-key": "eb76c9b688msha0363b0bcc4e8d8p1f0147jsn4c17370cbe91",
 					},
 				}
 			);
 			const result = await res.json();
-			const news = result.data;
-			dispatch(getNewsAction(news));
+			if (res.ok) {
+				const news = result.data;
+				dispatch(getNewsAction(news));
+			} else {
+				dispatch(getNewsAction([]));
+			}
 		} catch (error) {
 			console.log(error);
 		}

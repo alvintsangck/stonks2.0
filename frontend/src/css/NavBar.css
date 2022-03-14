@@ -5,7 +5,7 @@ a {
 
 .nav-bar {
 	position: sticky;
-	top: 0;
+	top: 46px;
 	left: 0;
 	z-index: 100;
 	margin-bottom: 20px;
@@ -15,6 +15,10 @@ a {
 nav .container-fluid {
 	padding: 16px 60px;
 	background-color: #ffffff;
+}
+
+.dark nav .container-fluid {
+	background-color: #000000;
 }
 
 .login {
@@ -29,12 +33,16 @@ nav .container-fluid {
 }
 
 .login a:first-child {
-	border-right: #000 1px solid;
+	border-right: 1px solid #000000;
+}
+.dark .login a:first-child {
+	border-right: 1px solid rgba(255, 255, 255, 0.9);
 }
 
 .user-avatar-btn {
-	background-color: transparent;
-	border: none;
+	background-color: transparent !important;
+	border: none !important;
+	box-shadow: none !important;
 }
 
 .user-avatar-btn::after {
@@ -55,8 +63,16 @@ nav .container-fluid {
 	line-height: 1.2;
 }
 
+.dark .brand-name a {
+	color: #ffffff;
+}
+
 .brand-name a:hover {
 	color: #000000;
+}
+
+.dark .brand-name a:hover {
+	color: #ffffff;
 }
 
 .brand-name div {
@@ -65,9 +81,17 @@ nav .container-fluid {
 	color: rgba(0, 0, 0, 0.3);
 }
 
+.dark .brand-name div {
+	color: rgba(255, 255, 255, 0.6);
+}
+
 /* Bottom Bar */
 .navbar-toggler {
 	color: rgb(255, 255, 255, 0.5);
+}
+
+nav.blue > button {
+	color: rgba(255, 255, 255, 1) !important;
 }
 
 .blue {
@@ -76,8 +100,8 @@ nav .container-fluid {
 }
 
 .blue a {
-	color: #ffffff;
-	padding: 15px;
+	color: #ffffff !important;
+	padding: 15px !important;
 }
 
 .navbar,

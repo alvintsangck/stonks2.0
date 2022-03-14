@@ -16,7 +16,7 @@ describe("WatchlistController", () => {
 
 	beforeEach(function () {
 		service = new WatchlistService({} as Knex);
-		service.getWatchlist = jest.fn((userId) => Promise.resolve([{ id: 1, name: "a" }]));
+		service.getWatchlist = jest.fn((userId) => Promise.resolve([]));
 		service.createWatchlist = jest.fn((userId, name) => Promise.resolve(1));
 		service.changeWatchlistName = jest.fn((watchlistId, name) => Promise.resolve({ message: "changed" }));
 		service.deleteWatchlist = jest.fn((WatchlistId) => Promise.resolve({ message: "deleted" }));
@@ -42,7 +42,7 @@ describe("WatchlistController", () => {
 			req.params = { watchlistId: "1" };
 			const result = await controller.get(req);
 			expect(service.getWatchlist).toBeCalled;
-			expect(result).toMatchObject([{ id: 1, name: "a" }]);
+			expect(result).toMatchObject({ stocks: [] });
 		});
 
 		test("throw error with string watchlistId", async () => {
