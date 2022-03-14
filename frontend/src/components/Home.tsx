@@ -74,7 +74,7 @@ function makeSmallNewsElem(news: News, i: number) {
 	const rawContent = extractContent(news.attributes.content);
 	const index = "Getty Images ";
 	const content = rawContent?.slice(rawContent.indexOf(index) + index.length);
-	const image = news.attributes.gettyImageUrl || `${env}/stonk_bg.webp`;
+	const image = news.attributes.gettyImageUrl || `${env.url}/stonk_bg.webp`;
 	return (
 		<Col md={3} key={i}>
 			<div className="small-news">

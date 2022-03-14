@@ -17,7 +17,7 @@ export default function NoMatch() {
 		<Container>
 			<h3>This page is not stonks.</h3>
 			<h4>Redirecting to homepage in 2 seconds...</h4>
-			<img src={`${env}/NOT_STONK.png`} alt="not stonk"></img>
+			<img src={`${env.url}/NOT_STONK.png`} alt="not stonk"></img>
 		</Container>
 	);
 }

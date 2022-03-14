@@ -34,7 +34,7 @@ export default function NavBar() {
 								<Dropdown.Toggle className="user-avatar-btn">
 									<img
 										className="user-avatar"
-										src={`${env}/${user.payload.avatar}`}
+										src={`${env.url}/${user.payload.avatar}`}
 										alt="user-avatar"
 									/>
 								</Dropdown.Toggle>
