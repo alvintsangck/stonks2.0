@@ -7,4 +7,5 @@ export const env = {
 			: process.env.REACT_APP_API_SERVER,
 	metaMask: process.env.REACT_APP_METAMASK,
 	contract: process.env.REACT_APP_CONTRACT_ADDRESS,
+	finnhubKey: process.env.REACT_APP_FINNHUB_KEY,
 };
