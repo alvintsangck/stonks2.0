@@ -6,24 +6,27 @@ import { useForm } from "react-hook-form";
 import { depositThunk } from "../redux/metaMask/thunk";
 
 type FormState = {
-	deposit: string;
+	deposit: number;
 };
 
 export default function TransferForm() {
 	const dispatch = useDispatch();
 	const balance = useSelector((state: RootState) => state.metaMask.balance);
-	const { watch, handleSubmit, register, reset, setValue } = useForm<FormState>({ defaultValues: { deposit: "0" } });
+	const { watch, handleSubmit, register, reset, setValue } = useForm<FormState>({ defaultValues: { deposit: 0 } });
 
 	function onSubmit(data: FormState) {
-		dispatch(depositThunk(data.deposit));
-		reset();
+		const deposit = Number(data.deposit);
+		if (deposit > 0) {
+			dispatch(depositThunk(deposit));
+			reset();
+		}
 	}
 
 	function validateValue(e: any) {
 		const value = Number(e.target.value);
-		if (value <= 0) setValue("deposit", "0");
-		else if (value >= balance) setValue("deposit", balance.toString());
-		else setValue("deposit", value.toFixed(2));
+		if (value <= 0) setValue("deposit", 0);
+		else if (value >= balance) setValue("deposit", balance);
+		else setValue("deposit", Number(value.toFixed(2)));
 	}
 
 	return (

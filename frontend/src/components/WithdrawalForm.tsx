@@ -7,7 +7,7 @@ import { withdrawalThunk } from "../redux/metaMask/thunk";
 import { RootState } from "../redux/store/state";
 
 type FormState = {
-	withdrawal: string;
+	withdrawal: number;
 };
 
 export default function WithdrawalForm() {
@@ -15,7 +15,7 @@ export default function WithdrawalForm() {
 	const balance = useSelector((state: RootState) => state.metaMask.balance);
 	const cash = useSelector((state: RootState) => state.auth.balance.cash);
 	const { watch, handleSubmit, register, reset, setValue } = useForm<FormState>({
-		defaultValues: { withdrawal: "0" },
+		defaultValues: { withdrawal: 0 },
 	});
 
 	function onSubmit(data: FormState) {
@@ -25,9 +25,9 @@ export default function WithdrawalForm() {
 
 	function validateValue(e: any) {
 		const value = Number(e.target.value);
-		if (value <= 0) setValue("withdrawal", "0");
-		else if (value >= balance) setValue("withdrawal", balance.toString());
-		else setValue("withdrawal", value.toFixed(2));
+		if (value <= 0) setValue("withdrawal", 0);
+		else if (value >= balance) setValue("withdrawal", balance);
+		else setValue("withdrawal", Number(value.toFixed(2)));
 	}
 
 	useEffect(() => {
