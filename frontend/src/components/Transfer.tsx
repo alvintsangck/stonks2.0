@@ -3,7 +3,7 @@ import MetaMaskOnboarding from "@metamask/onboarding";
 import { useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { getBalanceThunk } from "../redux/metaMask/thunk";
+import { getTokenThunk } from "../redux/metaMask/thunk";
 import { RootState } from "../redux/store/state";
 import { OnboardingButton } from "./OnboardingButton";
 import SwitchChianButton from "./SwitchChainButton";
@@ -47,7 +47,7 @@ export default function Transfer() {
 	}, []);
 
 	useEffect(() => {
-		dispatch(getBalanceThunk());
+		dispatch(getTokenThunk());
 	}, [dispatch, account]);
 
 	return (

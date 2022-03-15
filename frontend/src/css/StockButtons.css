@@ -31,3 +31,31 @@
 	border: 1px solid #0b56bf;
 	color: #0b56bf;
 }
+
+
+.title-row span:last-child {
+	margin-left: 5px;
+	color: rgba(0, 0, 0, 0.4);
+}
+
+.input-row {
+	display: flex;
+	align-items: center;
+}
+
+.input-row > div:last-child {
+	margin-left: 10px;
+}
+
+.input-row > input {
+	width: 150px;
+}
+
+.cost-row {
+	margin-top: 10px;
+}
+
+.trade-btn {
+	margin-top: 20px;
+	width: 100%;
+}

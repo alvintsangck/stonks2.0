@@ -1,6 +1,7 @@
 import { push } from "connected-react-router";
-import { defaultErrorSwal } from "../../components/ReactSwal";
+import { defaultErrorSwal, defaultSuccessSwal } from "../../components/ReactSwal";
 import { callApi } from "../api";
+import { getCashAction } from "../auth/action";
 import { RootDispatch } from "../store/action";
 import { getCommentsAction, getStockNewsAction, getStockAction, postCommentAction } from "./action";
 
@@ -44,6 +45,34 @@ export function getStockNewsThunk(ticker: string) {
 			defaultErrorSwal(result.error);
 		} else {
 			dispatch(getStockNewsAction(result));
+		}
+	};
+}
+
+export function buyStockThunk(ticker: string, shares: number, price: number) {
+	return async (dispatch: RootDispatch) => {
+		const result = await callApi(`/stocks/${ticker}/buy`, "POST", { shares, price });
+		console.log("re ", result);
+
+		if ("error" in result) {
+			defaultErrorSwal(result.error);
+		} else {
+			console.log("buy");
+
+			dispatch(getCashAction(result.cash));
+			defaultSuccessSwal(`Bought ${shares} share${shares > 1 ? "s" : ""} ${ticker}`);
+		}
+	};
+}
+
+export function sellStockThunk(ticker: string, shares: number, price: number) {
+	return async (dispatch: RootDispatch) => {
+		const result = await callApi(`/stocks/${ticker}/sell`, "POST", { shares, price });
+		if ("error" in result) {
+			defaultErrorSwal(result.error);
+		} else {
+			dispatch(getCashAction(result.cash));
+			defaultSuccessSwal(`Sold ${shares} share${shares > 1 ? "s" : ""} ${ticker}`);
 		}
 	};
 }

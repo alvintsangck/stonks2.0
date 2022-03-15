@@ -34,6 +34,8 @@ export function authReducer(state: AuthState = initialState, action: AuthAction)
 		case "@@Auth/balance":
 			const { deposit, cash } = action;
 			return { ...state, balance: { deposit, cash }, error: "" };
+		case "@@Auth/cash":
+			return { ...state, balance: { ...state.balance, cash: action.cash }, error: "" };
 		case "@@Auth/apiFailed":
 			return { ...state, error: action.msg };
 		default:

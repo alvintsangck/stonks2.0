@@ -1,12 +1,12 @@
 import { useDispatch } from "react-redux";
-import { getBalanceThunk, switchChainThunk } from "../redux/metaMask/thunk";
+import { getTokenThunk, switchChainThunk } from "../redux/metaMask/thunk";
 
 export default function SwitchChianButton() {
 	const dispatch = useDispatch();
 
 	function switchChain() {
 		dispatch(switchChainThunk());
-		dispatch(getBalanceThunk());
+		dispatch(getTokenThunk());
 	}
 
 	return (
