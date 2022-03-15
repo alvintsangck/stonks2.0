@@ -1,63 +1,128 @@
 import express, { Request } from "express";
 import { StockService } from "../services/stock.service";
-import { HttpError } from "../util/models";
+import { HttpError, User } from "../util/models";
 import yahooFinance from "yahoo-finance2";
 import { wrapControllerMethod } from "../util/helper";
 import { isLoggedIn } from "../middlewares/guard";
+import jwt from "../util/jwt";
+import permit from "../util/permit";
+import jwtSimple from "jwt-simple";
+import { logger } from "../util/logger";
 
 export class StockController {
 	constructor(private stockService: StockService) {
 		this.router.get("/stocks/:ticker", wrapControllerMethod(this.getStockInfo));
-		this.router.get("/stocks/:ticker/price", wrapControllerMethod(this.getStockPrice));
+		this.router.get("/stocks/:ticker/shares", wrapControllerMethod(this.getShares));
 		this.router.get("/stocks/:ticker/news", wrapControllerMethod(this.getStockNews));
-		this.router.post("/stocks/:ticker/trade", isLoggedIn, this.trade);
+		this.router.post("/stocks/:ticker/buy", isLoggedIn, wrapControllerMethod(this.buy));
+		this.router.post("/stocks/:ticker/sell", isLoggedIn, wrapControllerMethod(this.sell));
 	}
 
 	router = express.Router();
 
 	getStockInfo = async (req: Request) => {
-		const ticker: string = String(req.params.ticker).toUpperCase();
+		const ticker = String(req.params.ticker).toUpperCase();
 		if (!ticker.match(/[a-zA-z]/g)) throw new HttpError(400, "Invalid ticker");
-		const stock = await this.stockService.getStockInfo(ticker);
-		if (!stock) throw new HttpError(400, "Stock not found");
-		return stock;
+		const stockArr = await this.stockService.getStockInfo(ticker);
+
+		if (stockArr.length === 0) {
+			throw new HttpError(400, "Stock not found");
+		} else if (stockArr.length === 1) {
+			return stockArr[0];
+		}
+		return {
+			id: stockArr[0].id,
+			ticker: stockArr[0].ticker,
+			name: stockArr[0].name,
+			price: stockArr[0].price || null,
+			prevPrice: stockArr[1].price || null,
+			sectorName: stockArr[0].sectorName,
+			industryName: stockArr[0].industryName,
+		};
+	};
+
+	getShares = async (req: Request) => {
+		const token = permit.check(req);
+		const user: User = jwtSimple.decode(token, jwt.jwtSecret);
+		if (user.id <= 0) throw new HttpError(400, "User not exist");
+
+		const ticker = String(req.params.ticker).toUpperCase();
+		if (!ticker.match(/[a-zA-z]/g)) throw new HttpError(400, "Invalid ticker");
+
+		const shares = await this.stockService.getShare(ticker, user.id);
+		return { shares };
 	};
 
 	getStockNews = async (req: Request) => {
-		const ticker: string = String(req.params.ticker).toUpperCase();
+		const ticker = String(req.params.ticker).toUpperCase();
 		if (!ticker.match(/[a-zA-z]/g)) throw new HttpError(400, "Invalid ticker");
-		const news = (await yahooFinance.search(ticker, { newsCount: 10 })).news;
-		return news;
+		try {
+			const news = (await yahooFinance.search(ticker, { newsCount: 10 })).news;
+			return news;
+		} catch (error) {
+			logger.info(error);
+			return [];
+		}
 	};
 
-	getStockPrice = async (req: Request) => {
-		const ticker: string = String(req.params.ticker).toUpperCase();
+	buy = async (req: Request) => {
+		const token = permit.check(req);
+		const user: User = jwtSimple.decode(token, jwt.jwtSecret);
+		if (user.id <= 0) throw new HttpError(400, "User not exist");
+
+		const ticker = String(req.params.ticker).toUpperCase();
 		if (!ticker.match(/[a-zA-z]/g)) throw new HttpError(400, "Invalid ticker");
-		return await yahooFinance.quote(ticker);
+
+		const stockArr = await this.stockService.getStockInfo(ticker);
+		if (stockArr.length === 0) throw new HttpError(400, "Stock not found");
+
+		const shares = Number(req.body.shares);
+		if (Number.isNaN(shares) || shares <= 0) throw new HttpError(400, "Share number must be positive");
+
+		const price = Number(req.body.price);
+		if (Number.isNaN(price) || price <= 0) throw new HttpError(400, "Price must be positive");
+
+		const cash = await this.stockService.getCash(user.id);
+		const cost = price * shares;
+		if (cost > cash) throw new HttpError(400, "Not enough cash");
+
+		const remainingCash = cash - cost;
+		const error = await this.stockService.trade(user.id, stockArr[0].id, shares, price, remainingCash);
+		if (error) throw error;
+
+		const ownedShares = await this.stockService.getShare(ticker, user.id);
+
+		return { cash: remainingCash, shares: ownedShares };
 	};
 
-	trade = async (req: Request) => {
-		// let portfolio = await this.userService.getUserPortfolio(Number(req.session["user"].id));
-		// let { ticker, price, share, status } = req.body;
-		// console.log("received", status);
+	sell = async (req: Request) => {
+		const token = permit.check(req);
+		const user: User = jwtSimple.decode(token, jwt.jwtSecret);
+		if (user.id <= 0) throw new HttpError(400, "User not exist");
 
-		// if (Number(share) == 0 || !Number.isInteger(Number(share))) {
-		// 	throw new HttpError(400, "Number must be an integer greater than zero.");
-		// }
-		// if (status === "sell") {
-		// 	let sellShare = Number(share);
-		// 	if (portfolio.shares - sellShare < 0) {
-		// 		throw new HttpError(400, "Sell more than portfolio have");
-		// 	}
-		// 	share = share * -1;
-		// } else if (status === "buy") {
-		// 	let buyPrice = parseInt(price);
-		// 	let buyStock = parseInt(share);
-		// 	if (buyPrice * buyStock > portfolio.cash) {
-		// 		throw new HttpError(400, "not enough cash");
-		// 	}
-		// }
-		// await this.userService.tradeStockServ(Number(req.session["user"].id), ticker, price, share);
-		return;
+		const ticker = String(req.params.ticker).toUpperCase();
+		if (!ticker.match(/[a-zA-z]/g)) throw new HttpError(400, "Invalid ticker");
+
+		const stockArr = await this.stockService.getStockInfo(ticker);
+		if (stockArr.length === 0) throw new HttpError(400, "Stock not found");
+
+		const shares = Number(req.body.shares);
+		if (Number.isNaN(shares) || shares <= 0) throw new HttpError(400, "Share number must be positive");
+
+		const ownedShares = await this.stockService.getShare(ticker, user.id);
+
+		if (shares > ownedShares) throw new HttpError(400, "Not enough shares");
+
+		const price = Number(req.body.price);
+		if (Number.isNaN(price) || price <= 0) throw new HttpError(400, "Price must be positive");
+
+		const profit = price * shares;
+		const cash = await this.stockService.getCash(user.id);
+
+		const remainingCash = cash + profit;
+		const error = await this.stockService.trade(user.id, stockArr[0].id, -shares, price, remainingCash);
+		if (error) throw error;
+
+		return { cash: remainingCash, shares: ownedShares - shares };
 	};
 }

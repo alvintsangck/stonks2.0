@@ -22,15 +22,15 @@ export class WatchlistController {
 	getAllWatchlistsName = async (req: Request) => {
 		const token = permit.check(req);
 		const user: User = jwtSimple.decode(token, jwt.jwtSecret);
-
 		if (user.id <= 0) throw new HttpError(400, "User not exist");
+
 		return await this.watchlistService.getAllWatchlistsName(user.id);
 	};
 
 	get = async (req: Request) => {
 		const watchlistId = Number(req.params.watchlistId);
-
 		if (Number.isNaN(watchlistId) || watchlistId <= 0) throw new HttpError(400, "Watchlist not exist");
+
 		const stocks = await this.watchlistService.getWatchlist(watchlistId);
 		return { stocks };
 	};
@@ -38,6 +38,7 @@ export class WatchlistController {
 	post = async (req: Request) => {
 		const name = String(req.body.name).replace(/\s+/g, "");
 		if (name === "") throw new HttpError(400, "Watchlist name cannot be empty");
+
 		const token = permit.check(req);
 		const user: User = jwtSimple.decode(token, jwt.jwtSecret);
 		if (user.id <= 0) throw new HttpError(400, "User not exist");
@@ -47,25 +48,26 @@ export class WatchlistController {
 
 	put = async (req: Request): Promise<{ message: string }> => {
 		const watchlistId = Number(req.params.watchlistId);
-		const name = String(req.body.name).replace(/\s+/g, "");
-
 		if (Number.isNaN(watchlistId) || watchlistId <= 0) throw new HttpError(400, "Watchlist not exist");
+
+		const name = String(req.body.name).replace(/\s+/g, "");
 		if (!name) throw new HttpError(400, "Watchlist name cannot be empty");
+
 		return await this.watchlistService.changeWatchlistName(watchlistId, name);
 	};
 
 	delete = async (req: Request): Promise<{ message: string }> => {
 		const watchlistId = Number(req.params.watchlistId);
-
 		if (Number.isNaN(watchlistId) || watchlistId <= 0) throw new HttpError(400, "Watchlist not exist");
+
 		return await this.watchlistService.deleteWatchlist(watchlistId);
 	};
 
 	addStock = async (req: Request): Promise<{ message: string }> => {
 		const watchlistId = Number(req.params.watchlistId);
 		const stockId = Number(req.params.stockId);
-
 		if (Number.isNaN(watchlistId) || watchlistId <= 0) throw new HttpError(400, "Watchlist not exist");
+
 		const result = await this.watchlistService.getStock(watchlistId, stockId);
 		if (result) throw new HttpError(400, "Stock already exist");
 
@@ -74,9 +76,11 @@ export class WatchlistController {
 
 	deleteStock = async (req: Request): Promise<{ message: string }> => {
 		const watchlistId = Number(req.params.watchlistId);
-		const stockId = Number(req.params.stockId);
-
 		if (Number.isNaN(watchlistId) || watchlistId <= 0) throw new HttpError(400, "Watchlist not exist");
+
+		const stockId = Number(req.params.stockId);
+		if (stockId <= 0) throw new HttpError(400, "Stock not found");
+		
 		return await this.watchlistService.deleteStock(watchlistId, stockId);
 	};
 }

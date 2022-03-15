@@ -26,6 +26,7 @@ export type UserComment = {
 
 export type StockState = {
 	stock: Stock | null;
+	shares: number;
 	comments: UserComment[];
 	news: StockNews[];
 };

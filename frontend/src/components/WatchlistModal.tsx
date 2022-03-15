@@ -1,6 +1,6 @@
 import "../css/WatchlistModal.css";
 import { useEffect, useState } from "react";
-import { Button, ListGroup, Modal } from "react-bootstrap";
+import { ListGroup, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { RootState } from "../redux/store/state";
@@ -17,9 +17,7 @@ export default function WatchlistModal({ isShow, setIsShow }: Props) {
 	const user = useSelector((state: RootState) => state.auth.user);
 	const [watchlistId, setWatchlistId] = useState(0);
 	const { ticker } = useParams<{ ticker: string }>();
-
 	const hideModal = () => setIsShow(false);
-
 	const addStock = () => {
 		dispatch(addStockThunk(watchlistId, ticker));
 		setWatchlistId(0);
@@ -52,12 +50,9 @@ export default function WatchlistModal({ isShow, setIsShow }: Props) {
 				</ListGroup>
 			</Modal.Body>
 			<Modal.Footer>
-				<Button variant="secondary" onClick={hideModal}>
-					Close
-				</Button>
-				<Button variant="primary" onClick={addStock}>
+				<button className="stonk-btn trade-btn" onClick={addStock}>
 					Add
-				</Button>
+				</button>
 			</Modal.Footer>
 		</Modal>
 	);

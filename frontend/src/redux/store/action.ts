@@ -8,16 +8,21 @@ import { NewsAction } from "../news/action";
 import { ScreenerAction } from "../screener/action";
 import { StockAction } from "../stock/action";
 import { MetaMaskAction } from "../metaMask/action";
+import { ThunkDispatch } from "redux-thunk";
+import { RootState } from "./state";
+
 
 export type RootAction =
-	| AuthAction
-	| ThemeAction
-	| WatchlistAction
-	| NewsAction
-	| ScreenerAction
-	| StockAction
-	| MetaMaskAction
-	| CallHistoryMethodAction
-	| PortfolioAction;
+| AuthAction
+| ThemeAction
+| WatchlistAction
+| NewsAction
+| ScreenerAction
+| StockAction
+| MetaMaskAction
+| CallHistoryMethodAction
+| PortfolioAction;
+
+export type RootThunkDispatch = ThunkDispatch<RootState, null, RootAction>;
 
 export type RootDispatch = Dispatch<RootAction>;

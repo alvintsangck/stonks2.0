@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Form } from "react-bootstrap";
+import { Col, Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { getBalanceThunk } from "../redux/auth/thunk";
@@ -25,14 +25,9 @@ export default function WithdrawalForm() {
 
 	function validateValue(e: any) {
 		const value = Number(e.target.value);
-		switch (true) {
-			case value <= 0:
-				return setValue("withdrawal", "0");
-			case value >= cash:
-				return setValue("withdrawal", cash.toString());
-			default:
-				return setValue("withdrawal", value.toFixed(2));
-		}
+		if (value <= 0) setValue("withdrawal", "0");
+		else if (value >= balance) setValue("withdrawal", balance.toString());
+		else setValue("withdrawal", value.toFixed(2));
 	}
 
 	useEffect(() => {
@@ -41,20 +36,30 @@ export default function WithdrawalForm() {
 
 	return (
 		<Form id="transfer-form" onSubmit={handleSubmit(onSubmit)}>
-			<Form.Group>Current balance for withdrawal: {cash} USD</Form.Group>
-			<Form.Group>
-				<Form.Label>Withdrawal Amount</Form.Label>
-			</Form.Group>
-			<Form.Group className="transfer-input">
-				<Form.Control type="number" {...register("withdrawal")} min="0" max={balance} onBlur={validateValue} />
-				<span>USD</span>
-			</Form.Group>
-			<Form.Group>
-				<span>= {Number(watch("withdrawal")) > 0 ? watch("withdrawal") : 0} STONK</span>
-			</Form.Group>
-			<button className="stonk-btn" type="submit">
-				Withdrawal
-			</button>
+			<Row>
+				<Col>
+					<Form.Group>Current balance for withdrawal: {cash} USD</Form.Group>
+					<Form.Group>
+						<Form.Label>Withdrawal Amount</Form.Label>
+					</Form.Group>
+					<Form.Group className="transfer-input">
+						<Form.Control
+							type="number"
+							{...register("withdrawal")}
+							min="0"
+							max={balance}
+							onBlur={validateValue}
+						/>
+						<span>USD</span>
+					</Form.Group>
+					<Form.Group>
+						<span>= {Number(watch("withdrawal")) > 0 ? watch("withdrawal") : 0} STONK</span>
+					</Form.Group>
+					<button className="stonk-btn" type="submit">
+						Withdrawal
+					</button>
+				</Col>
+			</Row>
 		</Form>
 	);
 }

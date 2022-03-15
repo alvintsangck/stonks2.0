@@ -1,27 +1,33 @@
 import { Stock, StockNews, UserComment } from "./state";
 
 export const getStockAction = (stock: Stock) => ({
-	type: "@@Stock/get_stock" as const,
+	type: "@@Stock/getStock" as const,
 	stock,
 });
 
 export const getCommentsAction = (comments: UserComment[]) => ({
-	type: "@@Stock/get_comments" as const,
+	type: "@@Stock/getComments" as const,
 	comments,
 });
 
 export const postCommentAction = (comment: UserComment) => ({
-	type: "@@Stock/post_comment" as const,
+	type: "@@Stock/postComment" as const,
 	comment,
 });
 
 export const getStockNewsAction = (news: StockNews[]) => ({
-	type: "@@Stock/get_news" as const,
+	type: "@@Stock/getNews" as const,
 	news,
+});
+
+export const getSharesAction = (shares: number) => ({
+	type: "@@Stock/getShares" as const,
+	shares,
 });
 
 export type StockAction =
 	| ReturnType<typeof getStockAction>
 	| ReturnType<typeof getCommentsAction>
 	| ReturnType<typeof postCommentAction>
-	| ReturnType<typeof getStockNewsAction>;
+	| ReturnType<typeof getStockNewsAction>
+	| ReturnType<typeof getSharesAction>;

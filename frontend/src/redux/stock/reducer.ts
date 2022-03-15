@@ -5,18 +5,21 @@ const initialState: StockState = {
 	stock: null,
 	comments: [],
 	news: [],
+	shares: 0,
 };
 
-export function stockReducer(state: StockState = initialState, action: StockAction) {
+export function stockReducer(state: StockState = initialState, action: StockAction): StockState {
 	switch (action.type) {
-		case "@@Stock/get_stock":
+		case "@@Stock/getStock":
 			return { ...state, stock: action.stock };
-		case "@@Stock/get_comments":
+		case "@@Stock/getComments":
 			return { ...state, comments: action.comments };
-		case "@@Stock/post_comment":
+		case "@@Stock/postComment":
 			return { ...state, comments: state.comments.concat(action.comment) };
-		case "@@Stock/get_news":
+		case "@@Stock/getNews":
 			return { ...state, news: action.news };
+		case "@@Stock/getShares":
+			return { ...state, shares: action.shares };
 		default:
 			return state;
 	}

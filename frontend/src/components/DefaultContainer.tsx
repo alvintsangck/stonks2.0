@@ -5,6 +5,7 @@ import Footer from "./Footer";
 import Home from "./Home";
 import NoMatch from "./NoMatch";
 import Portfolio from "./Portfolio";
+import PowerBI from "./PowerBI";
 import PrivateRoute from "./PrivateRoute";
 import Screener from "./Screener";
 import Stock from "./Stock";
@@ -26,6 +27,7 @@ export default function DefaultContainer() {
 					<Route path="/screener" component={Screener} />
 					<PrivateRoute path="/portfolio" component={Portfolio} />
 					<PrivateRoute path="/transfer/:method" component={Transfer} />
+					<Route path="/dashboard" component={PowerBI} />
 					<Redirect from="/transfer" to="/transfer/deposit" />
 					<Route component={NoMatch} />
 				</Switch>
