@@ -27,7 +27,7 @@ export default function DefaultContainer() {
 					<Route path="/screener" component={Screener} />
 					<PrivateRoute path="/portfolio" component={Portfolio} />
 					<PrivateRoute path="/transfer/:method" component={Transfer} />
-					<Route path="/power-bi" component={PowerBI} />
+					<Route path="/dashboard" component={PowerBI} />
 					<Redirect from="/transfer" to="/transfer/deposit" />
 					<Route component={NoMatch} />
 				</Switch>

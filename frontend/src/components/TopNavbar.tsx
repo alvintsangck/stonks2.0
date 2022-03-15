@@ -82,8 +82,8 @@ export default function NavBar() {
 						<Nav.Link href="#" onClick={()=>dispatch(push("/portfolio"))}>
 								<span className="nav-item">Portfolio</span>
 						</Nav.Link>
-						<Nav.Link href="#" onClick={()=>dispatch(push("/power-bi"))}>
-								<span className="nav-item">PowerBI</span>
+						<Nav.Link href="#" onClick={()=>dispatch(push("/dashboard"))}>
+								<span className="nav-item">Dashboard</span>
 						</Nav.Link>
 					</Nav>
 				</Navbar.Collapse>
