@@ -79,7 +79,7 @@ export async function up(knex: Knex): Promise<void> {
 				and dyq."year" = NEW.earning_year and dyq.quarter = NEW.earning_quarter 
 				and s.ticker = NEW.ticker) 
 				on conflict (stock_id, year_quarter_id)
-				DO UPDATE set date_id = dd.id, eps_reported = NEW.eps_reported, revenue_reported = NEW.revenue_reported, release_time = NEW.release_time, updated_at = NOW();
+				DO UPDATE set date_id = EXCLUDED.date_id, eps_reported = NEW.eps_reported, revenue_reported = NEW.revenue_reported, created_at = NEW.created_at, updated_at = NOW();
 		
 				return NEW;
 			END
