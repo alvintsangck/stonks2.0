@@ -21,21 +21,19 @@ export default function Transfer() {
 	const account = useSelector((state: RootState) => state.metaMask.account);
 	const chainId = useSelector((state: RootState) => state.metaMask.chainId);
 	const { method } = useParams<{ method: string }>();
-	const ethereum = window.ethereum;
-
-	function handleNewAccount(newAccount: string[]) {
-		dispatch(getMetaMaskAction(newAccount[0]));
-	}
-
-	function handleChainChanged(chainId: string) {
-		dispatch(getChainIdAction(parseInt(chainId, 16)));
-	}
 
 	useEffect(() => {
-		if (MetaMaskOnboarding.isMetaMaskInstalled()) {
+		if (MetaMaskOnboarding.isMetaMaskInstalled() && account) {
+			const ethereum = window.ethereum;
+			const handleNewAccount = (newAccount: string[]) => {
+				dispatch(getMetaMaskAction(newAccount[0]));
+			};
+			const handleChainChanged = (chainId: string) => {
+				dispatch(getChainIdAction(parseInt(chainId, 16)));
+			};
 			dispatch(getMetaMaskThunk());
 			dispatch(getChainIdThunk());
-
+			dispatch(getTokenThunk());
 			ethereum.on("accountsChanged", handleNewAccount);
 			ethereum.on("chainChanged", handleChainChanged);
 			return () => {
@@ -43,11 +41,6 @@ export default function Transfer() {
 				ethereum.removeListener("chainChanged", handleChainChanged);
 			};
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
-		dispatch(getTokenThunk());
 	}, [dispatch, account]);
 
 	return (
@@ -57,14 +50,18 @@ export default function Transfer() {
 			</Helmet>
 			<Container className="deposit-container">
 				<Row className="justify-content-center">
-					<Col md={6} className="status-bar">
+					<Col md={3}/>
+					<Col md={3} className="status-bar">
 						MetaMask:{account ? " Connected" : <OnboardingButton />}
 					</Col>
-					<Col md={6} className="status-bar">
-						Current Chain: {getChainName(chainId)} {chainId !== 43113 && <SwitchChianButton />}
+					<Col  className="status-bar">
+						<div>Current Chain: {getChainName(chainId)}</div>
+						<div>{chainId !== 43113 && <SwitchChianButton />}</div>
 					</Col>
 				</Row>
-				<Row className="d-flex justify-content-center">
+			</Container>
+			<Container className="transfer-form-container">
+				<Row className="justify-content-center">
 					<Col
 						xs={3}
 						className={"form-btn" + (method === "deposit" ? " active" : "")}
@@ -80,16 +77,14 @@ export default function Transfer() {
 						Withdraw
 					</Col>
 				</Row>
-			</Container>
-			<Container className="transfer-form-container">
 				<Row className="justify-content-center">
-					<Col xs={6} className="px-0">
+					<Col xs={6} className="">
 						{method === "deposit" && <DepositForm />}
 						{method === "withdrawal" && <WithdrawalForm />}
 					</Col>
 				</Row>
 				<Row className="justify-content-center import-bar">
-					<Col xs={6} className="px-0">
+					<Col xs={6} className="">
 						<div>
 							<div>Didn't see the token in MetaMask?</div>
 							<button className="stonk-btn" onClick={addTokenAddress}>

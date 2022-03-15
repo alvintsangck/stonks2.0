@@ -1,16 +1,12 @@
 #transfer-form {
-	padding-left: 5px;
-	text-align: center;
+	display: flex;
+	justify-content: center;
 	padding-top: 20px;
-}
-
-#transfer-form div {
 }
 
 .transfer-input {
 	display: flex;
 	align-items: center;
-	justify-content: center;
 }
 
 .transfer-input input {
