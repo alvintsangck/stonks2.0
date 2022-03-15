@@ -127,7 +127,7 @@ export async function up(knex: Knex): Promise<void> {
 		});
 	}
 
-	await knex.schema.raw(`CREATE UNIQUE INDEX stock_earnings_idx on stock_earnings(date_id, stock_id, year_quarter_id); `);
+	await knex.schema.raw(`CREATE UNIQUE INDEX stock_earnings_idx on stock_earnings(stock_id, year_quarter_id); `);
 
 	if (!(await knex.schema.hasTable("economic_indicators"))) {
 		await knex.schema.createTable("economic_indicators", (table) => {
