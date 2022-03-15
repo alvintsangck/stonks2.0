@@ -7,8 +7,8 @@ export function defaultErrorSwal(error: any) {
 	ReactSwal.fire({
 		toast: true,
 		position: "top",
-		showConfirmButton: false,
-		timer: 2000,
+		showConfirmButton: true,
+		// timer: 3000,
 		icon: "error",
 		title: error,
 	});
@@ -19,7 +19,7 @@ export function defaultSuccessSwal(msg: string) {
 		toast: true,
 		position: "top",
 		showConfirmButton: false,
-		timer: 1800,
+		timer: 3000,
 		icon: "success",
 		title: msg,
 	});

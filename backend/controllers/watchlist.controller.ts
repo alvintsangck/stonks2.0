@@ -1,10 +1,7 @@
 import express, { Request } from "express";
 import { WatchlistService } from "../services/watchlist.service";
-import { wrapControllerMethod } from "../util/helper";
-import { HttpError, User } from "../util/models";
-import jwtSimple from "jwt-simple";
-import jwt from "../util/jwt";
-import permit from "../util/permit";
+import { getUser, wrapControllerMethod } from "../util/helper";
+import { HttpError } from "../util/models";
 
 export class WatchlistController {
 	constructor(private watchlistService: WatchlistService) {
@@ -20,8 +17,7 @@ export class WatchlistController {
 	router = express.Router();
 
 	getAllWatchlistsName = async (req: Request) => {
-		const token = permit.check(req);
-		const user: User = jwtSimple.decode(token, jwt.jwtSecret);
+		const user = getUser(req);
 		if (user.id <= 0) throw new HttpError(400, "User not exist");
 
 		return await this.watchlistService.getAllWatchlistsName(user.id);
@@ -36,12 +32,11 @@ export class WatchlistController {
 	};
 
 	post = async (req: Request) => {
+		const user = getUser(req);
+		if (user.id <= 0) throw new HttpError(400, "User not exist");
+		
 		const name = String(req.body.name).replace(/\s+/g, "");
 		if (name === "") throw new HttpError(400, "Watchlist name cannot be empty");
-
-		const token = permit.check(req);
-		const user: User = jwtSimple.decode(token, jwt.jwtSecret);
-		if (user.id <= 0) throw new HttpError(400, "User not exist");
 
 		return await this.watchlistService.createWatchlist(user.id, name);
 	};
@@ -80,7 +75,7 @@ export class WatchlistController {
 
 		const stockId = Number(req.params.stockId);
 		if (stockId <= 0) throw new HttpError(400, "Stock not found");
-		
+
 		return await this.watchlistService.deleteStock(watchlistId, stockId);
 	};
 }

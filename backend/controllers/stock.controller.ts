@@ -1,12 +1,9 @@
 import express, { Request } from "express";
 import { StockService } from "../services/stock.service";
-import { HttpError, User } from "../util/models";
+import { HttpError } from "../util/models";
 import yahooFinance from "yahoo-finance2";
-import { wrapControllerMethod } from "../util/helper";
+import { getUser, wrapControllerMethod } from "../util/helper";
 import { isLoggedIn } from "../middlewares/guard";
-import jwt from "../util/jwt";
-import permit from "../util/permit";
-import jwtSimple from "jwt-simple";
 import { logger } from "../util/logger";
 
 export class StockController {
@@ -42,8 +39,7 @@ export class StockController {
 	};
 
 	getShares = async (req: Request) => {
-		const token = permit.check(req);
-		const user: User = jwtSimple.decode(token, jwt.jwtSecret);
+		const user = getUser(req);
 		if (user.id <= 0) throw new HttpError(400, "User not exist");
 
 		const ticker = String(req.params.ticker).toUpperCase();
@@ -66,8 +62,7 @@ export class StockController {
 	};
 
 	buy = async (req: Request) => {
-		const token = permit.check(req);
-		const user: User = jwtSimple.decode(token, jwt.jwtSecret);
+		const user = getUser(req);
 		if (user.id <= 0) throw new HttpError(400, "User not exist");
 
 		const ticker = String(req.params.ticker).toUpperCase();
@@ -96,8 +91,7 @@ export class StockController {
 	};
 
 	sell = async (req: Request) => {
-		const token = permit.check(req);
-		const user: User = jwtSimple.decode(token, jwt.jwtSecret);
+		const user = getUser(req);
 		if (user.id <= 0) throw new HttpError(400, "User not exist");
 
 		const ticker = String(req.params.ticker).toUpperCase();

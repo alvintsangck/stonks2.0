@@ -8,12 +8,20 @@ export const getChainIdAction = (chainId: number) => ({
 	chainId,
 });
 
-export const getBalanceAction = (balance: number) => ({
-	type: "@@MetaMask/getBalance" as const,
-	balance,
+export const getTokenAction = (token: number) => ({
+	type: "@@MetaMask/getToken" as const,
+	token,
 });
 
-export const apiFailedAction = (error: string) => ({
+export const loadingMetaMaskAction = () => ({
+	type: "@@MetaMask/loading" as const,
+});
+
+export const endLoadingMetaMaskAction = () => ({
+	type: "@@MetaMask/endLoading" as const,
+});
+
+export const apiFailedAction = (error: any) => ({
 	type: "@@MetaMask/apiFailed" as const,
 	error,
 });
@@ -21,5 +29,7 @@ export const apiFailedAction = (error: string) => ({
 export type MetaMaskAction =
 	| ReturnType<typeof getMetaMaskAction>
 	| ReturnType<typeof getChainIdAction>
-	| ReturnType<typeof getBalanceAction>
+	| ReturnType<typeof getTokenAction>
+	| ReturnType<typeof loadingMetaMaskAction>
+	| ReturnType<typeof endLoadingMetaMaskAction>
 	| ReturnType<typeof apiFailedAction>;

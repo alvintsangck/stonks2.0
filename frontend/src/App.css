@@ -40,7 +40,9 @@ main {
 }
 
 .dark input,
-.dark textarea {
+.dark textarea,
+.dark input:focus,
+.dark textarea:focus {
 	background-color: #000000;
 	color: rgba(255, 255, 255, 0.9);
 	border: 1px solid rgba(255, 255, 255, 0.3);

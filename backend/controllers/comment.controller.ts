@@ -1,12 +1,9 @@
 import express, { Request } from "express";
 import { CommentService } from "../services/comment.service";
 import { isLoggedIn } from "../middlewares/guard";
-import { HttpError, User, UserComment } from "../util/models";
+import { HttpError, UserComment } from "../util/models";
 import SocketIO from "socket.io";
-import { wrapControllerMethod } from "../util/helper";
-import jwt from "../util/jwt";
-import permit from "../util/permit";
-import jwtSimple from "jwt-simple";
+import { getUser, wrapControllerMethod } from "../util/helper";
 export class CommentController {
 	constructor(private commentService: CommentService, private io: SocketIO.Server) {
 		this.router.get("/comment/:stockId", wrapControllerMethod(this.get));
@@ -23,8 +20,7 @@ export class CommentController {
 	};
 
 	post = async (req: Request) => {
-		const token = permit.check(req);
-		const user: User = jwtSimple.decode(token, jwt.jwtSecret);
+		const user = getUser(req);
 		if (user.id <= 0) throw new HttpError(400, "User not exist");
 
 		const userId: number = Number(user.id);

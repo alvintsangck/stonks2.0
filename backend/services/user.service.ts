@@ -77,7 +77,7 @@ export class UserService {
 		});
 	}
 	// get portfolio
-	async queryPortfolio(userId: number) {
+	private async queryPortfolio(userId: number) {
 		return camelCaseKeys(
 			(
 				await this.knex.raw(
@@ -98,7 +98,7 @@ export class UserService {
 		);
 	}
 	//get stock price in portfolio
-	async queryStockPrice(queryString: string) {
+	private async queryStockPrice(queryString: string) {
 		return camelCaseKeys(
 			(
 				await this.knex.raw(/*sql*/ `select sp.stock_id, sp.price 
@@ -109,7 +109,7 @@ export class UserService {
 			).rows
 		);
 	}
-	async updateSetting(username: string, hashedPassword: any, filename: any, userId: number) {
+	async updateSetting(username: any, hashedPassword: any, filename: any, userId: number) {
 		return camelCaseKeys(
 			await this.knex.raw(
 				/*sql*/
@@ -122,12 +122,17 @@ export class UserService {
 		);
 	}
 
-	async getBalance(userId: number): Promise<{ deposit: number; cash: number }> {
-		const balance = await this.knex<{ deposit: number; cash: number }>("user_history")
+	async getBalance(userId: number): Promise<{ deposit: string; cash: string }> {
+		const balance = await this.knex<{ deposit: string; cash: string }>("user_history")
 			.select("deposit", "cash")
 			.where("user_id", userId)
 			.orderBy("created_at", "desc")
 			.limit(1);
 		return balance[0];
+	}
+
+	async transfer(cash:number, deposit:number, userId:number):Promise<void> {
+		await this.knex('user_history').insert({deposit, cash, user_id: userId})
+		return
 	}
 }

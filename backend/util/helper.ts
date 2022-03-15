@@ -1,5 +1,9 @@
 import camelcaseKeys from "camelcase-keys";
 import { Request, Response } from "express";
+import jwt from "../util/jwt";
+import jwtSimple from "jwt-simple";
+import permit from "../util/permit";
+import { User } from "./models";
 
 export function wrapControllerMethod(method: (req: Request) => any) {
 	return async (req: Request, res: Response) => {
@@ -37,4 +41,10 @@ export function makeMap(obj: {}, obj2: {}): {} {
 	const ObjValArr: any[] = Object.values(obj2);
 	obj[ObjValArr[0]] = ObjValArr[1];
 	return obj;
+}
+
+export function getUser(req: Request) {
+	const token = permit.check(req);
+	const user: User = jwtSimple.decode(token, jwt.jwtSecret);
+	return user;
 }
