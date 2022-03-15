@@ -90,7 +90,9 @@ export class StockController {
 		const error = await this.stockService.trade(user.id, stockArr[0].id, shares, price, remainingCash);
 		if (error) throw error;
 
-		return { cash: remainingCash };
+		const ownedShares = await this.stockService.getShare(ticker, user.id);
+
+		return { cash: remainingCash, shares: ownedShares };
 	};
 
 	sell = async (req: Request) => {
@@ -121,6 +123,6 @@ export class StockController {
 		const error = await this.stockService.trade(user.id, stockArr[0].id, -shares, price, remainingCash);
 		if (error) throw error;
 
-		return { cash: remainingCash };
+		return { cash: remainingCash, shares: ownedShares - shares };
 	};
 }

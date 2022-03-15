@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { env } from "../env";
 import { getBalanceThunk } from "../redux/auth/thunk";
-import { buyStockThunk } from "../redux/stock/thunk";
+import { buyStockThunk, getSharesThunk } from "../redux/stock/thunk";
 import { RootState } from "../redux/store/state";
 import { defaultErrorSwal } from "./ReactSwal";
 
@@ -23,6 +23,7 @@ export default function BuyOffcanvas({ setIsShow }: Props) {
 	const user = useSelector((state: RootState) => state.auth.user);
 	const cash = useSelector((state: RootState) => state.auth.balance.cash);
 	const stock = useSelector((state: RootState) => state.stock.stock);
+	const shares = useSelector((state: RootState) => state.stock.shares);
 	const { ticker } = useParams<{ ticker: string }>();
 	const [price, setPrice] = useState(0);
 	const { register, handleSubmit, setValue, watch, reset } = useForm<BuyFormState>({ defaultValues: { shares: 0 } });
@@ -58,6 +59,12 @@ export default function BuyOffcanvas({ setIsShow }: Props) {
 	}, [dispatch, user]);
 
 	useEffect(() => {
+		if (user?.payload) {
+			dispatch(getSharesThunk(ticker));
+		}
+	}, [dispatch, user, ticker]);
+
+	useEffect(() => {
 		const socket = new WebSocket(`wss://ws.finnhub.io?token=${env.finnhubKey}`);
 
 		socket.addEventListener("open", (e) => {
@@ -91,8 +98,8 @@ export default function BuyOffcanvas({ setIsShow }: Props) {
 					<span>{stock?.name}</span>
 				</div>
 				<h3>{price.toFixed(2)}</h3>
-				<div>Cash BP: ${cash}</div>
-				<div>You own: </div>
+				<div>Cash BP: ${cash.toFixed(2)}</div>
+				<div>You own: {shares}</div>
 				<span>QUANTITY</span>
 				<div className="input-row">
 					<Form onSubmit={handleSubmit(onSubmit)} id="buy-form">

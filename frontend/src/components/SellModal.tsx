@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { env } from "../env";
 import { getBalanceThunk } from "../redux/auth/thunk";
-import { sellStockThunk } from "../redux/stock/thunk";
+import { getSharesThunk, sellStockThunk } from "../redux/stock/thunk";
 import { RootState } from "../redux/store/state";
 import { BuyFormState } from "./BuyModal";
 import { defaultErrorSwal } from "./ReactSwal";
@@ -24,13 +24,14 @@ export default function BuyModal({ setIsShow }: Props) {
 	const user = useSelector((state: RootState) => state.auth.user);
 	const cash = useSelector((state: RootState) => state.auth.balance.cash);
 	const stock = useSelector((state: RootState) => state.stock.stock);
+	const shares = useSelector((state: RootState) => state.stock.shares);
 	const { ticker } = useParams<{ ticker: string }>();
 	const [price, setPrice] = useState(0);
 	const { register, handleSubmit, setValue, watch, reset } = useForm<SellFormState>({ defaultValues: { shares: 0 } });
 	const hideOffcanvas = () => setIsShow(false);
 
 	function onSubmit(data: BuyFormState) {
-		if (data.shares * price > cash) defaultErrorSwal("Not enough cash");
+		if (data.shares > shares) defaultErrorSwal("Not enough shares");
 		if (data.shares > 0) {
 			dispatch(sellStockThunk(ticker, data.shares, price));
 			reset();
@@ -57,6 +58,12 @@ export default function BuyModal({ setIsShow }: Props) {
 			dispatch(getBalanceThunk());
 		}
 	}, [dispatch, user]);
+
+	useEffect(() => {
+		if (user?.payload) {
+			dispatch(getSharesThunk(ticker));
+		}
+	}, [dispatch, user, ticker]);
 
 	useEffect(() => {
 		const socket = new WebSocket(`wss://ws.finnhub.io?token=${env.finnhubKey}`);
@@ -92,8 +99,8 @@ export default function BuyModal({ setIsShow }: Props) {
 					<span>{stock?.name}</span>
 				</div>
 				<h3>{price.toFixed(2)}</h3>
-				<div>Cash BP: ${cash}</div>
-				<div>You own: </div>
+				<div>Cash BP: ${cash.toFixed(2)}</div>
+				<div>You own: {shares}</div>
 				<span>QUANTITY</span>
 				<div className="input-row">
 					<Form onSubmit={handleSubmit(onSubmit)} id="sell-form">
