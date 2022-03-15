@@ -17,6 +17,7 @@ export default function Portfolio() {
 	const dispatch = useDispatch();
 	const portfolio = useSelector((state: RootState) => state.portfolio.portfolio);
 	const deposit = useSelector((state: RootState) => state.auth.balance.deposit);
+	const cash = useSelector((state: RootState) => state.auth.balance.cash);
 	const tableHeadings = [
 		"ticker",
 		"company name",
@@ -98,9 +99,17 @@ export default function Portfolio() {
 								{portfolio.length > 0 ? ((profit / deposit) * 100).toFixed(2) + "%" : 0}
 							</span>
 						</div>
+						<div className="accu-percent brief-info">
+							Cash BP
+							<span className="accumulate-percentage brief-value">{cash}</span>
+						</div>
 						<div className="button-container">
-							<button className="stonk-btn" onClick={()=>dispatch(push('/transfer/deposit'))}>Deposit</button>
-							<button className="stonk-btn" onClick={()=>dispatch(push('/transfer/withdrawal'))}>Withdraw</button>
+							<button className="stonk-btn" onClick={() => dispatch(push("/transfer/deposit"))}>
+								Deposit
+							</button>
+							<button className="stonk-btn" onClick={() => dispatch(push("/transfer/withdrawal"))}>
+								Withdraw
+							</button>
 						</div>
 					</Col>
 					<Col md={6}>
