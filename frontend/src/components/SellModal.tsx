@@ -5,13 +5,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { env } from "../env";
 import { getBalanceThunk } from "../redux/auth/thunk";
-import { buyStockThunk } from "../redux/stock/thunk";
+import { sellStockThunk } from "../redux/stock/thunk";
 import { RootState } from "../redux/store/state";
 import { BuyFormState } from "./BuyModal";
 import { defaultErrorSwal } from "./ReactSwal";
 
 type Props = {
 	setIsShow: (isShow: boolean) => void;
+};
+
+export type SellFormState = {
+	shares: number;
 };
 
 export default function BuyModal({ setIsShow }: Props) {
@@ -22,13 +26,13 @@ export default function BuyModal({ setIsShow }: Props) {
 	const stock = useSelector((state: RootState) => state.stock.stock);
 	const { ticker } = useParams<{ ticker: string }>();
 	const [price, setPrice] = useState(0);
-	const { register, handleSubmit, setValue, watch, reset } = useForm({ defaultValues: { shares: 0 } });
+	const { register, handleSubmit, setValue, watch, reset } = useForm<SellFormState>({ defaultValues: { shares: 0 } });
 	const hideOffcanvas = () => setIsShow(false);
 
 	function onSubmit(data: BuyFormState) {
 		if (data.shares * price > cash) defaultErrorSwal("Not enough cash");
 		if (data.shares > 0) {
-			dispatch(buyStockThunk(ticker, data.shares, price));
+			dispatch(sellStockThunk(ticker, data.shares, price));
 			reset();
 		}
 	}
@@ -80,7 +84,7 @@ export default function BuyModal({ setIsShow }: Props) {
 	return (
 		<Offcanvas show={true} onHide={hideOffcanvas} placement="end" backdrop={false} scroll className={theme}>
 			<Offcanvas.Header closeButton>
-				<Offcanvas.Title>ORDER</Offcanvas.Title>
+				<Offcanvas.Title>SELL</Offcanvas.Title>
 			</Offcanvas.Header>
 			<Offcanvas.Body>
 				<div className="title-row">

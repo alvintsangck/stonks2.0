@@ -25,7 +25,7 @@ export default function BuyOffcanvas({ setIsShow }: Props) {
 	const stock = useSelector((state: RootState) => state.stock.stock);
 	const { ticker } = useParams<{ ticker: string }>();
 	const [price, setPrice] = useState(0);
-	const { register, handleSubmit, setValue, watch, reset } = useForm({ defaultValues: { shares: 0 } });
+	const { register, handleSubmit, setValue, watch, reset } = useForm<BuyFormState>({ defaultValues: { shares: 0 } });
 	const hideOffcanvas = () => setIsShow(false);
 
 	function onSubmit(data: BuyFormState) {
@@ -83,7 +83,7 @@ export default function BuyOffcanvas({ setIsShow }: Props) {
 	return (
 		<Offcanvas show={true} onHide={hideOffcanvas} placement="end" backdrop={false} scroll className={theme}>
 			<Offcanvas.Header closeButton>
-				<Offcanvas.Title>ORDER</Offcanvas.Title>
+				<Offcanvas.Title>BUY</Offcanvas.Title>
 			</Offcanvas.Header>
 			<Offcanvas.Body>
 				<div className="title-row">
