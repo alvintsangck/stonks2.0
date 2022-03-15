@@ -30,7 +30,7 @@ export default function Portfolio() {
 		"profit/loss%",
 	];
 	const ChartData = {
-		labels: portfolio.map((stock) => stock.name),
+		labels: portfolio.map((stock) => stock.ticker),
 		datasets: [
 			{
 				label: "number of shares",
