@@ -42,11 +42,11 @@ export default function NavBar() {
 									<Dropdown.Item onClick={() => dispatch(push(`/portfolio`))}>
 										{user.payload.username}
 									</Dropdown.Item>
-									<Dropdown.Item>
-										{/* <NavLink className="dropdown-item" to="/setting"> */}
+									{/* <Dropdown.Item>
+										<NavLink className="dropdown-item" to="/setting">
 										User Setting
-										{/* </NavLink> */}
-									</Dropdown.Item>
+										</NavLink>
+									</Dropdown.Item> */}
 									<Dropdown.Item onClick={() => dispatch(toggleThemeAction())}>
 										Change Theme
 									</Dropdown.Item>
@@ -81,6 +81,9 @@ export default function NavBar() {
 						</Nav.Link>
 						<Nav.Link href="#" onClick={()=>dispatch(push("/portfolio"))}>
 								<span className="nav-item">Portfolio</span>
+						</Nav.Link>
+						<Nav.Link href="#" onClick={()=>dispatch(push("/power-bi"))}>
+								<span className="nav-item">PowerBI</span>
 						</Nav.Link>
 					</Nav>
 				</Navbar.Collapse>
