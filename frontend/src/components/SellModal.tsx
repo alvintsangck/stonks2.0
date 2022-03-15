@@ -89,8 +89,15 @@ export default function BuyModal({ setIsShow }: Props) {
 	const totalCost = price * watch("shares");
 
 	return (
-		<Offcanvas show={true} onHide={hideOffcanvas} placement="end" backdrop={false} scroll className={theme}>
-			<Offcanvas.Header closeButton>
+		<Offcanvas
+			show={true}
+			onHide={hideOffcanvas}
+			placement="end"
+			backdrop={false}
+			scroll
+			className={"sell-order " + theme}
+		>
+			<Offcanvas.Header closeButton className="order-header">
 				<Offcanvas.Title>SELL</Offcanvas.Title>
 			</Offcanvas.Header>
 			<Offcanvas.Body>

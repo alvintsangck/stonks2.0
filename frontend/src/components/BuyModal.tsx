@@ -88,8 +88,15 @@ export default function BuyOffcanvas({ setIsShow }: Props) {
 	const totalCost = price * watch("shares");
 
 	return (
-		<Offcanvas show={true} onHide={hideOffcanvas} placement="end" backdrop={false} scroll className={theme}>
-			<Offcanvas.Header closeButton>
+		<Offcanvas
+			show={true}
+			onHide={hideOffcanvas}
+			placement="end"
+			backdrop={false}
+			scroll
+			className={"buy-order " + theme}
+		>
+			<Offcanvas.Header closeButton className="order-header">
 				<Offcanvas.Title>BUY</Offcanvas.Title>
 			</Offcanvas.Header>
 			<Offcanvas.Body>
