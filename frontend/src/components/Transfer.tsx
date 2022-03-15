@@ -14,7 +14,7 @@ import { Helmet } from "react-helmet";
 import { useParams } from "react-router";
 import WithdrawalForm from "./WithdrawalForm";
 import { push } from "connected-react-router";
-import { defaultErrorSwal } from "./ReactSwal";
+import { env } from "../env";
 
 export default function Transfer() {
 	const dispatch = useDispatch();
@@ -50,11 +50,11 @@ export default function Transfer() {
 			</Helmet>
 			<Container className="deposit-container">
 				<Row className="justify-content-center">
-					<Col md={3}/>
+					<Col md={3} />
 					<Col md={3} className="status-bar">
 						MetaMask:{account ? " Connected" : <OnboardingButton />}
 					</Col>
-					<Col  className="status-bar">
+					<Col className="status-bar">
 						<div>Current Chain: {getChainName(chainId)}</div>
 						<div>{chainId !== 43113 && <SwitchChianButton />}</div>
 					</Col>
@@ -114,11 +114,11 @@ async function addTokenAddress() {
 					address: "0x6baad065aa5173e16783d35f607265b5b2750264", // The address that the token is at.
 					symbol: "STON", // A ticker symbol or shorthand, up to 5 chars.
 					decimals: 18, // The number of decimals in the token
-					image: "http://localhost:8080/STONK.png", // A string url of the token logo
+					image: `${env.url}/stonk_token.png`, // A string url of the token logo
 				},
 			},
 		});
 	} catch (error) {
-		defaultErrorSwal(error);
+		console.log(error);
 	}
 }
