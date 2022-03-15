@@ -18,7 +18,7 @@ export default function BuyModal({ isShow, setIsShow }: Props) {
 			<Modal.Header>Get notification of {ticker}</Modal.Header>
 			<Modal.Body>in development</Modal.Body>
 			<Modal.Footer>
-				<button className="stonk-btn" onClick={() => dispatch}>
+				<button className="stonk-btn trade-btn" onClick={() => dispatch}>
 					Add
 				</button>
 			</Modal.Footer>
