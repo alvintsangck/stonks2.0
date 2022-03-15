@@ -1,4 +1,4 @@
-import { Button, Modal } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router";
 
@@ -15,15 +15,12 @@ export default function BuyModal({ isShow, setIsShow }: Props) {
 
 	return (
 		<Modal show={isShow} onHide={hideModal} centered>
-			<Modal.Header>Notification {ticker}</Modal.Header>
-			<Modal.Body>Price</Modal.Body>
+			<Modal.Header>Get notification of {ticker}</Modal.Header>
+			<Modal.Body>in development</Modal.Body>
 			<Modal.Footer>
-				<Button variant="secondary" onClick={hideModal}>
-					Close
-				</Button>
-				<Button variant="primary" onClick={() => dispatch}>
+				<button className="stonk-btn" onClick={() => dispatch}>
 					Add
-				</Button>
+				</button>
 			</Modal.Footer>
 		</Modal>
 	);
