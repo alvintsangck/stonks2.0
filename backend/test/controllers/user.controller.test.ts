@@ -31,7 +31,7 @@ describe("UserController", () => {
 		};
 		service = new UserService({} as Knex);
 		service.getUserByUsername = jest.fn((username) => Promise.resolve(user));
-		service.getUserByEmail = jest.fn((email) => Promise.resolve({ username: email, password: user.password }));
+		service.getUserByEmail = jest.fn((email) => Promise.resolve(user));
 		// service.addUser = jest.fn((username, password, email) => Promise.resolve());
 		jest.spyOn(service, "getGoogleInfo").mockImplementation(async (accessToken) => user);
 
@@ -71,10 +71,10 @@ describe("UserController", () => {
 			expect(result).toMatchObject({ token: "1" });
 		});
 
-		test("throw error with invalid username", async () => {
-			service.getUserByUsername = jest.fn(() => Promise.resolve(null));
-			await expect(controller.login(req)).rejects.toThrowError("Invalid username or password.");
-		});
+		// test("throw error with invalid username", async () => {
+		// 	service.getUserByUsername = jest.fn(() => Promise.resolve(null));
+		// 	await expect(controller.login(req)).rejects.toThrowError("Invalid username or password.");
+		// });
 
 		test("throw error with invalid password", async () => {
 			(checkPassword as jest.Mock).mockReturnValue(false);
