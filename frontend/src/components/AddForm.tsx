@@ -30,13 +30,11 @@ export default function AddForm({ name, placeholder, onAdd }: Props) {
 				{/* <div className={isRotate ? "rotate" : ""} onClick={() => setIsRotate(!isRotate)}>
 					+
 				</div> */}
-				(
 				<FontAwesomeIcon
 					icon={faPlus as IconProp}
 					className={isRotate ? "rotate" : ""}
 					onClick={() => setIsRotate(!isRotate)}
 				/>
-				)
 			</div>
 			{isRotate && (
 				<Form onSubmit={onSubmit} className="add-form">
