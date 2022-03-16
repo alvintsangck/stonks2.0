@@ -65,7 +65,6 @@ export default function Portfolio() {
 		() => portfolio.map((stock) => stock.profit).reduce((prev, next) => Number(prev) + Number(next), 0),
 		[portfolio]
 	);
-	console.log(profit);
 
 	return (
 		<>
