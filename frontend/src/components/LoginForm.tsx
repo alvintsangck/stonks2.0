@@ -8,7 +8,6 @@ import { loginFacebookThunk, loginThunk } from "../redux/auth/thunk";
 import { RootState } from "../redux/store/state";
 import { defaultErrorSwal } from "./ReactSwal";
 import { useLocation } from "react-router";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
 
 export type LoginFormState = {
