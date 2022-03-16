@@ -12,6 +12,8 @@ import { WatchlistService } from "./services/watchlist.service";
 import { knex } from "./util/db";
 import SocketIO from "socket.io";
 import { Express } from "express";
+import { CalendarService } from "./services/calendar.service";
+import { CalendarController } from "./controllers/calendar.controller";
 
 export function attachApi(app: Express, io: SocketIO.Server) {
 	let userService = new UserService(knex);
@@ -24,10 +26,13 @@ export function attachApi(app: Express, io: SocketIO.Server) {
 	let screenerController = new ScreenerController(screenerService);
 	let watchlistService = new WatchlistService(knex);
 	let watchlistController = new WatchlistController(watchlistService);
+	let calendarService = new CalendarService(knex);
+	let calendarController = new CalendarController(calendarService);
 
 	app.use(userController.router);
 	app.use(stockController.router);
 	app.use(commentController.router);
 	app.use(screenerController.router);
+	app.use(calendarController.router);
 	app.use(isLoggedIn, watchlistController.router);
 }

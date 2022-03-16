@@ -19,21 +19,21 @@
 	z-index: 10;
 }
 
-table {
+table.stock-table {
 	border-collapse: collapse;
 }
 
-thead {
+.stock-table thead {
 	background-color: #273472;
 	color: #fff;
 	border: none;
 }
 
-tr {
+.stock-table tr {
 	cursor: pointer;
 }
 
-th {
+.stock-table th {
 	text-transform: uppercase;
 	font-size: 12px;
 	font-weight: 400;

@@ -1,18 +1,33 @@
-.status-bar {
+.connect {
+	margin-top: 80px;
 	display: flex;
+	justify-content: center;
 	align-items: center;
 }
 
-.transfer-form-container {
-	margin-top: 50px;
+.connect > * {
+	margin-bottom: 0;
 }
 
-.deposit-container .status-bar button {
+.connect button {
+	margin-left: 10px;
+}
+
+.status-bar {
+	margin-top: 80px;
+	text-align: center;
+}
+
+.status-bar > button {
+	margin-left: 10px;
+}
+
+.transfer-container .status-bar button {
 	margin-left: 5px;
 }
 
 .form-btn {
-	background-color: #3146a1;
+	background-color: #273472;
 	color: #ffffff;
 	cursor: pointer;
 	padding: 10px 10px;
@@ -21,29 +36,6 @@
 }
 
 .form-btn.active {
-	background-color: #273472;
+	background-color: #3146a1;
 	color: #ffffff;
-}
-
-.transfer-form-container .col-6 {
-	border-radius: 0 0 5px 5px;
-	border: 1px solid #d3d3d3;
-	border-top: none;
-}
-
-.transfer-form-container .row:not(:last-child) .col-6 {
-	border-bottom: none;
-	border-radius: 0;
-}
-
-.import-bar > div {
-	padding: 20px 0;
-	display: flex;
-	justify-content: center;
-	text-align: center;
-}
-
-.import-bar button {
-	margin-left: 5px;
-	margin-top: 5px;
 }

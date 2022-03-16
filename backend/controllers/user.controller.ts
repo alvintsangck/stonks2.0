@@ -6,10 +6,9 @@ import { multerSingle } from "../util/multer";
 import { isLoggedIn } from "../middlewares/guard";
 import crypto from "crypto";
 import { logger } from "../util/logger";
-import { wrapControllerMethod } from "../util/helper";
+import { getUser, wrapControllerMethod } from "../util/helper";
 import jwt from "../util/jwt";
 import jwtSimple from "jwt-simple";
-import permit from "../util/permit";
 
 export class UserController {
 	constructor(private userService: UserService) {
@@ -19,6 +18,8 @@ export class UserController {
 		this.router.get("/user/login/google", this.loginGoogle);
 		this.router.get("/user/portfolio", isLoggedIn, wrapControllerMethod(this.getPortfolio));
 		this.router.get("/user/balance", isLoggedIn, wrapControllerMethod(this.getBalance));
+		this.router.post("/user/deposit", isLoggedIn, wrapControllerMethod(this.deposit));
+		this.router.post("/user/withdrawal", isLoggedIn, wrapControllerMethod(this.withdraw));
 	}
 
 	router = express.Router();
@@ -55,6 +56,24 @@ export class UserController {
 		return { user };
 	};
 
+	private async validateInput(req: Request) {
+		let { username, email, password, confirmPassword } = req.body;
+
+		let whiteSpace = /^\s+/;
+		if (username.match(whiteSpace) || email.match(whiteSpace) || password.match(whiteSpace)) {
+			return new HttpError(400, "Cannot be empty.");
+		}
+
+		if (username.match(/@/)) return new HttpError(400, "Cannot use @ in username.");
+		if (password !== confirmPassword) return new HttpError(400, "The passwords you entered do not match.");
+
+		let user = await this.userService.getUserByUsername(username);
+		if (user) return new HttpError(400, "Username has been used.");
+		let userEmail = await this.userService.getUserByEmail(email);
+		if (userEmail) return new HttpError(400, "This email address is not available. Choose a different address.");
+		return;
+	}
+
 	updateUser = async (req: Request) => {
 		let { username, password, confirmPassword } = req.body;
 		const userId = req.session["user"].id;
@@ -84,37 +103,42 @@ export class UserController {
 	};
 
 	getPortfolio = async (req: Request) => {
-		const token = permit.check(req);
-		const user: User = jwtSimple.decode(token, jwt.jwtSecret);
+		const user = getUser(req);
 		if (user.id <= 0) throw new HttpError(400, "User not exist");
+
 		const portfolio = await this.userService.getUserPortfolio(user.id);
 		return { portfolio };
 	};
 
 	getBalance = async (req: Request) => {
-		const token = permit.check(req);
-		const user: User = jwtSimple.decode(token, jwt.jwtSecret);
+		const user = getUser(req);
 		if (user.id <= 0) throw new HttpError(400, "User not exist");
 
 		const { deposit, cash } = await this.userService.getBalance(user.id);
 		return { deposit, cash };
 	};
 
-	async validateInput(req: Request) {
-		let { username, email, password, confirmPassword } = req.body;
+	deposit = async (req: Request) => {
+		const user = getUser(req);
+		if (user.id <= 0) throw new HttpError(400, "User not exist");
 
-		let whiteSpace = /^\s+/;
-		if (username.match(whiteSpace) || email.match(whiteSpace) || password.match(whiteSpace)) {
-			return new HttpError(400, "Cannot be empty.");
-		}
+		const addCash = Number(req.body.cash);
+		const { deposit, cash } = await this.userService.getBalance(user.id);
+		const depositCash = Number(cash) + addCash;
+		await this.userService.transfer(depositCash, Number(deposit) + addCash, user.id);
+		return { cash: depositCash };
+	};
 
-		if (username.match(/@/)) return new HttpError(400, "Cannot use @ in username.");
-		if (password !== confirmPassword) return new HttpError(400, "The passwords you entered do not match.");
+	withdraw = async (req: Request) => {
+		const user = getUser(req);
+		if (user.id <= 0) throw new HttpError(400, "User not exist");
 
-		let user = await this.userService.getUserByUsername(username);
-		if (user) return new HttpError(400, "Username has been used.");
-		let userEmail = await this.userService.getUserByEmail(email);
-		if (userEmail) return new HttpError(400, "This email address is not available. Choose a different address.");
-		return;
-	}
+		const minusCash = Number(req.body.cash);
+		const { deposit, cash } = await this.userService.getBalance(user.id);
+		const remainingCash = Number(cash) - minusCash;
+
+		if (remainingCash < 0) throw new HttpError(400, "Not enough cash");
+		await this.userService.transfer(remainingCash, Number(deposit) - minusCash, user.id);
+		return { cash: remainingCash };
+	};
 }

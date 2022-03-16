@@ -1,10 +1,21 @@
-import { ethers, Contract } from "ethers";
-import { defaultErrorSwal } from "../../components/ReactSwal";
+import { ethers, Contract, Wallet } from "ethers";
+import { defaultSuccessSwal } from "../../components/ReactSwal";
 import { env } from "../../env";
 import { RootDispatch } from "../store/action";
-import { getBalanceAction, getChainIdAction, getMetaMaskAction } from "./action";
-import Web3 from "web3";
+import {
+	apiFailedAction,
+	getTokenAction,
+	getChainIdAction,
+	getMetaMaskAction,
+	loadingMetaMaskAction,
+	endLoadingMetaMaskAction,
+} from "./action";
 import abi from "./abi";
+import { callApi } from "../api";
+import { getCashAction } from "../auth/action";
+import { UseFormReset } from "react-hook-form";
+import { WithdrawalFormState } from "../../components/WithdrawalForm";
+import { DepositFormState } from "../../components/DepositForm";
 
 const ethereum = window.ethereum;
 
@@ -13,8 +24,8 @@ export function getMetaMaskThunk() {
 		try {
 			const accounts = await ethereum.request({ method: "eth_requestAccounts" });
 			dispatch(getMetaMaskAction(accounts[0]));
-		} catch (error) {
-			defaultErrorSwal(error);
+		} catch (error: any) {
+			dispatch(apiFailedAction(error.message));
 		}
 	};
 }
@@ -24,8 +35,8 @@ export function getChainIdThunk() {
 		try {
 			const chainId = await ethereum.request({ method: "eth_chainId" });
 			dispatch(getChainIdAction(parseInt(chainId, 16)));
-		} catch (error) {
-			defaultErrorSwal(error);
+		} catch (error: any) {
+			dispatch(apiFailedAction(error.message));
 		}
 	};
 }
@@ -45,7 +56,7 @@ export function switchChainThunk() {
 		};
 		try {
 			await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: "0xA869" }] });
-			dispatch(getChainIdAction(14113));
+			dispatch(getChainIdAction(43113));
 		} catch (switchError: any) {
 			if (switchError.code === 4902) {
 				try {
@@ -53,12 +64,12 @@ export function switchChainThunk() {
 						method: "wallet_addEthereumChain",
 						params: [AVALANCHE_TESTNET_PARAMS],
 					});
-					dispatch(getChainIdAction(14113));
-				} catch (addError) {
-					defaultErrorSwal(addError);
+					dispatch(getChainIdAction(43113));
+				} catch (addError: any) {
+					dispatch(apiFailedAction(addError.message));
 				}
 			} else {
-				defaultErrorSwal(switchError);
+				dispatch(apiFailedAction(switchError.message));
 			}
 		}
 	};
@@ -73,42 +84,84 @@ export function getTokenThunk() {
 		try {
 			const balance = await contract.balanceOf(await signer.getAddress());
 			const calculatedBalance = ethers.utils.formatEther(balance);
-			dispatch(getBalanceAction(Number(calculatedBalance)));
-		} catch (error) {
-			defaultErrorSwal(error);
+
+			dispatch(getTokenAction(Number(calculatedBalance)));
+		} catch (error: any) {
+			dispatch(apiFailedAction(error.message));
 		}
 	};
 }
 
-export function depositThunk(amount: number) {
+export function depositThunk(cash: number, reset: UseFormReset<DepositFormState>) {
 	return async (dispatch: RootDispatch) => {
+		dispatch(loadingMetaMaskAction());
+		const account = env.metaMask;
 		const provider = new ethers.providers.Web3Provider(window.ethereum);
 		const signer = provider.getSigner();
 		const contract = new Contract(env.contract, abi, signer);
+		const calcAmount = ethers.utils.parseUnits(cash.toString(), "ether");
+
 		try {
-			const tx = await contract.transfer(env.metaMask, ethers.utils.parseUnits(amount.toString(), "ether"));
-			const result = await tx.wait();
-			if (result.confirmations === 1) {
+			const preTxn = await contract.callStatic.transfer(account, calcAmount);
+			if (preTxn) {
+				const tx = await contract.transfer(account, calcAmount);
+				const result = await tx.wait();
+				if (result.status === 1) {
+					const result = await callApi(`/user/deposit`, "POST", { cash });
+					if ("error" in result) {
+						dispatch(apiFailedAction(result.error));
+					} else {
+						reset();
+						dispatch(getCashAction(result.cash));
+						dispatch(endLoadingMetaMaskAction());
+						defaultSuccessSwal("Deposit successful");
+					}
+				}
+			} else {
+				dispatch(apiFailedAction("Deposit failed. Please try again"));
 			}
 		} catch (error: any) {
 			if (error.code === 4001) {
-				defaultErrorSwal("Transaction denied");
+				dispatch(apiFailedAction("Transaction denied"));
+			} else {
+				console.log(error);
 			}
 		}
 	};
 }
 
-export function withdrawalThunk(amount: number) {
+export function withdrawalThunk(account: string, cash: string, reset: UseFormReset<WithdrawalFormState>) {
 	return async (dispatch: RootDispatch) => {
-		const nodeURL = "https://api.avax-test.network/ext/bc/C/rpc";
-		const HTTPSProvider = new ethers.providers.JsonRpcProvider(nodeURL);
-		const contract = new Contract(env.contract, abi, HTTPSProvider);
-		const wallet = new ethers.Wallet('')
-		const tx = await contract.transfer(
-			"0xcb72b2bb1407137eBD0994099992354fb7116081",
-			ethers.utils.parseUnits(amount.toString(), "ether")
-		);
+		dispatch(loadingMetaMaskAction());
+		const nodeUrl = "https://api.avax-test.network/ext/bc/C/rpc";
+		const provider = new ethers.providers.JsonRpcProvider(nodeUrl);
+		const wallet = new Wallet(env.privateKey, provider);
+		const contract = new Contract(env.contract, abi, wallet);
+		const calcAmount = ethers.utils.parseUnits(cash.toString(), "ether");
 
-		const result = await tx.wait();
+		try {
+			const preTxn = await contract.callStatic.transfer(account, calcAmount);
+			if (preTxn) {
+				const tx = await contract.transfer(account, calcAmount);
+				const result = await tx.wait();
+				if (result.status === 1) {
+					const result = await callApi(`/user/withdrawal`, "POST", { cash });
+					if ("error" in result) {
+						dispatch(apiFailedAction(result.error));
+					} else {
+						reset();
+						dispatch(getCashAction(result.cash));
+						dispatch(endLoadingMetaMaskAction());
+						defaultSuccessSwal(`Withdraw successful`);
+					}
+				}
+			} else {
+				dispatch(apiFailedAction("Withdraw failed. Please try again"));
+			}
+		} catch (error: any) {
+			if (error.code === 4001) {
+				dispatch(apiFailedAction("Transaction denied"));
+			}
+		}
 	};
 }
