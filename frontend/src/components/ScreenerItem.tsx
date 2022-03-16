@@ -147,25 +147,3 @@ export default function ScreenerItem({ radioIndustry, radioSector, setRadioIndus
 		</Row>
 	);
 }
-
-// {/* <ToggleButton
-// 	type="radio"
-// 	value="include"
-// 	variant="outline-success"
-// 	name="industry"
-// 	checked={industry === "include"}
-// 	onChange={(e) => setIndustry(e.currentTarget.value)}
-// >
-// 	include
-// </ToggleButton>
-// <ToggleButton
-// 	type="radio"
-// 	value="exclude"
-// 	variant="outline-danger"
-// 	id="excludedIndustry"
-// 	name="industry"
-// 	checked={industry === "exclude"}
-// 	onChange={(e) => setIndustry(e.currentTarget.value)}
-// >
-// 	exclude
-// </ToggleButton> */}
