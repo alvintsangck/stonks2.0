@@ -19,8 +19,6 @@ export default function EarningsTable({ contents }: Props) {
 		"Revenue surprise",
 	];
 
-	console.log(contents);
-
 	return (
 		<Table responsive hover className="stock-table">
 			<thead>
