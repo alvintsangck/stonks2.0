@@ -32,7 +32,7 @@ describe("UserController", () => {
 		service = new UserService({} as Knex);
 		service.getUserByUsername = jest.fn((username) => Promise.resolve(user));
 		service.getUserByEmail = jest.fn((email) => Promise.resolve({ username: email, password: user.password }));
-		service.addUser = jest.fn((username, password, email) => Promise.resolve());
+		// service.addUser = jest.fn((username, password, email) => Promise.resolve());
 		jest.spyOn(service, "getGoogleInfo").mockImplementation(async (accessToken) => user);
 
 		controller = new UserController(service);
