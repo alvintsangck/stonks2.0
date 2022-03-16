@@ -135,21 +135,31 @@ export default function Portfolio() {
 		.reduce((prev, next) => Number(prev) + Number(next), 0);
 
 	function mapPortfolioTable(stock: CalcPortfolio, i: number) {
-		const isPrice = Number.isNaN(Number(stock.price));
+		const { price, profit, marketValue, ticker, name, shares, avgCost, totalCost } = stock;
+		const profitPercent = (Number(stock.profit) / Number(marketValue)) * 100;
+		const isNotNumberPrice = Number.isNaN(Number(price));
 		return (
-			<tr key={i} onClick={() => dispatch(push(`/stocks/${stock.ticker}`))}>
-				<td>{stock.ticker}</td>
-				<td>{stock.name}</td>
-				<td>{isPrice ? "calculating" : commaNumber(Number(stock.price))}</td>
-				<td>{stock.shares}</td>
-				<td>{stock.avgCost.toFixed(2)}</td>
-				<td>{stock.totalCost}</td>
-				<td>{isPrice ? "calculating" : commaNumber(Number(stock.marketValue))}</td>
-				<td>{isPrice ? "calculating" : commaNumber(Number(stock.profit))}</td>
-				<td>
-					{isPrice
-						? "calculating"
-						: ((Number(stock.profit) / Number(stock.marketValue)) * 100).toFixed(2) + "%"}
+			<tr key={i} onClick={() => dispatch(push(`/stocks/${ticker}`))}>
+				<td>{ticker}</td>
+				<td>{name}</td>
+				<td>{isNotNumberPrice ? "calculating" : commaNumber(Number(price))}</td>
+				<td>{shares}</td>
+				<td>{avgCost.toFixed(2)}</td>
+				<td>{totalCost}</td>
+				<td>{isNotNumberPrice ? "calculating" : commaNumber(Number(marketValue))}</td>
+				<td
+					className={
+						!isNotNumberPrice && Number(profit) > 0 ? "positive" : Number(profit) < 0 ? "negative" : ""
+					}
+				>
+					{isNotNumberPrice ? "calculating" : commaNumber(Number(profit))}
+				</td>
+				<td
+					className={
+						!isNotNumberPrice && profitPercent > 0 ? "positive" : profitPercent < 0 ? "negative" : ""
+					}
+				>
+					{isNotNumberPrice ? "calculating" : profitPercent.toFixed(2) + "%"}
 				</td>
 			</tr>
 		);
