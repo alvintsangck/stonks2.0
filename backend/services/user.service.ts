@@ -105,7 +105,7 @@ function calcPortfolio(rows: Portfolio[]): Portfolio[] {
 			stock.shares += Number(row.shares);
 			stock.totalCost += Number(row.unitCost);
 		} else {
-			arr.push({ ticker, name, shares: Number(shares), tot: Number(unitCost) });
+			arr.push({ ticker, name, shares: Number(shares), totalCost: Number(unitCost) });
 		}
 	}
 	return arr;
