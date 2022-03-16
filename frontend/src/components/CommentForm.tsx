@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { postCommentThunk } from "../redux/stock/thunk";
 import { RootState } from "../redux/store/state";
 import { push } from "connected-react-router";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 export default function CommentForm() {
 	const dispatch = useDispatch();
@@ -39,7 +40,7 @@ export default function CommentForm() {
 				<span className="comment-count">0</span>
 				<span>/200</span>
 				<button className="" type="submit">
-					(<FontAwesomeIcon icon={faPaperPlane} />)
+					(<FontAwesomeIcon icon={faPaperPlane as IconProp} />)
 				</button>
 			</Form.Group>
 		</Form>
