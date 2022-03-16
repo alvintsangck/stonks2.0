@@ -39,7 +39,7 @@ export default function CommentForm() {
 				<span className="comment-count">0</span>
 				<span>/200</span>
 				<button className="" type="submit">
-					<FontAwesomeIcon icon={faPaperPlane} />
+					(<FontAwesomeIcon icon={faPaperPlane} />)
 				</button>
 			</Form.Group>
 		</Form>
