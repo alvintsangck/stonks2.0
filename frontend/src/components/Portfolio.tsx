@@ -20,7 +20,7 @@ export default function Portfolio() {
 	const cash = useSelector((state: RootState) => state.auth.balance.cash);
 	const tableHeadings = [
 		"ticker",
-		"company name",
+		"company",
 		"price",
 		"share(s)",
 		"unit cost",

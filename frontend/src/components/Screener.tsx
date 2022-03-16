@@ -8,7 +8,7 @@ import { RootState } from "../redux/store/state";
 export default function Screener() {
 	const tableHeadings: string[] = [
 		"TICKER",
-		"COMPANY NAME",
+		"COMPANY",
 		"PRICE ($)",
 		"CHANGE ($)",
 		"CHANGE %",
