@@ -9,6 +9,7 @@ import { logger } from "../util/logger";
 import { getUser, wrapControllerMethod } from "../util/helper";
 import jwt from "../util/jwt";
 import jwtSimple from "jwt-simple";
+import fetch from "cross-fetch";
 
 export class UserController {
 	constructor(private userService: UserService) {
@@ -17,6 +18,7 @@ export class UserController {
 		this.router.post("/user/login", wrapControllerMethod(this.login));
 		this.router.post("/user/register", wrapControllerMethod(this.register));
 		this.router.get("/user/login/google", this.loginGoogle);
+		this.router.post("/user/login/facebook", wrapControllerMethod(this.loginFacebook));
 		this.router.get("/user/portfolio", isLoggedIn, wrapControllerMethod(this.getPortfolio));
 		this.router.get("/user/balance", isLoggedIn, wrapControllerMethod(this.getBalance));
 		this.router.post("/user/deposit", isLoggedIn, wrapControllerMethod(this.deposit));
@@ -102,6 +104,27 @@ export class UserController {
 		}
 		// req.session["user"] = foundUser;
 		// res.redirect("/portfolio.html");
+	};
+
+	loginFacebook = async (req: Request) => {
+		try {
+			if (!req.body.accessToken) throw new HttpError(401, "Wrong Access Token.");
+
+			const { accessToken } = req.body;
+			const fetchResponse = await fetch(
+				`https://graph.facebook.com/me?access_token=${accessToken}&fields=id,name,email,picture`
+			);
+			const result = await fetchResponse.json();
+			if (result.error) throw new HttpError(401, "Wrong Access Token.");
+			const user = await this.userService.getUserByEmail(result.email);
+
+			if (!user) throw new HttpError(401, "You are not registered.");
+			const payload = { ...user };
+			const token = jwtSimple.encode(payload, jwt.jwtSecret);
+			return { token };
+		} catch (e) {
+			throw e;
+		}
 	};
 
 	getPortfolio = async (req: Request) => {

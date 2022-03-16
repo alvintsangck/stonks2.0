@@ -6,7 +6,7 @@ import { Portfolio, User } from "../util/models";
 export class UserService {
 	constructor(private knex: Knex) {}
 
-	async getUserByUsername(username: string) {
+	async getUserByUsername(username: string): Promise<User> {
 		return (
 			await this.knex("users")
 				.select("id", "username", "email", "password", "avatar", "role")
@@ -14,7 +14,7 @@ export class UserService {
 		)[0];
 	}
 
-	async getUserByEmail(email: string) {
+	async getUserByEmail(email: string): Promise<User> {
 		return (
 			await this.knex("users")
 				.select("id", "username", "email", "password", "avatar", "role")

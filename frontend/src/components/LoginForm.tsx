@@ -1,14 +1,15 @@
 import "../css/LoginForm.css";
 import { Form } from "react-bootstrap";
-import { faGoogle, faFacebookF } from "@fortawesome/free-brands-svg-icons";
+import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { loginThunk } from "../redux/auth/thunk";
+import { loginFacebookThunk, loginThunk } from "../redux/auth/thunk";
 import { RootState } from "../redux/store/state";
 import { defaultErrorSwal } from "./ReactSwal";
 import { useLocation } from "react-router";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
 
 export type LoginFormState = {
 	username: string;
@@ -30,12 +31,29 @@ export default function LoginForm() {
 		}
 	}
 
+	const fBOnClick = () => {
+		return null;
+	};
+
+	const fBCallback = (userInfo: ReactFacebookLoginInfo & { accessToken: string }) => {
+		if (userInfo.accessToken) {
+			dispatch(loginFacebookThunk(userInfo.accessToken));
+		}
+		return null;
+	};
+
 	return (
 		<Form id="login-form" onSubmit={handleSubmit(onSubmit)}>
 			<h1>{signIn}</h1>
 			<div className="social-container">
-				<FontAwesomeIcon icon={faGoogle as IconProp} />
-				<FontAwesomeIcon icon={faFacebookF as IconProp} />
+				<FacebookLogin
+					appId={process.env.REACT_APP_FACEBOOK_APP_ID || ""}
+					autoLoad={false}
+					fields="name,email,picture"
+					onClick={fBOnClick}
+					callback={fBCallback}
+					icon="fa-facebook"
+				/>
 			</div>
 			<span>or use your account</span>
 			<Form.Control

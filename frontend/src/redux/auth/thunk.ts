@@ -52,3 +52,14 @@ export function getBalanceThunk() {
 		}
 	};
 }
+
+export function loginFacebookThunk(accessToken: string) {
+	return async (dispatch: RootDispatch) => {
+		const result = await callApi(`/user/login/facebook`, "POST", { accessToken });
+		if ("error" in result) {
+			defaultErrorSwal(result.error);
+		} else {
+			dispatch(loginAction(result.token));
+		}
+	};
+}

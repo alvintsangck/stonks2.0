@@ -17,11 +17,7 @@ export class CalendarController {
 	};
 
 	getTodayEarnings = async (req: Request) => {
-		console.log("hi");
-
 		const earnings = await this.calendarService.getTodayEarnings();
-		console.log(earnings);
-
 		return { earnings };
 	};
 
