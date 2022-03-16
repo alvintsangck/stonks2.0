@@ -5,10 +5,11 @@ import { push } from "connected-react-router";
 import { Stock } from "../redux/stock/state";
 import { Portfolio } from "../redux/portfolio/state";
 import LoadingSpinner from "./LoadingSpinner";
+import { EarningTable } from "../redux/calendar/state";
 
 type Props = {
 	headings: string[];
-	contents: Array<Omit<Stock, "id"> | Omit<Portfolio, "stockId">>;
+	contents: Array<Omit<Stock, "id"> | Omit<Portfolio, "stockId"> | EarningTable>;
 	isLoading: boolean;
 };
 
@@ -31,9 +32,9 @@ function StockTable({ headings, contents, isLoading }: Props) {
 			</thead>
 			<tbody>
 				{isLoading ? (
-					<div className="loading-container">
+					<tr className="loading-container">
 						<LoadingSpinner />
-					</div>
+					</tr>
 				) : contents.length > 0 ? (
 					contents.map((content, i) => {
 						const values = Object.values(content);

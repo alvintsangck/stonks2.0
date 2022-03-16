@@ -7,6 +7,7 @@ import { NewsState } from "../news/state";
 import { ScreenerState } from "../screener/state";
 import { StockState } from "../stock/state";
 import { MetaMaskState } from "../metaMask/state";
+import { CalendarState } from "../calendar/state";
 
 export type RootState = {
 	auth: AuthState;
@@ -18,4 +19,5 @@ export type RootState = {
 	watchlist: WatchlistState;
 	router: RouterState;
 	portfolio: PortfolioState;
+	calendar: CalendarState;
 };

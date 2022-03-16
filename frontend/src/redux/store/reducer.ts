@@ -11,6 +11,7 @@ import { screenerReducer } from "../screener/reducer";
 import { stockReducer } from "../stock/reducer";
 import { metaMaskReducer } from "../metaMask/reducer";
 import { RootAction } from "./action";
+import { CalendarReducer } from "../calendar/reducer";
 const appReducer = combineReducers<RootState>({
 	auth: authReducer,
 	news: newsReducer,
@@ -20,6 +21,7 @@ const appReducer = combineReducers<RootState>({
 	metaMask: metaMaskReducer,
 	watchlist: watchlistReducer,
 	portfolio: portfolioReducer,
+	calendar: CalendarReducer,
 	router: connectRouter(history),
 });
 

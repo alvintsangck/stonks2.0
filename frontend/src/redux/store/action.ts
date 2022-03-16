@@ -10,6 +10,7 @@ import { StockAction } from "../stock/action";
 import { MetaMaskAction } from "../metaMask/action";
 import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "./state";
+import { CalendarAction } from "../calendar/action";
 
 
 export type RootAction =
@@ -21,7 +22,8 @@ export type RootAction =
 | StockAction
 | MetaMaskAction
 | CallHistoryMethodAction
-| PortfolioAction;
+| PortfolioAction
+| CalendarAction
 
 export type RootThunkDispatch = ThunkDispatch<RootState, null, RootAction>;
 
