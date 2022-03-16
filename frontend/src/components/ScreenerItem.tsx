@@ -8,6 +8,7 @@ import { RootState } from "../redux/store/state";
 import { getIndustriesThunk, getSectorsThunk } from "../redux/screener/thunk";
 import { addItemAction, removeItemAction, resetItemAction } from "../redux/screener/action";
 import { Item } from "../redux/screener/state";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 type Props = {
 	radioIndustry: string;
@@ -85,7 +86,7 @@ export default function ScreenerItem({ radioIndustry, radioSector, setRadioIndus
 							</ListGroup.Item>
 						))}
 					</ListGroup>
-					<FontAwesomeIcon icon={faArrowRight} />
+					<FontAwesomeIcon icon={faArrowRight as IconProp} />
 					<ListGroup className="screen-list">
 						{addedSectors.map((sector, i) => (
 							<ListGroup.Item
@@ -129,7 +130,7 @@ export default function ScreenerItem({ radioIndustry, radioSector, setRadioIndus
 							</ListGroup.Item>
 						))}
 					</ListGroup>
-					<FontAwesomeIcon icon={faArrowRight} />
+					<FontAwesomeIcon icon={faArrowRight as IconProp} />
 					<ListGroup className="screen-list">
 						{addedIndustries.map((industry, i) => (
 							<ListGroup.Item

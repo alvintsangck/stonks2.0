@@ -1,3 +1,4 @@
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { push } from "connected-react-router";
@@ -26,7 +27,7 @@ export function SearchForm() {
 					onChange={(e) => setTicker(e.target.value.toUpperCase())}
 				/>
 			<button type="submit" className="search-btn">
-				<FontAwesomeIcon icon={faSearch} className="" />
+				<FontAwesomeIcon icon={faSearch as IconProp} className="" />
 			</button>
 		</Form>
 	);

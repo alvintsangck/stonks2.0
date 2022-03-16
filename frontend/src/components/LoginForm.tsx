@@ -8,6 +8,7 @@ import { loginThunk } from "../redux/auth/thunk";
 import { RootState } from "../redux/store/state";
 import { defaultErrorSwal } from "./ReactSwal";
 import { useLocation } from "react-router";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 export type LoginFormState = {
 	username: string;
@@ -23,7 +24,7 @@ export default function LoginForm() {
 
 	function onSubmit(data: LoginFormState) {
 		if (data.username && data.password) {
-			dispatch(loginThunk(data, location.state? location.state.from.pathname : "/portfolio"));
+			dispatch(loginThunk(data, location.state ? location.state.from.pathname : "/portfolio"));
 		} else {
 			defaultErrorSwal("username or password cannot be empty");
 		}
@@ -34,10 +35,10 @@ export default function LoginForm() {
 			<h1>{SIGN_IN}</h1>
 			<div className="social-container">
 				<a href="/connect/google" className="social">
-					<FontAwesomeIcon icon={faGoogle} />
+					<FontAwesomeIcon icon={faGoogle as IconProp} />
 				</a>
 				<a href="/connect/google" className="social">
-					<FontAwesomeIcon icon={faFacebookF} />
+					<FontAwesomeIcon icon={faFacebookF as IconProp} />
 				</a>
 				<a href="/connect/google" className="social">
 					M

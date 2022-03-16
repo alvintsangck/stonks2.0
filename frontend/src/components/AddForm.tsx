@@ -1,3 +1,4 @@
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FormEvent, useState } from "react";
@@ -26,9 +27,12 @@ export default function AddForm({ name, placeholder, onAdd }: Props) {
 		<>
 			<div className="form-heading">
 				<h2>{name}</h2>
+				{/* <div className={isRotate ? "rotate" : ""} onClick={() => setIsRotate(!isRotate)}>
+					+
+				</div> */}
 				<FontAwesomeIcon
+					icon={faPlus as IconProp}
 					className={isRotate ? "rotate" : ""}
-					icon={faPlus}
 					onClick={() => setIsRotate(!isRotate)}
 				/>
 			</div>
