@@ -66,24 +66,27 @@ export default function NavBar() {
 					</Col>
 				</Row>
 			</Container>
-			<Navbar collapseOnSelect expand="md" className="blue" variant='dark'>
+			<Navbar collapseOnSelect expand="md" className="blue" variant="dark">
 				<Navbar.Toggle aria-controls="responsive-navbar-nav" />
 				<Navbar.Collapse id="responsive-navbar-nav">
 					<Nav className="m-auto">
-						<Nav.Link href="#" onClick={()=>dispatch(push("/"))}>
-								<span className="nav-item">Home</span>
+						<Nav.Link href="#" onClick={() => dispatch(push("/"))}>
+							<span className="nav-item">Home</span>
 						</Nav.Link>
-						<Nav.Link href="#" onClick={()=>dispatch(push("/watchlist"))}>
-								<span className="nav-item">Watchlist</span>
+						<Nav.Link href="#" onClick={() => dispatch(push("/watchlist"))}>
+							<span className="nav-item">Watchlist</span>
 						</Nav.Link>
-						<Nav.Link href="#" onClick={()=>dispatch(push("/screener"))}>
-								<span className="nav-item">Screener</span>
+						<Nav.Link href="#" onClick={() => dispatch(push("/screener"))}>
+							<span className="nav-item">Screener</span>
 						</Nav.Link>
-						<Nav.Link href="#" onClick={()=>dispatch(push("/portfolio"))}>
-								<span className="nav-item">Portfolio</span>
+						<Nav.Link href="#" onClick={() => dispatch(push("/portfolio"))}>
+							<span className="nav-item">Portfolio</span>
 						</Nav.Link>
-						<Nav.Link href="#" onClick={()=>dispatch(push("/dashboard"))}>
-								<span className="nav-item">Dashboard</span>
+						<Nav.Link href="#" onClick={() => dispatch(push("/dashboard"))}>
+							<span className="nav-item">Dashboard</span>
+						</Nav.Link>
+						<Nav.Link href="#" onClick={() => dispatch(push("/calendar"))}>
+							<span className="nav-item">Calendar</span>
 						</Nav.Link>
 					</Nav>
 				</Navbar.Collapse>

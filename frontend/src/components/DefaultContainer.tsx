@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { Switch, Route, Redirect } from "react-router";
 import { RootState } from "../redux/store/state";
+import Calendar from "./Calendar";
 import Footer from "./Footer";
 import Home from "./Home";
 import NoMatch from "./NoMatch";
@@ -28,6 +29,7 @@ export default function DefaultContainer() {
 					<PrivateRoute path="/portfolio" component={Portfolio} />
 					<PrivateRoute path="/transfer/:method" component={Transfer} />
 					<Route path="/dashboard" component={PowerBI} />
+					<Route path="/calendar" component={Calendar} />
 					<Redirect from="/transfer" to="/transfer/deposit" />
 					<Route component={NoMatch} />
 				</Switch>
