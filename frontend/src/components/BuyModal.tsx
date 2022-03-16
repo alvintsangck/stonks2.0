@@ -74,13 +74,15 @@ export default function BuyOffcanvas({ setIsShow }: Props) {
 		socket.addEventListener("message", (e) => {
 			const data = JSON.parse(e.data);
 			if (data.data) {
-				const socketPrice = JSON.parse(e.data).data.at(-1).p;
+				const socketPrice = data.data.at(-1).p;
 				setPrice(socketPrice);
 			}
 		});
 
 		return () => {
-			socket.send(JSON.stringify({ type: "unsubscribe", symbol: ticker }));
+			socket.addEventListener("open", () => {
+				socket.send(JSON.stringify({ type: "unsubscribe", symbol: ticker }));
+			});
 			socket.close();
 		};
 	}, [ticker]);

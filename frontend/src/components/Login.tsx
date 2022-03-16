@@ -2,10 +2,12 @@ import "../css/Login.css";
 import { Container } from "react-bootstrap";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
+import { useState } from "react";
 
 export default function Login() {
+	const [isRight, setIsRight] = useState(false);
 	return (
-		<Container fluid className='login-container'>
+		<Container fluid className="login-container">
 			<div className="form-container">
 				<div className="sign-up-container">
 					<RegisterForm />

@@ -1,6 +1,6 @@
-import { Portfolio } from "./state";
+import { UserPortfolio } from "./state";
 
-export const getPortfolioAction = (portfolio: Portfolio[]) => ({
+export const getPortfolioAction = (portfolio: UserPortfolio[]) => ({
 	type: "@@Portfolio/get" as const,
 	portfolio,
 });

@@ -1,16 +1,21 @@
-export type Portfolio = {
-	stockId: number;
+export type UserPortfolio = {
 	ticker: string;
 	name: string;
-	price: string;
 	shares: string;
-	avgCost: string;
-	totalCost: string;
-	marketValue: string;
-	profit: string;
-	profitPercentage: string;
+	totalCost: number;
+};
+
+export type CalcPortfolio = {
+	ticker: string;
+	name: string;
+	price: number | string;
+	shares: number;
+	avgCost: number;
+	totalCost: number;
+	marketValue: number | string;
+	profit: number | string;
 };
 
 export type PortfolioState = {
-	portfolio: Portfolio[];
+	portfolio: UserPortfolio[];
 };
