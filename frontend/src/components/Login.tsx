@@ -6,6 +6,7 @@ import { useState } from "react";
 
 export default function Login() {
 	const [isRight, setIsRight] = useState(false);
+
 	return (
 		<Container fluid className="login-container">
 			<div className={"form-container" + (isRight ? " right-panel-active" : "")}>
