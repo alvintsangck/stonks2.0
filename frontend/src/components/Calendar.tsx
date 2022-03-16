@@ -15,14 +15,13 @@ export default function Calendar() {
 	const todayEarnings = useSelector((state: RootState) => state.calendar.today);
 	const pastEarnings = useSelector((state: RootState) => state.calendar.past);
 	const nextEarnings = useSelector((state: RootState) => state.calendar.next);
-	// console.log(todayEarnings);
 	console.log(pastEarnings);
-	// console.log(nextEarnings);
-
+	
 	useEffect(() => {
 		dispatch(getAllEarningsThunk());
 		dispatch(getEarningsTableThunk());
 	}, [dispatch]);
+
 	const earningCalendar = allEarnings.map(({ createdAt, ticker, releaseTime }) => ({
 		date: createdAt,
 		title: `${ticker} (${releaseTime})`,
@@ -84,10 +83,12 @@ function mapEarningTable({
 		epsEstimated,
 		epsReported,
 		epsSurprise: epsReported
-			? ((Number(epsReported) - Number(epsEstimated) / Number(epsEstimated)) * 100).toFixed(2) + "%"
+			? (((Number(epsReported) - Number(epsEstimated)) / Number(epsEstimated)) * 100).toFixed(2) + "%"
 			: null,
-		revenueEstimated,
-		revenueReported,
+		revenueEstimated: Number(revenueEstimated).toLocaleString(undefined, { minimumFractionDigits: 2 }),
+		revenueReported: revenueReported
+			? Number(revenueReported).toLocaleString(undefined, { minimumFractionDigits: 2 })
+			: null,
 		revenueSurprise: revenueReported
 			? (((Number(revenueReported) - Number(revenueEstimated)) / Number(revenueEstimated)) * 100).toFixed(2) + "%"
 			: null,

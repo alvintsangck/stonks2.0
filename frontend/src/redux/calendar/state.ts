@@ -11,10 +11,10 @@ export type EarningTable = {
 	year: number;
 	quarter: number;
 	epsEstimated: string;
-	epsReported: number | null;
+	epsReported: string | null;
 	epsSurprise?: string | null;
 	revenueEstimated: string;
-	revenueReported: number | null;
+	revenueReported: string | null;
 	revenueSurprise?: string | null;
 };
 
