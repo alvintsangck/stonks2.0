@@ -43,23 +43,13 @@ export class UserService {
 	}
 
 	async getUserPortfolio(userId: number): Promise<Portfolio[]> {
-		let queryPortfolioArr = await this.queryPortfolio(userId);
+		const portfolio = await this.queryPortfolio(userId);
 
-		let stockMap = queryPortfolioArr.reduce((prev: {}, next: {}) => {
-			prev[next["ticker"]] = next["stockId"];
-			return prev;
-		}, {});
+		if (portfolio.length > 0) {
+			const stockPriceArr = await this.queryStockPrice(userId);
+			const stockPriceMap = stockPriceArr.reduce(makeMap, {});
 
-		let queryString = "";
-		for (let ticker in stockMap) {
-			queryString += `sp.stock_id = ${stockMap[ticker]} or `;
-		}
-
-		let stockPriceArr = await this.queryStockPrice(queryString.slice(0, -4));
-		let stockPriceMap = stockPriceArr.reduce(makeMap, {});
-
-		return queryPortfolioArr.map((row: any) => {
-			return {
+			return portfolio.map((row: any) => ({
 				stockId: row.stockId,
 				ticker: row.ticker,
 				name: row.name,
@@ -73,8 +63,9 @@ export class UserService {
 					((row["shares"] * stockPriceMap[row["stockId"]] - row["totalCost"]) / row["totalCost"]) *
 					100
 				).toFixed(2)}%`,
-			};
-		});
+			}));
+		}
+		return [];
 	}
 	// get portfolio
 	private async queryPortfolio(userId: number) {
@@ -98,14 +89,19 @@ export class UserService {
 		);
 	}
 	//get stock price in portfolio
-	private async queryStockPrice(queryString: string) {
+	private async queryStockPrice(userId: number) {
 		return camelCaseKeys(
 			(
-				await this.knex.raw(/*sql*/ `select sp.stock_id, sp.price 
-				from stock_prices sp 
-				where created_at 
+				await this.knex.raw(
+					/*sql*/ `select sp.stock_id, sp.price 
+					from stock_prices sp 
+				join portfolios p 
+				on p.stock_id = sp.stock_id 
+				where sp.created_at 
 				in (SELECT max(created_at) FROM stock_prices sp limit 1)
-				and (${queryString})`)
+				and p.user_id  = ?`,
+					[userId]
+				)
 			).rows
 		);
 	}
