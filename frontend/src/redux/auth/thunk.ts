@@ -60,6 +60,7 @@ export function loginFacebookThunk(accessToken: string) {
 			defaultErrorSwal(result.error);
 		} else {
 			dispatch(loginAction(result.token));
+			dispatch(push("/portfolio"));
 		}
 	};
 }
