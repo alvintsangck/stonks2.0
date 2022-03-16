@@ -1,7 +1,7 @@
 import { Knex } from "knex";
 import fetch from "node-fetch";
 import { camelCaseKeys } from "../util/helper";
-import { Portfolio } from "../util/models";
+import { Portfolio, User } from "../util/models";
 
 export class UserService {
 	constructor(private knex: Knex) {}
@@ -22,12 +22,12 @@ export class UserService {
 		)[0];
 	}
 
-	async addUser(username: string, password: string, email: string) {
-		return (
-			await this.knex("users")
-				.insert({ username, password, email })
-				.returning(["id", "username", "email", "avatar", "role"])
-		)[0];
+	async addUser(username: string, password: string, email: string): Promise<Omit<User, "password">> {
+		const user = await this.knex("users")
+			.insert({ username, password, email })
+			.returning(["id", "username", "email", "avatar", "role"])[0];
+		await this.knex("user_history").insert({ user_id: user.id });
+		return user;
 	}
 
 	async getGoogleInfo(accessToken: string) {

@@ -15,6 +15,7 @@ export class UserController {
 		this.router.post("/user", wrapControllerMethod(this.register));
 		this.router.put("/user", isLoggedIn, multerSingle, wrapControllerMethod(this.updateUser));
 		this.router.post("/user/login", wrapControllerMethod(this.login));
+		this.router.post("/user/register", wrapControllerMethod(this.register));
 		this.router.get("/user/login/google", this.loginGoogle);
 		this.router.get("/user/portfolio", isLoggedIn, wrapControllerMethod(this.getPortfolio));
 		this.router.get("/user/balance", isLoggedIn, wrapControllerMethod(this.getBalance));
@@ -47,23 +48,24 @@ export class UserController {
 	};
 
 	register = async (req: Request) => {
+		throw new HttpError(503, "Register function is not opened.");
+
 		const error = await this.validateInput(req);
 		if (error) throw error;
-		let { username, email, password } = req.body;
-		password = await hashPassword(password.toString());
+		const { username, email, password } = req.body;
+		const hashedPassword = await hashPassword(password.toString());
 
-		let user: User = await this.userService.addUser(username, password, email);
+		const user: Omit<User, "password"> = await this.userService.addUser(username, hashedPassword, email);
 		return { user };
 	};
 
 	private async validateInput(req: Request) {
-		let { username, email, password, confirmPassword } = req.body;
+		const { username, email, password, confirmPassword } = req.body;
 
-		let whiteSpace = /^\s+/;
-		if (username.match(whiteSpace) || email.match(whiteSpace) || password.match(whiteSpace)) {
-			return new HttpError(400, "Cannot be empty.");
-		}
-
+		const space = /\s+/g;
+		if (username.replace(space, "") === "") return new HttpError(400, "Username cannot be empty.");
+		if (email.replace(space, "") === "") return new HttpError(400, "Email cannot be empty.");
+		if (password.replace(space, "") === "") return new HttpError(400, "Password cannot be empty.");
 		if (username.match(/@/)) return new HttpError(400, "Cannot use @ in username.");
 		if (password !== confirmPassword) return new HttpError(400, "The passwords you entered do not match.");
 
@@ -92,7 +94,7 @@ export class UserController {
 		const googleUserInfo = await this.userService.getGoogleInfo(accessToken);
 		let foundUser: User = await this.userService.getUserByEmail(googleUserInfo.email);
 		if (!foundUser) {
-			foundUser = await this.userService.addUser(
+			await this.userService.addUser(
 				googleUserInfo.name.concat(Date.now()),
 				await hashPassword(crypto.randomBytes(20).toString("hex")),
 				googleUserInfo.email

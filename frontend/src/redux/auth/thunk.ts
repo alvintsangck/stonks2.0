@@ -1,6 +1,7 @@
 import { push } from "connected-react-router";
 import { LoginFormState } from "../../components/LoginForm";
 import { defaultErrorSwal } from "../../components/ReactSwal";
+import { RegisterFormState } from "../../components/RegisterForm";
 import { callApi } from "../api";
 import { RootDispatch } from "../store/action";
 import { authApiFailedAction, getBalanceAction, loginAction, logoutAction, registerAction } from "./action";
@@ -27,7 +28,7 @@ export function logoutThunk() {
 	};
 }
 
-export function registerThunk(data: any, pathname: string) {
+export function registerThunk(data: RegisterFormState) {
 	return async (dispatch: RootDispatch) => {
 		const result = await callApi("/user/register", "POST", data);
 		if ("error" in result) {
@@ -36,18 +37,18 @@ export function registerThunk(data: any, pathname: string) {
 			const { token } = result;
 			localStorage.setItem("token", token);
 			dispatch(registerAction(token));
-			dispatch(push(pathname));
+			dispatch(push("/portfolio"));
 		}
 	};
 }
 
-export function getBalanceThunk(){
-	return async (dispatch:RootDispatch)=> {
-		const result = await callApi("/user/balance")
-		if ('error' in result) {
-			defaultErrorSwal(result.error)
+export function getBalanceThunk() {
+	return async (dispatch: RootDispatch) => {
+		const result = await callApi("/user/balance");
+		if ("error" in result) {
+			defaultErrorSwal(result.error);
 		} else {
-			dispatch(getBalanceAction(result.deposit, result.cash))
+			dispatch(getBalanceAction(result.deposit, result.cash));
 		}
-	}
+	};
 }

@@ -20,7 +20,7 @@ export default function LoginForm() {
 	const location = useLocation<any>();
 	const error = useSelector((state: RootState) => state.auth.error);
 	const { register, handleSubmit } = useForm<LoginFormState>({ defaultValues: { username: "", password: "" } });
-	const SIGN_IN = "Sign in";
+	const signIn = "Sign in";
 
 	function onSubmit(data: LoginFormState) {
 		if (data.username && data.password) {
@@ -32,17 +32,10 @@ export default function LoginForm() {
 
 	return (
 		<Form id="login-form" onSubmit={handleSubmit(onSubmit)}>
-			<h1>{SIGN_IN}</h1>
+			<h1>{signIn}</h1>
 			<div className="social-container">
-				<a href="/connect/google" className="social">
-					<FontAwesomeIcon icon={faGoogle as IconProp} />
-				</a>
-				<a href="/connect/google" className="social">
-					<FontAwesomeIcon icon={faFacebookF as IconProp} />
-				</a>
-				<a href="/connect/google" className="social">
-					M
-				</a>
+				<FontAwesomeIcon icon={faGoogle as IconProp} />
+				<FontAwesomeIcon icon={faFacebookF as IconProp} />
 			</div>
 			<span>or use your account</span>
 			<Form.Control
@@ -55,7 +48,7 @@ export default function LoginForm() {
 				{...register("password", { required: true })}
 				placeholder="Password"
 			></Form.Control>
-			<button type="submit">{SIGN_IN}</button>
+			<button type="submit">{signIn}</button>
 			{error && defaultErrorSwal(error)}
 		</Form>
 	);
