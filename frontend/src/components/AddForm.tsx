@@ -1,5 +1,3 @@
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FormEvent, useState } from "react";
 import { Form } from "react-bootstrap";
 import { useDispatch } from "react-redux";
@@ -26,11 +24,14 @@ export default function AddForm({ name, placeholder, onAdd }: Props) {
 		<>
 			<div className="form-heading">
 				<h2>{name}</h2>
-				<FontAwesomeIcon
-					className={isRotate ? "rotate" : ""}
+				<div className={isRotate ? "rotate" : ""} onClick={() => setIsRotate(!isRotate)}>
+					+
+				</div>
+				{/* <FontAwesomeIcon
 					icon={faPlus}
+					className={isRotate ? "rotate" : ""}
 					onClick={() => setIsRotate(!isRotate)}
-				/>
+				/> */}
 			</div>
 			{isRotate && (
 				<Form onSubmit={onSubmit} className="add-form">
