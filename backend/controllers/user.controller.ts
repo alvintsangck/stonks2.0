@@ -122,8 +122,8 @@ export class UserController {
 			const payload = { ...user };
 			const token = jwtSimple.encode(payload, jwt.jwtSecret);
 			return { token };
-		} catch (e) {
-			throw e;
+		} catch (e: any) {
+			throw e
 		}
 	};
 
