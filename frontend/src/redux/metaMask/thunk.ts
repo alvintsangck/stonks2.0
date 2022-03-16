@@ -98,7 +98,7 @@ export function depositThunk(cash: number, reset: UseFormReset<DepositFormState>
 		const account = env.metaMask;
 		const provider = new ethers.providers.Web3Provider(window.ethereum);
 		const signer = provider.getSigner();
-		const contract = new Contract(env.contract, abi, signer);
+		const contract = new Contract("0x6baad065aa5173e16783d35f607265b5b2750264", abi, signer);
 		const calcAmount = ethers.utils.parseUnits(cash.toString(), "ether");
 
 		try {
@@ -136,7 +136,7 @@ export function withdrawalThunk(account: string, cash: string, reset: UseFormRes
 		const nodeUrl = "https://api.avax-test.network/ext/bc/C/rpc";
 		const provider = new ethers.providers.JsonRpcProvider(nodeUrl);
 		const wallet = new Wallet(env.privateKey, provider);
-		const contract = new Contract(env.contract, abi, wallet);
+		const contract = new Contract("0x6baad065aa5173e16783d35f607265b5b2750264", abi, wallet);
 		const calcAmount = ethers.utils.parseUnits(cash.toString(), "ether");
 
 		try {
