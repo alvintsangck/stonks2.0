@@ -89,7 +89,7 @@ export class UserService {
 					from portfolios p
 					join stocks s on p.stock_id = s.id
 					join users u on p.user_id = u.id 
-					where u.id = ?
+					where u.id = ? and p.position_size > 0
 					group by s.ticker, s.name, p.stock_id
 					order by s.ticker asc`,
 					[userId]
@@ -131,8 +131,8 @@ export class UserService {
 		return balance[0];
 	}
 
-	async transfer(cash:number, deposit:number, userId:number):Promise<void> {
-		await this.knex('user_history').insert({deposit, cash, user_id: userId})
-		return
+	async transfer(cash: number, deposit: number, userId: number): Promise<void> {
+		await this.knex("user_history").insert({ deposit, cash, user_id: userId });
+		return;
 	}
 }
