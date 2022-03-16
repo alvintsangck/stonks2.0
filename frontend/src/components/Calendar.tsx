@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { getAllEarningsThunk, getEarningsTableThunk } from "../redux/calendar/thunk";
 import { EarningTable } from "../redux/calendar/state";
 import EarningsTable from "./EarningsTable";
+import { push } from "connected-react-router";
 
 export default function Calendar() {
 	const dispatch = useDispatch();
@@ -30,6 +31,53 @@ export default function Calendar() {
 	const pastEarningTable = pastEarnings.map(mapEarningTable);
 	const nextEarningTable = nextEarnings.map(mapEarningTable);
 
+	function mapEarningTable(
+		{
+			createdAt,
+			ticker,
+			name,
+			year,
+			quarter,
+			epsEstimated,
+			epsReported,
+			revenueEstimated,
+			revenueReported,
+		}: EarningTable,
+		i: number
+	) {
+		const epsSurprise = epsReported
+			? ((Number(epsReported) - Number(epsEstimated)) / Number(epsEstimated)) * 100
+			: null;
+		const revenueSurprise = revenueReported
+			? ((Number(revenueReported) - Number(revenueEstimated)) / Number(revenueEstimated)) * 100
+			: null;
+		return (
+			<tr key={i} onClick={() => dispatch(push(`/stocks/${ticker}`))}>
+				<td className={""}>{createdAt.split("T")[0]}</td>
+				<td className={""}>{ticker}</td>
+				<td className={""}>{name}</td>
+				<td className={"number"}>{year}</td>
+				<td className={"number"}>{quarter}</td>
+				<td className={"number"}>{epsEstimated}</td>
+				<td className={"number"}>{epsReported}</td>
+				<td className={"number " + (epsSurprise && epsSurprise > 0 ? "positive" : "negative")}>
+					{epsSurprise !== null && epsSurprise.toFixed(2) + "%"}
+				</td>
+				<td className={"number"}>
+					{Number(revenueEstimated).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+				</td>
+				<td className={"number"}>
+					{revenueReported
+						? Number(revenueReported).toLocaleString(undefined, { minimumFractionDigits: 2 })
+						: null}
+				</td>
+				<td className={"number " + (revenueSurprise && revenueSurprise > 0 ? "positive" : "negative")}>
+					{revenueSurprise !== null && revenueSurprise.toFixed(2) + "%"}
+				</td>
+			</tr>
+		);
+	}
+
 	return (
 		<>
 			<Container>
@@ -46,52 +94,5 @@ export default function Calendar() {
 				<EarningsTable contents={nextEarningTable} />
 			</Container>
 		</>
-	);
-}
-
-function mapEarningTable(
-	{
-		createdAt,
-		ticker,
-		name,
-		year,
-		quarter,
-		epsEstimated,
-		epsReported,
-		revenueEstimated,
-		revenueReported,
-	}: EarningTable,
-	i: number
-) {
-	const epsSurprise = epsReported
-		? ((Number(epsReported) - Number(epsEstimated)) / Number(epsEstimated)) * 100
-		: null;
-	const revenueSurprise = revenueReported
-		? ((Number(revenueReported) - Number(revenueEstimated)) / Number(revenueEstimated)) * 100
-		: null;
-	return (
-		<tr key={i}>
-			<td className={""}>{createdAt.split("T")[0]}</td>
-			<td className={""}>{ticker}</td>
-			<td className={""}>{name}</td>
-			<td className={"number"}>{year}</td>
-			<td className={"number"}>{quarter}</td>
-			<td className={"number"}>{epsEstimated}</td>
-			<td className={"number"}>{epsReported}</td>
-			<td className={"number " + (epsSurprise && epsSurprise > 0 ? "positive" : "negative")}>
-				{epsSurprise !== null && epsSurprise.toFixed(2) + "%"}
-			</td>
-			<td className={"number"}>
-				{Number(revenueEstimated).toLocaleString(undefined, { minimumFractionDigits: 2 })}
-			</td>
-			<td className={"number"}>
-				{revenueReported
-					? Number(revenueReported).toLocaleString(undefined, { minimumFractionDigits: 2 })
-					: null}
-			</td>
-			<td className={"number " + (revenueSurprise && revenueSurprise > 0 ? "positive" : "negative")}>
-				{revenueSurprise !== null && revenueSurprise.toFixed(2) + "%"}
-			</td>
-		</tr>
 	);
 }
