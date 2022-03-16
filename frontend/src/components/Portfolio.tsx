@@ -62,11 +62,10 @@ export default function Portfolio() {
 	}, [dispatch]);
 
 	const profit = useMemo(
-		() =>
-			portfolio.map((stock) => stock.marketValue).reduce((prev, next) => Number(prev) + Number(next), 0) -
-			Number(deposit),
-		[portfolio, deposit]
+		() => portfolio.map((stock) => stock.profit).reduce((prev, next) => Number(prev) + Number(next), 0),
+		[portfolio]
 	);
+	console.log(profit);
 
 	return (
 		<>
