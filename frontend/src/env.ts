@@ -1,4 +1,3 @@
-if (!process.env.REACT_APP_CONTRACT_ADDRESS) throw Error("no contract address");
 if (!process.env.REACT_APP_FINNHUB_KEY) throw Error("no finnhub key");
 if (!process.env.REACT_APP_PRIVATE_KEY) throw Error("no crypto wallet private key");
 
