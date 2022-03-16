@@ -26,6 +26,9 @@ export default function AddForm({ name, placeholder, onAdd }: Props) {
 		<>
 			<div className="form-heading">
 				<h2>{name}</h2>
+				{
+					//@@ts-ignore
+				}
 				<FontAwesomeIcon
 					className={isRotate ? "rotate" : ""}
 					icon={faPlus}
