@@ -5,6 +5,7 @@ import "../css/Sidebar.css";
 import { useDispatch } from "react-redux";
 import { addWatchlistThunk, deleteWatchlistThunk, getWatchlistThunk } from "../redux/watchlist/thunk";
 import { push } from "connected-react-router";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 type Props = {
 	lists: any[];
@@ -30,7 +31,7 @@ function Sidebar({ lists, currentListId }: Props) {
 								<span>{list.name}</span>
 							</div>
 							<div>
-								<FontAwesomeIcon icon={faTimes} onClick={() => deleteWatchlist(list.id, list.name)} />
+								<FontAwesomeIcon icon={faTimes as IconProp} onClick={() => deleteWatchlist(list.id, list.name)} />
 							</div>
 						</div>
 					))}

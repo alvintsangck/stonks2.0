@@ -9,6 +9,7 @@ import { push } from "connected-react-router";
 import BuyModal from "./BuyModal";
 import SellModal from "./SellModal";
 import NotiModal from "./NotiModal";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 export default function StockButtons() {
 	const dispatch = useDispatch();
@@ -30,7 +31,7 @@ export default function StockButtons() {
 		{ name: "Buy", className: "buy-btn", fn: setIsShowBuy },
 		{ name: "Sell", className: "sell-btn", fn: setIsShowSell },
 		{ name: "Watchlist", className: "watchlist-btn", fn: setIsShowWatchlist },
-		{ name: <FontAwesomeIcon icon={faBell} />, className: "noti-btn", fn: setIsShowNoti },
+		{ name: <FontAwesomeIcon icon={faBell as IconProp} />, className: "noti-btn", fn: setIsShowNoti },
 	];
 
 	return (

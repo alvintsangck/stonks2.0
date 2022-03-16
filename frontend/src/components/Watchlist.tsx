@@ -12,6 +12,7 @@ import { RootState } from "../redux/store/state";
 import StockTable from "./StockTable";
 import { useParams } from "react-router-dom";
 import { Stock } from "../redux/stock/state";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 export default function Watchlist() {
 	const dispatch = useDispatch();
@@ -87,7 +88,9 @@ function loadStocks(stocks: Stock[], watchlistId: number, watchlistName: string,
 			price: stock.price,
 			change: change.toFixed(2),
 			changePercentage: ((change / stock.prevPrice!) * 100).toFixed(2) + "%",
-			deleteBtn: <FontAwesomeIcon icon={faTimes} onClick={() => dispatch(deleteStockThunk(deleteInfo))} />,
+			deleteBtn: (
+				<FontAwesomeIcon icon={faTimes as IconProp} onClick={() => dispatch(deleteStockThunk(deleteInfo))} />
+			),
 		};
 	});
 }
