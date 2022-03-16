@@ -127,33 +127,34 @@ export default function Portfolio() {
 			profit: "calculating",
 		};
 	}
-
 	const calcPortfolio: CalcPortfolio[] = portfolio.map(mapPortfolio);
-	const profit = calcProfit(calcPortfolio);
+
+	const profit = calcPortfolio.map((stock) => stock.profit).reduce((prev, next) => Number(prev) + Number(next), 0);
 	const marketValue = calcPortfolio
 		.map((stock) => stock.marketValue)
 		.reduce((prev, next) => Number(prev) + Number(next), 0);
 
-	function mapStockTable(stock: CalcPortfolio, i: number) {
+	function mapPortfolioTable(stock: CalcPortfolio, i: number) {
+		const isPrice = Number.isNaN(Number(stock.price));
 		return (
 			<tr key={i} onClick={() => dispatch(push(`/stocks/${stock.ticker}`))}>
 				<td>{stock.ticker}</td>
 				<td>{stock.name}</td>
-				<td>{Number.isNaN(stock.price) ? "is calculating" : commaNumber(Number(stock.price))}</td>
+				<td>{isPrice ? "calculating" : commaNumber(Number(stock.price))}</td>
 				<td>{stock.shares}</td>
 				<td>{stock.avgCost.toFixed(2)}</td>
 				<td>{stock.totalCost}</td>
-				<td>{Number.isNaN(stock.price) ? "is calculating" : commaNumber(Number(stock.marketValue))}</td>
-				<td>{Number.isNaN(stock.price) ? "is calculating" : commaNumber(Number(stock.profit))}</td>
+				<td>{isPrice ? "calculating" : commaNumber(Number(stock.marketValue))}</td>
+				<td>{isPrice ? "calculating" : commaNumber(Number(stock.profit))}</td>
 				<td>
-					{Number.isNaN(stock.price)
-						? "is calculating"
+					{isPrice
+						? "calculating"
 						: ((Number(stock.profit) / Number(stock.marketValue)) * 100).toFixed(2) + "%"}
 				</td>
 			</tr>
 		);
 	}
-	const portfolioTable = calcPortfolio.map(mapStockTable);
+	const portfolioTable = calcPortfolio.map(mapPortfolioTable);
 	return (
 		<>
 			<Helmet>
@@ -165,19 +166,21 @@ export default function Portfolio() {
 						<div className="brief-info">
 							Market Value
 							<span className="account-value brief-value">
-								{Number.isNaN(marketValue) ? "is calculating" : "$" + commaNumber(Number(marketValue))}
+								{Number.isNaN(marketValue) ? "calculating" : "$" + commaNumber(Number(marketValue))}
 							</span>
 						</div>
 						<div className="accu-value brief-info">
 							Accumulate Profit/Loss
 							<span className="accumulate-profit brief-value">
-								{Number.isNaN(profit) ? "is calculating" : "$" + profit.toFixed(2)}
+								{Number.isNaN(profit) ? "calculating" : "$" + Number(profit).toFixed(2)}
 							</span>
 						</div>
 						<div className="accu-percent brief-info">
 							Accumulate Profit/Loss%
 							<span className="accumulate-percentage brief-value">
-								{Number.isNaN(profit) ? "is calculating" : ((profit / deposit) * 100).toFixed(2) + "%"}
+								{Number.isNaN(profit)
+									? "calculating"
+									: ((Number(profit) / deposit) * 100).toFixed(2) + "%"}
 							</span>
 						</div>
 						<div className="accu-percent brief-info">
@@ -214,14 +217,4 @@ export default function Portfolio() {
 			</Container>
 		</>
 	);
-}
-
-function calcProfit(portfolio: CalcPortfolio[]): number {
-	let profit = 0;
-	for (let stock of portfolio) {
-		if (!Number.isNaN(stock.profit)) {
-			profit += Number(stock.profit);
-		}
-	}
-	return profit;
 }
