@@ -45,6 +45,17 @@ table.stock-table {
 	border-top: none;
 }
 
+.stock-table .number {
+	text-align: right;
+}
+
+.stock-table .negative {
+	color: rgb(255, 0, 0);
+}
+.stock-table .positive {
+	color: rgb(0, 255, 0);
+}
+
 .stock-table .empty {
 	border: none;
 }

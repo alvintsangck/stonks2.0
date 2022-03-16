@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store/state";
 import { useEffect } from "react";
 import { getAllEarningsThunk, getEarningsTableThunk } from "../redux/calendar/thunk";
-import StockTable from "./StockTable";
 import { EarningTable } from "../redux/calendar/state";
+import EarningsTable from "./EarningsTable";
 
 export default function Calendar() {
 	const dispatch = useDispatch();
@@ -15,8 +15,7 @@ export default function Calendar() {
 	const todayEarnings = useSelector((state: RootState) => state.calendar.today);
 	const pastEarnings = useSelector((state: RootState) => state.calendar.past);
 	const nextEarnings = useSelector((state: RootState) => state.calendar.next);
-	console.log(pastEarnings);
-	
+
 	useEffect(() => {
 		dispatch(getAllEarningsThunk());
 		dispatch(getEarningsTableThunk());
@@ -30,19 +29,6 @@ export default function Calendar() {
 	const todayEarningTable = todayEarnings.map(mapEarningTable);
 	const pastEarningTable = pastEarnings.map(mapEarningTable);
 	const nextEarningTable = nextEarnings.map(mapEarningTable);
-	const tableHeadings = [
-		"date",
-		"ticker",
-		"company",
-		"year",
-		"quarter",
-		"EPS estimated",
-		"EPS reported",
-		"EPS surprise",
-		"Revenue Estimated (Mil)",
-		"Revenue Reported (Mil)",
-		"Revenue surprise",
-	];
 
 	return (
 		<>
@@ -53,44 +39,59 @@ export default function Calendar() {
 			</Container>
 			<Container fluid className="calendar-container">
 				<h4>Today's Earnings Releases</h4>
-				<StockTable headings={tableHeadings} contents={todayEarningTable} isLoading={false} />
+				<EarningsTable contents={todayEarningTable} />
 				<h4>Earnings Releases in the past 10 days</h4>
-				<StockTable headings={tableHeadings} contents={pastEarningTable} isLoading={false} />
+				<EarningsTable contents={pastEarningTable} />
 				<h4>Upcoming Earning Releases in the next 10 days</h4>
-				<StockTable headings={tableHeadings} contents={nextEarningTable} isLoading={false} />
+				<EarningsTable contents={nextEarningTable} />
 			</Container>
 		</>
 	);
 }
 
-function mapEarningTable({
-	createdAt,
-	ticker,
-	name,
-	year,
-	quarter,
-	epsEstimated,
-	epsReported,
-	revenueEstimated,
-	revenueReported,
-}: EarningTable): EarningTable {
-	return {
-		createdAt: createdAt.split("T")[0],
+function mapEarningTable(
+	{
+		createdAt,
 		ticker,
 		name,
 		year,
 		quarter,
 		epsEstimated,
 		epsReported,
-		epsSurprise: epsReported
-			? (((Number(epsReported) - Number(epsEstimated)) / Number(epsEstimated)) * 100).toFixed(2) + "%"
-			: null,
-		revenueEstimated: Number(revenueEstimated).toLocaleString(undefined, { minimumFractionDigits: 2 }),
-		revenueReported: revenueReported
-			? Number(revenueReported).toLocaleString(undefined, { minimumFractionDigits: 2 })
-			: null,
-		revenueSurprise: revenueReported
-			? (((Number(revenueReported) - Number(revenueEstimated)) / Number(revenueEstimated)) * 100).toFixed(2) + "%"
-			: null,
-	};
+		revenueEstimated,
+		revenueReported,
+	}: EarningTable,
+	i: number
+) {
+	const epsSurprise = epsReported
+		? ((Number(epsReported) - Number(epsEstimated)) / Number(epsEstimated)) * 100
+		: null;
+	const revenueSurprise = revenueReported
+		? ((Number(revenueReported) - Number(revenueEstimated)) / Number(revenueEstimated)) * 100
+		: null;
+	return (
+		<tr key={i}>
+			<td className={""}>{createdAt.split("T")[0]}</td>
+			<td className={""}>{ticker}</td>
+			<td className={""}>{name}</td>
+			<td className={"number"}>{year}</td>
+			<td className={"number"}>{quarter}</td>
+			<td className={"number"}>{epsEstimated}</td>
+			<td className={"number"}>{epsReported}</td>
+			<td className={"number " + (epsSurprise && epsSurprise > 0 ? "positive" : "negative")}>
+				{epsSurprise !== null && epsSurprise.toFixed(2) + "%"}
+			</td>
+			<td className={"number"}>
+				{Number(revenueEstimated).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+			</td>
+			<td className={"number"}>
+				{revenueReported
+					? Number(revenueReported).toLocaleString(undefined, { minimumFractionDigits: 2 })
+					: null}
+			</td>
+			<td className={"number " + (revenueSurprise && revenueSurprise > 0 ? "positive" : "negative")}>
+				{revenueSurprise !== null && revenueSurprise.toFixed(2) + "%"}
+			</td>
+		</tr>
+	);
 }
