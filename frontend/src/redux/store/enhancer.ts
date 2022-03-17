@@ -18,7 +18,7 @@ let rootEnhancer: any;
 
 if (window.location.origin === "http://localhost:3000") {
 	rootEnhancer = composeEnhancer(
-		// applyMiddleware(logger),
+		applyMiddleware(logger),
 		applyMiddleware(thunk),
 		applyMiddleware(routerMiddleware(history))
 	);
