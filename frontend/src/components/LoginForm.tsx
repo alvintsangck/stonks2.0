@@ -1,7 +1,5 @@
 import "../css/LoginForm.css";
 import { Form } from "react-bootstrap";
-import { faGoogle } from "@fortawesome/free-brands-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { loginFacebookThunk, loginThunk } from "../redux/auth/thunk";
