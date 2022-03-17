@@ -38,7 +38,7 @@ export default function Home() {
 							<Carousel> {bigNews.map(makeBigNewsElem)}</Carousel>
 						)}
 					</Col>
-					<Col lg={4}>
+					<Col lg={4} className="d-flex justify-content-end">
 						<MarketOverview widgetProps={{ colorTheme: theme }} />
 					</Col>
 				</Row>
