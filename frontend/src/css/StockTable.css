@@ -50,10 +50,10 @@ table.stock-table {
 }
 
 .stock-table .negative {
-	color: rgb(255, 0, 0);
+	color: rgb(127, 37, 37);
 }
 .stock-table .positive {
-	color: rgb(0, 255, 0);
+	color: rgb(40, 98, 40);
 }
 
 .stock-table .empty {
