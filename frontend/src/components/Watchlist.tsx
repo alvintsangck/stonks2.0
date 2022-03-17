@@ -40,7 +40,7 @@ export default function Watchlist() {
 	}, [dispatch, watchlists]);
 
 	const addStock = (ticker: string) => {
-		return addStockThunk(currentWatchlistId, ticker);
+		return addStockThunk(currentWatchlistId, ticker.toUpperCase());
 	};
 
 	const watchlistTable = mapWatchlistTable(stocks, currentWatchlistId, currentWatchlistName, dispatch);

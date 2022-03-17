@@ -43,7 +43,7 @@ export default function BuyModal({ setIsShow }: Props) {
 		if (shares <= 0) {
 			setValue("shares", 0);
 		} else {
-			setValue("shares", Math.round(shares));
+			setValue("shares", Number(shares.toFixed(2)));
 		}
 	}
 
@@ -69,24 +69,32 @@ export default function BuyModal({ setIsShow }: Props) {
 		const socket = new WebSocket(`wss://ws.finnhub.io?token=${env.finnhubKey}`);
 
 		socket.addEventListener("open", (e) => {
-			socket.send(JSON.stringify({ type: "subscribe", symbol: ticker }));
+			if (stock?.sectorName?.toLowerCase() === "crypto".toLowerCase()) {
+				socket.send(JSON.stringify({ type: "subscribe", symbol: `BINANCE:${ticker}USDT` }));
+			} else {
+				socket.send(JSON.stringify({ type: "subscribe", symbol: ticker }));
+			}
 		});
 
 		socket.addEventListener("message", (e) => {
 			const data = JSON.parse(e.data);
 			if (data.data) {
-				const socketPrice = JSON.parse(e.data).data.at(-1).p;
+				const socketPrice = data.data.at(-1).p;
 				setPrice(socketPrice);
 			}
 		});
 
 		return () => {
-			socket.addEventListener("on", () => {
-				socket.send(JSON.stringify({ type: "unsubscribe", symbol: ticker }));
+			socket.addEventListener("open", () => {
+				if (stock?.sectorName?.toLowerCase() === "crypto".toLowerCase()) {
+					socket.send(JSON.stringify({ type: "unsubscribe", symbol: `BINANCE:${ticker}USDT` }));
+				} else {
+					socket.send(JSON.stringify({ type: "unsubscribe", symbol: ticker }));
+				}
 			});
 			socket.close();
 		};
-	}, [ticker]);
+	}, [ticker, stock]);
 
 	const totalCost = price * watch("shares");
 

@@ -42,7 +42,7 @@ export default function BuyOffcanvas({ setIsShow }: Props) {
 		if (shares <= 0) {
 			setValue("shares", 0);
 		} else {
-			setValue("shares", Math.round(shares));
+			setValue("shares", Number(shares.toFixed(2)));
 		}
 	}
 
@@ -68,7 +68,11 @@ export default function BuyOffcanvas({ setIsShow }: Props) {
 		const socket = new WebSocket(`wss://ws.finnhub.io?token=${env.finnhubKey}`);
 
 		socket.addEventListener("open", (e) => {
-			socket.send(JSON.stringify({ type: "subscribe", symbol: ticker }));
+			if (stock?.sectorName?.toLowerCase() === "crypto".toLowerCase()) {
+				socket.send(JSON.stringify({ type: "subscribe", symbol: `BINANCE:${ticker}USDT` }));
+			} else {
+				socket.send(JSON.stringify({ type: "subscribe", symbol: ticker }));
+			}
 		});
 
 		socket.addEventListener("message", (e) => {
@@ -81,11 +85,15 @@ export default function BuyOffcanvas({ setIsShow }: Props) {
 
 		return () => {
 			socket.addEventListener("open", () => {
-				socket.send(JSON.stringify({ type: "unsubscribe", symbol: ticker }));
+				if (stock?.sectorName?.toLowerCase() === "crypto".toLowerCase()) {
+					socket.send(JSON.stringify({ type: "unsubscribe", symbol: `BINANCE:${ticker}USDT` }));
+				} else {
+					socket.send(JSON.stringify({ type: "unsubscribe", symbol: ticker }));
+				}
 			});
 			socket.close();
 		};
-	}, [ticker]);
+	}, [ticker, stock]);
 
 	const totalCost = price * watch("shares");
 
