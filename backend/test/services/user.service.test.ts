@@ -10,7 +10,6 @@ describe("UserService", () => {
 	beforeEach(async () => {
 		userService = new UserService(knex);
 		await knex("users").del();
-
 		await knex("users").insert([{ username: "a", password: "1", email: "1@1.com", avatar: "p", role: "user" }]);
 	});
 
@@ -43,14 +42,14 @@ describe("UserService", () => {
 		});
 	});
 
-	test("register", async () => {
-		const user = await userService.addUser("b", "2", "2@2.com");
+	// test("register", async () => {
+	// 	const user = await userService.addUser("b", "2", "2@2.com");
 
-		expect(user).toMatchObject({
-			username: "b",
-			email: "2@2.com",
-			avatar: "STONK.png",
-			role: "user",
-		});
-	});
+	// 	expect(user).toMatchObject({
+	// 		username: "b",
+	// 		email: "2@2.com",
+	// 		avatar: "STONK.png",
+	// 		role: "user",
+	// 	});
+	// });
 });

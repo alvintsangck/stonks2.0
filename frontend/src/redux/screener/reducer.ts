@@ -10,7 +10,7 @@ const initialState: ScreenerState = {
 	isLoading: false,
 };
 
-export function screenerReducer(state: ScreenerState = initialState, action: ScreenerAction) {
+export function screenerReducer(state: ScreenerState = initialState, action: ScreenerAction):ScreenerState {
 	switch (action.type) {
 		case "@@Screener/get_industry":
 			return { ...state, industries: action.industries };

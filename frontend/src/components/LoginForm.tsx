@@ -1,14 +1,11 @@
 import "../css/LoginForm.css";
 import { Form } from "react-bootstrap";
-import { faGoogle, faFacebookF } from "@fortawesome/free-brands-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { loginThunk } from "../redux/auth/thunk";
-import { RootState } from "../redux/store/state";
+import { loginFacebookThunk, loginThunk } from "../redux/auth/thunk";
 import { defaultErrorSwal } from "./ReactSwal";
 import { useLocation } from "react-router";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
 
 export type LoginFormState = {
 	username: string;
@@ -18,9 +15,8 @@ export type LoginFormState = {
 export default function LoginForm() {
 	const dispatch = useDispatch();
 	const location = useLocation<any>();
-	const error = useSelector((state: RootState) => state.auth.error);
 	const { register, handleSubmit } = useForm<LoginFormState>({ defaultValues: { username: "", password: "" } });
-	const SIGN_IN = "Sign in";
+	const signIn = "Sign in";
 
 	function onSubmit(data: LoginFormState) {
 		if (data.username && data.password) {
@@ -30,19 +26,29 @@ export default function LoginForm() {
 		}
 	}
 
+	const fBOnClick = () => {
+		return null;
+	};
+
+	const fBCallback = (userInfo: ReactFacebookLoginInfo & { accessToken: string }) => {
+		if (userInfo.accessToken) {
+			dispatch(loginFacebookThunk(userInfo.accessToken));
+		}
+		return null;
+	};
+
 	return (
 		<Form id="login-form" onSubmit={handleSubmit(onSubmit)}>
-			<h1>{SIGN_IN}</h1>
+			<h1>{signIn}</h1>
 			<div className="social-container">
-				<a href="/connect/google" className="social">
-					<FontAwesomeIcon icon={faGoogle as IconProp} />
-				</a>
-				<a href="/connect/google" className="social">
-					<FontAwesomeIcon icon={faFacebookF as IconProp} />
-				</a>
-				<a href="/connect/google" className="social">
-					M
-				</a>
+				<FacebookLogin
+					appId={process.env.REACT_APP_FACEBOOK_APP_ID || ""}
+					autoLoad={false}
+					fields="name,email,picture"
+					onClick={fBOnClick}
+					callback={fBCallback}
+					icon="fa-facebook"
+				/>
 			</div>
 			<span>or use your account</span>
 			<Form.Control
@@ -55,8 +61,7 @@ export default function LoginForm() {
 				{...register("password", { required: true })}
 				placeholder="Password"
 			></Form.Control>
-			<button type="submit">{SIGN_IN}</button>
-			{error && defaultErrorSwal(error)}
+			<button type="submit">{signIn}</button>
 		</Form>
 	);
 }

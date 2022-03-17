@@ -6,13 +6,14 @@ import "../css/Watchlist.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { addStockThunk, deleteStockThunk, getAllWatchlistsThunk, getWatchlistThunk } from "../redux/watchlist/thunk";
 import { RootState } from "../redux/store/state";
 import StockTable from "./StockTable";
 import { useParams } from "react-router-dom";
 import { Stock } from "../redux/stock/state";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { push } from "connected-react-router";
 
 export default function Watchlist() {
 	const dispatch = useDispatch();
@@ -42,10 +43,7 @@ export default function Watchlist() {
 		return addStockThunk(currentWatchlistId, ticker);
 	};
 
-	const calculatedStocks = useMemo(
-		() => loadStocks(stocks, currentWatchlistId, currentWatchlistName, dispatch),
-		[currentWatchlistId, currentWatchlistName, dispatch, stocks]
-	);
+	const watchlistTable = mapWatchlistTable(stocks, currentWatchlistId, currentWatchlistName, dispatch);
 
 	return (
 		<>
@@ -59,11 +57,7 @@ export default function Watchlist() {
 					</Col>
 					<Col md={9}>
 						<AddForm name={currentWatchlistName} placeholder="stock" onAdd={addStock} />
-						<StockTable
-							headings={tableHeadings}
-							contents={calculatedStocks.map(({ id, ...obj }) => obj)}
-							isLoading={isLoading}
-						/>
+						<StockTable headings={tableHeadings} contents={watchlistTable} isLoading={isLoading} />
 					</Col>
 				</Row>
 			</Container>
@@ -71,26 +65,31 @@ export default function Watchlist() {
 	);
 }
 
-function loadStocks(stocks: Stock[], watchlistId: number, watchlistName: string, dispatch: Function) {
-	return stocks.map((stock) => {
+function mapWatchlistTable(stocks: Stock[], watchlistId: number, watchlistName: string, dispatch: Function) {
+	return stocks.map((stock, i: number) => {
 		const deleteInfo = {
 			watchlistId,
 			stockId: stock.id,
 			ticker: stock.ticker,
 			watchlistName,
 		};
-		//load into table
 		const change = stock.price - stock.prevPrice!;
-		return {
-			id: stock.id,
-			ticker: stock.ticker,
-			name: stock.name,
-			price: stock.price,
-			change: change.toFixed(2),
-			changePercentage: ((change / stock.prevPrice!) * 100).toFixed(2) + "%",
-			deleteBtn: (
-				<FontAwesomeIcon icon={faTimes as IconProp} onClick={() => dispatch(deleteStockThunk(deleteInfo))} />
-			),
-		};
+		return (
+			<tr key={i}>
+				<td onClick={() => dispatch(push(`/stocks/${stock.ticker}`))}>{stock.ticker}</td>
+				<td onClick={() => dispatch(push(`/stocks/${stock.ticker}`))}>{stock.name}</td>
+				<td onClick={() => dispatch(push(`/stocks/${stock.ticker}`))}>{Number(stock.price).toFixed(2)}</td>
+				<td onClick={() => dispatch(push(`/stocks/${stock.ticker}`))}>{change.toFixed(2)}</td>
+				<td onClick={() => dispatch(push(`/stocks/${stock.ticker}`))}>
+					{((change / stock.prevPrice!) * 100).toFixed(2) + "%"}
+				</td>
+				<td>
+					<FontAwesomeIcon
+						icon={faTimes as IconProp}
+						onClick={() => dispatch(deleteStockThunk(deleteInfo))}
+					/>
+				</td>
+			</tr>
+		);
 	});
 }

@@ -1,12 +1,12 @@
 import { Knex } from "knex";
 import fetch from "node-fetch";
-import { camelCaseKeys, makeMap } from "../util/helper";
-import { Portfolio } from "../util/models";
+import { camelCaseKeys } from "../util/helper";
+import { Portfolio, User } from "../util/models";
 
 export class UserService {
 	constructor(private knex: Knex) {}
 
-	async getUserByUsername(username: string) {
+	async getUserByUsername(username: string): Promise<User> {
 		return (
 			await this.knex("users")
 				.select("id", "username", "email", "password", "avatar", "role")
@@ -14,7 +14,7 @@ export class UserService {
 		)[0];
 	}
 
-	async getUserByEmail(email: string) {
+	async getUserByEmail(email: string): Promise<User> {
 		return (
 			await this.knex("users")
 				.select("id", "username", "email", "password", "avatar", "role")
@@ -22,12 +22,12 @@ export class UserService {
 		)[0];
 	}
 
-	async addUser(username: string, password: string, email: string) {
-		return (
-			await this.knex("users")
-				.insert({ username, password, email })
-				.returning(["id", "username", "email", "avatar", "role"])
-		)[0];
+	async addUser(username: string, password: string, email: string): Promise<Omit<User, "password">> {
+		const user = await this.knex("users")
+			.insert({ username, password, email })
+			.returning(["id", "username", "email", "avatar", "role"])[0];
+		await this.knex("user_history").insert({ user_id: user.id });
+		return user;
 	}
 
 	async getGoogleInfo(accessToken: string) {
@@ -43,72 +43,31 @@ export class UserService {
 	}
 
 	async getUserPortfolio(userId: number): Promise<Portfolio[]> {
-		let queryPortfolioArr = await this.queryPortfolio(userId);
-
-		let stockMap = queryPortfolioArr.reduce((prev: {}, next: {}) => {
-			prev[next["ticker"]] = next["stockId"];
-			return prev;
-		}, {});
-
-		let queryString = "";
-		for (let ticker in stockMap) {
-			queryString += `sp.stock_id = ${stockMap[ticker]} or `;
+		const portfolioQuery = await this.queryPortfolio(userId);
+		if (portfolioQuery.length > 0) {
+			const portfolio = calcPortfolio(portfolioQuery);
+			return portfolio.filter((stock) => stock.shares !== 0);
 		}
-
-		let stockPriceArr = await this.queryStockPrice(queryString.slice(0, -4));
-		let stockPriceMap = stockPriceArr.reduce(makeMap, {});
-
-		return queryPortfolioArr.map((row: any) => {
-			return {
-				stockId: row.stockId,
-				ticker: row.ticker,
-				name: row.name,
-				price: stockPriceMap[row["stockId"]],
-				shares: row.shares,
-				avgCost: row.avgCost,
-				totalCost: row.totalCost,
-				marketValue: (row["shares"] * stockPriceMap[row["stockId"]]).toFixed(2),
-				profit: (row["shares"] * stockPriceMap[row["stockId"]] - row["totalCost"]).toFixed(2),
-				profitPercentage: `${(
-					((row["shares"] * stockPriceMap[row["stockId"]] - row["totalCost"]) / row["totalCost"]) *
-					100
-				).toFixed(2)}%`,
-			};
-		});
+		return [];
 	}
 	// get portfolio
-	private async queryPortfolio(userId: number) {
+	private async queryPortfolio(userId: number): Promise<Portfolio[]> {
 		return camelCaseKeys(
 			(
 				await this.knex.raw(
 					/*sql*/
-					`select s.ticker, s.name , p.stock_id,
-					sum(p.position_size) shares, 
-					round(sum(p.position_size * p.unit_cost) / sum(p.position_size),2) avg_cost,
-					round(sum(p.position_size * p.unit_cost), 2) total_cost
+					`select s.ticker, s.name ,p.position_size shares, p.unit_cost 
 					from portfolios p
 					join stocks s on p.stock_id = s.id
 					join users u on p.user_id = u.id 
 					where u.id = ?
-					group by s.ticker, s.name, p.stock_id
-					order by s.ticker asc`,
+					order by s.ticker asc;`,
 					[userId]
 				)
 			).rows
 		);
 	}
-	//get stock price in portfolio
-	private async queryStockPrice(queryString: string) {
-		return camelCaseKeys(
-			(
-				await this.knex.raw(/*sql*/ `select sp.stock_id, sp.price 
-				from stock_prices sp 
-				where created_at 
-				in (SELECT max(created_at) FROM stock_prices sp limit 1)
-				and (${queryString})`)
-			).rows
-		);
-	}
+
 	async updateSetting(username: any, hashedPassword: any, filename: any, userId: number) {
 		return camelCaseKeys(
 			await this.knex.raw(
@@ -131,8 +90,23 @@ export class UserService {
 		return balance[0];
 	}
 
-	async transfer(cash:number, deposit:number, userId:number):Promise<void> {
-		await this.knex('user_history').insert({deposit, cash, user_id: userId})
-		return
+	async transfer(cash: number, deposit: number, userId: number): Promise<void> {
+		await this.knex("user_history").insert({ deposit, cash, user_id: userId });
+		return;
 	}
+}
+
+function calcPortfolio(rows: Portfolio[]): Portfolio[] {
+	const arr: any = [];
+	for (let row of rows) {
+		const { ticker, name, shares, unitCost } = row;
+		let stock = arr.at(-1);
+		if (stock && stock.ticker === ticker) {
+			stock.shares += Number(row.shares);
+			stock.totalCost += Number(row.unitCost);
+		} else {
+			arr.push({ ticker, name, shares: Number(shares), totalCost: Number(unitCost) });
+		}
+	}
+	return arr;
 }

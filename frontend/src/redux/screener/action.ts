@@ -1,5 +1,4 @@
-import { Stock } from "../stock/state";
-import { Item, ScreenerState } from "./state";
+import { IScreener, Item, ScreenerState } from "./state";
 
 export const getIndustriesAction = (industries: Item[]) => ({
 	type: "@@Screener/get_industry" as const,
@@ -14,7 +13,7 @@ export const getSectorsAction = (sectors: Item[]) => ({
 export const addItemAction = (
 	key: keyof Pick<ScreenerState, "addedIndustries" | "addedSectors">,
 	item: Item,
-	value: string,
+	value: string
 ) => ({
 	type: "@@Screener/add_item" as const,
 	key,
@@ -33,7 +32,7 @@ export const resetItemAction = (key: keyof Pick<ScreenerState, "addedIndustries"
 	key,
 });
 
-export const loadScreenResultAction = (stocks: Stock[]) => ({
+export const loadScreenResultAction = (stocks: IScreener[]) => ({
 	type: "@@Screener/result" as const,
 	stocks,
 });

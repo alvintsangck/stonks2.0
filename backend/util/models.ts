@@ -61,16 +61,11 @@ export type UserComment = {
 };
 
 export type Portfolio = {
-	id: number;
 	ticker: string;
 	name: string;
-	price: number;
-	shares: number;
-	avgCost: number;
-	totalCost: number;
-	marketValue: number;
-	profit: number;
-	profitPercentage: number;
+	shares: string | number;
+	unitCost?: string | number;
+	totalCost?: string | number;
 };
 
 export enum Table {

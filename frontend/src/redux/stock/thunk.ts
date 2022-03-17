@@ -63,13 +63,9 @@ export function getSharesThunk(ticker: string) {
 export function buyStockThunk(ticker: string, shares: number, price: number) {
 	return async (dispatch: RootDispatch) => {
 		const result = await callApi(`/stocks/${ticker}/buy`, "POST", { shares, price });
-		console.log("re ", result);
-
 		if ("error" in result) {
 			defaultErrorSwal(result.error);
 		} else {
-			console.log("buy");
-
 			dispatch(getCashAction(Number(result.cash)));
 			dispatch(getSharesAction(Number(result.shares)));
 			defaultSuccessSwal(`Bought ${shares} share${shares > 1 ? "s" : ""} ${ticker}`);

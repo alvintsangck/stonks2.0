@@ -81,7 +81,9 @@ export default function BuyModal({ setIsShow }: Props) {
 		});
 
 		return () => {
-			socket.send(JSON.stringify({ type: "unsubscribe", symbol: ticker }));
+			socket.addEventListener("on", () => {
+				socket.send(JSON.stringify({ type: "unsubscribe", symbol: ticker }));
+			});
 			socket.close();
 		};
 	}, [ticker]);

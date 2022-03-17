@@ -204,3 +204,11 @@
 .right-panel-active .overlay-right {
 	transform: translateX(20%);
 }
+
+#register-form .form-label {
+	margin-bottom: 0;
+}
+
+#register-form button {
+	margin-top: 20px;
+}

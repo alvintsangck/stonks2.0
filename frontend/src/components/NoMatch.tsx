@@ -10,13 +10,13 @@ export default function NoMatch() {
 	useEffect(() => {
 		setTimeout(() => {
 			dispatch(push("/"));
-		}, 3000);
+		}, 5000);
 	}, [dispatch]);
 
 	return (
 		<Container>
 			<h3>This page is not stonks.</h3>
-			<h4>Redirecting to homepage in 2 seconds...</h4>
+			<h4>Redirecting to homepage in 5 seconds...</h4>
 			<img src={`${env.url}/NOT_STONK.png`} alt="not stonk"></img>
 		</Container>
 	);

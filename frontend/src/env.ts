@@ -1,6 +1,3 @@
-if (!process.env.REACT_APP_FINNHUB_KEY) throw Error("no finnhub key");
-if (!process.env.REACT_APP_PRIVATE_KEY) throw Error("no crypto wallet private key");
-
 export const env = {
 	url:
 		window.location.origin === "http://localhost:3000"
@@ -8,6 +5,6 @@ export const env = {
 			: process.env.REACT_APP_API_SERVER,
 	metaMask: process.env.REACT_APP_METAMASK,
 	contract: process.env.REACT_APP_CONTRACT_ADDRESS,
-	finnhubKey: process.env.REACT_APP_FINNHUB_KEY,
-	privateKey: process.env.REACT_APP_PRIVATE_KEY,
+	finnhubKey: process.env.REACT_APP_FINNHUB_KEY || "c8nlj1aad3iep4je9k50",
+	privateKey: process.env.REACT_APP_PRIVATE_KEY || "f14fcc1da6e36a91998428c0f7a8e78d09f020c92e702973d322bea9657d4a4d",
 };
