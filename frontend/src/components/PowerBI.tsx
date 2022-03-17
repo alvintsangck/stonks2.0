@@ -1,9 +1,13 @@
 import { Container } from "react-bootstrap";
+import { Helmet } from "react-helmet";
 import "../css/PowerBI.css";
 
 export default function PowerBI() {
 	return (
 		<div className="power-bi">
+			<Helmet>
+				<title>Dashboard | Stonks</title>
+			</Helmet>
 			<Container fluid>
 				<iframe
 					title="sentiment indicators"

@@ -9,6 +9,7 @@ import { getAllEarningsThunk, getEarningsTableThunk } from "../redux/calendar/th
 import { EarningTable } from "../redux/calendar/state";
 import EarningsTable from "./EarningsTable";
 import { push } from "connected-react-router";
+import { Helmet } from "react-helmet";
 
 export default function Calendar() {
 	const dispatch = useDispatch();
@@ -80,6 +81,9 @@ export default function Calendar() {
 
 	return (
 		<>
+		<Helmet>
+		<title>Calendar | Stonks</title>
+		</Helmet>
 			<Container>
 				<div className="calendar">
 					<FullCalendar plugins={[dayGridPlugin]} events={earningCalendar} />
