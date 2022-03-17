@@ -157,7 +157,7 @@ export default function Portfolio() {
 				<td>{isPriceZero ? "calculating" : commaNumber(Number(price))}</td>
 				<td>{shares}</td>
 				<td>{avgCost.toFixed(2)}</td>
-				<td>{totalCost}</td>
+				<td>{totalCost.toFixed(2)}</td>
 				<td>{isPriceZero ? "calculating" : commaNumber(Number(marketValue))}</td>
 				<td className={!isPriceZero && Number(profit) > 0 ? "positive" : Number(profit) < 0 ? "negative" : ""}>
 					{isPriceZero ? "calculating" : commaNumber(Number(profit))}
