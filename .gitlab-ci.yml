@@ -1,8 +1,8 @@
 image: node:lts
 
 stages:
-    - server-testing
-    - react-testing
+    # - server-testing
+    # - react-testing
     - server-build
     - react-build
     - server-deploy
@@ -16,28 +16,28 @@ variables:
     REPOSITORY_URL: alvintsang/stonks
     IMAGE_TAG: latest
 
-server-testing:
-    only:
-        - production
-    services:
-        - postgres:latest
-    before_script:
-        - cd backend
-        - yarn install
-        - yarn knex migrate:latest --env test
-    stage: server-testing
-    script:
-        - yarn test
+# server-testing:
+#     only:
+#         - production
+#     services:
+#         - postgres:latest
+#     before_script:
+#         - cd backend
+#         - yarn install
+#         - yarn knex migrate:latest --env test
+#     stage: server-testing
+#     script:
+#         - yarn test
 
-react-testing:
-    only:
-        - production
-    before_script:
-        - cd frontend
-        - yarn install
-    stage: react-testing
-    script:
-        - CI=true yarn test
+# react-testing:
+#     only:
+#         - production
+#     before_script:
+#         - cd frontend
+#         - yarn install
+#     stage: react-testing
+#     script:
+#         - CI=true yarn test
 
 server-build:
     only:
