@@ -198,8 +198,14 @@ export default function Portfolio() {
 							</span>
 						</div>
 						<div className="accu-percent brief-info">
-							Cash BP
-							<span className="accumulate-percentage brief-value">{cash}</span>
+							Cash
+							<span className="accumulate-percentage brief-value">{"$" + commaNumber(cash)}</span>
+						</div>
+						<div className="accu-percent brief-info">
+							Total Account Value
+							<span className="accumulate-percentage brief-value">
+								{!marketValue ? "calculating" : "$" + commaNumber(cash + Number(marketValue))}
+							</span>
 						</div>
 						<div className="button-container">
 							<button className="stonk-btn" onClick={() => dispatch(push("/transfer/deposit"))}>
