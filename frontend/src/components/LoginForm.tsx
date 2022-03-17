@@ -48,6 +48,7 @@ export default function LoginForm() {
 					onClick={fBOnClick}
 					callback={fBCallback}
 					icon="fa-facebook"
+					isDisabled
 				/>
 			</div>
 			<span>or use your account</span>
