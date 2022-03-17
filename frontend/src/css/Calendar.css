@@ -9,3 +9,7 @@
 .calendar-container .table-responsive {
 	height: auto;
 }
+
+.calendar .fc-event-title-container {
+	cursor: pointer;
+}

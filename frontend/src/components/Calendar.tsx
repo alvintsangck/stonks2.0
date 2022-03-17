@@ -10,6 +10,7 @@ import { EarningTable } from "../redux/calendar/state";
 import EarningsTable from "./EarningsTable";
 import { push } from "connected-react-router";
 import { Helmet } from "react-helmet";
+import { faEnvelopeOpenText } from "@fortawesome/free-solid-svg-icons";
 
 export default function Calendar() {
 	const dispatch = useDispatch();
@@ -81,12 +82,19 @@ export default function Calendar() {
 
 	return (
 		<>
-		<Helmet>
-		<title>Calendar | Stonks</title>
-		</Helmet>
+			<Helmet>
+				<title>Calendar | Stonks</title>
+			</Helmet>
 			<Container>
 				<div className="calendar">
-					<FullCalendar plugins={[dayGridPlugin]} events={earningCalendar} />
+					<FullCalendar
+						plugins={[dayGridPlugin]}
+						events={earningCalendar}
+						eventClick={(event) => {
+							const ticker = event.event.title.split("(")[0];
+							dispatch(push(`/stocks/${ticker}`));
+						}}
+					/>
 				</div>
 			</Container>
 			<Container fluid className="calendar-container">
