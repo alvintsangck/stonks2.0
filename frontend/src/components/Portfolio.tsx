@@ -5,23 +5,24 @@ import { Doughnut } from "react-chartjs-2";
 import { Col, Container, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store/state";
-import { useEffect, useState } from "react";
-import { getPortfolioThunk } from "../redux/portfolio/thunk";
+import { useEffect } from "react";
+import { getPortfolioPriceThunk, getPortfolioThunk } from "../redux/portfolio/thunk";
 import StockTable from "./StockTable";
 import { getBalanceThunk } from "../redux/auth/thunk";
 import { push } from "connected-react-router";
 import { env } from "../env";
 import { CalcPortfolio, UserPortfolio } from "../redux/portfolio/state";
 import { commaNumber } from "../helper";
+import { getPortfolioPriceAction } from "../redux/portfolio/action";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-type FinnhubTrade = {
+export type FinnhubTrade = {
 	s: string;
 	p: number;
-	t: number;
-	v: number;
-	c: string;
+	t?: number;
+	v?: number;
+	c?: string;
 };
 
 export default function Portfolio() {
@@ -29,7 +30,7 @@ export default function Portfolio() {
 	const portfolio = useSelector((state: RootState) => state.portfolio.portfolio);
 	const deposit = useSelector((state: RootState) => state.auth.balance.deposit);
 	const cash = useSelector((state: RootState) => state.auth.balance.cash);
-	const [trades, setTrades] = useState<FinnhubTrade[]>([]);
+	const priceArr = useSelector((state: RootState) => state.portfolio.price);
 	const tableHeadings = [
 		"ticker",
 		"company",
@@ -74,6 +75,10 @@ export default function Portfolio() {
 	}, [dispatch]);
 
 	useEffect(() => {
+		dispatch(getPortfolioPriceThunk(portfolio));
+	}, [dispatch, portfolio]);
+
+	useEffect(() => {
 		const socket = new WebSocket(`wss://ws.finnhub.io?token=${env.finnhubKey}`);
 		if (portfolio.length > 0) {
 			socket.addEventListener("open", (e) => {
@@ -86,7 +91,7 @@ export default function Portfolio() {
 				const data = JSON.parse(e.data);
 				if (data.data) {
 					const trades = data.data;
-					setTrades(trades);
+					dispatch(getPortfolioPriceAction(trades));
 				}
 			});
 		}
@@ -98,37 +103,43 @@ export default function Portfolio() {
 			}
 			socket.close();
 		};
-	}, [portfolio]);
+	}, [dispatch, portfolio]);
 
-	function mapPortfolio(stock: UserPortfolio) {
-		const price = trades.find((trade) => trade?.s === stock.ticker);
-		if (price) {
-			const marketValue = Number(stock.shares) * price.p;
-			const profit = marketValue - Number(stock.totalCost);
-			return {
-				ticker: stock.ticker,
-				name: stock.name,
-				shares: Number(stock.shares),
-				price: price.p,
-				avgCost: Number(stock.totalCost) / Number(stock.shares),
-				totalCost: stock.totalCost,
-				marketValue,
-				profit,
-			};
+	function mapPortfolio(stocks: UserPortfolio[]) {
+		let arr = [];
+		for (let i = 0; i < stocks.length; i++) {
+			const price = priceArr.find((stock) => stock?.s === stocks[i].ticker);
+			if (price) {
+				const marketValue = Number(stocks[i].shares) * price.p;
+				const profit = marketValue - Number(stocks[i].totalCost);
+				arr.push({
+					ticker: stocks[i].ticker,
+					name: stocks[i].name,
+					shares: Number(stocks[i].shares),
+					price: price.p,
+					avgCost: Number(stocks[i].totalCost) / Number(stocks[i].shares),
+					totalCost: stocks[i].totalCost,
+					marketValue,
+					profit,
+				});
+			} else {
+				arr.push({
+					ticker: stocks[i].ticker,
+					name: stocks[i].name,
+					price: prevCalcPortfolio ? prevCalcPortfolio[i].price : null,
+					shares: Number(stocks[i].shares),
+					avgCost: Number(stocks[i].totalCost) / Number(stocks[i].shares),
+					totalCost: stocks[i].totalCost,
+					marketValue: prevCalcPortfolio ? prevCalcPortfolio[i].marketValue : null,
+					profit: prevCalcPortfolio ? prevCalcPortfolio[i].profit : null,
+				});
+			}
 		}
-		return {
-			ticker: stock.ticker,
-			name: stock.name,
-			price: "calculating",
-			shares: Number(stock.shares),
-			avgCost: Number(stock.totalCost) / Number(stock.shares),
-			totalCost: stock.totalCost,
-			marketValue: "calculating",
-			profit: "calculating",
-		};
+		return arr;
 	}
-	const calcPortfolio: CalcPortfolio[] = portfolio.map(mapPortfolio);
-
+	let prevCalcPortfolio: CalcPortfolio[];
+	const calcPortfolio: CalcPortfolio[] = mapPortfolio(portfolio);
+	prevCalcPortfolio = calcPortfolio;
 	const profit = calcPortfolio.map((stock) => stock.profit).reduce((prev, next) => Number(prev) + Number(next), 0);
 	const marketValue = calcPortfolio
 		.map((stock) => stock.marketValue)
@@ -137,29 +148,22 @@ export default function Portfolio() {
 	function mapPortfolioTable(stock: CalcPortfolio, i: number) {
 		const { price, profit, marketValue, ticker, name, shares, avgCost, totalCost } = stock;
 		const profitPercent = (Number(stock.profit) / Number(marketValue)) * 100;
-		const isNotNumberPrice = Number.isNaN(Number(price));
+		const isPriceZero = Number.isNaN(Number(price));
+
 		return (
 			<tr key={i} onClick={() => dispatch(push(`/stocks/${ticker}`))}>
 				<td>{ticker}</td>
 				<td>{name}</td>
-				<td>{isNotNumberPrice ? "calculating" : commaNumber(Number(price))}</td>
+				<td>{isPriceZero ? "calculating" : commaNumber(Number(price))}</td>
 				<td>{shares}</td>
 				<td>{avgCost.toFixed(2)}</td>
 				<td>{totalCost}</td>
-				<td>{isNotNumberPrice ? "calculating" : commaNumber(Number(marketValue))}</td>
-				<td
-					className={
-						!isNotNumberPrice && Number(profit) > 0 ? "positive" : Number(profit) < 0 ? "negative" : ""
-					}
-				>
-					{isNotNumberPrice ? "calculating" : commaNumber(Number(profit))}
+				<td>{isPriceZero ? "calculating" : commaNumber(Number(marketValue))}</td>
+				<td className={!isPriceZero && Number(profit) > 0 ? "positive" : Number(profit) < 0 ? "negative" : ""}>
+					{isPriceZero ? "calculating" : commaNumber(Number(profit))}
 				</td>
-				<td
-					className={
-						!isNotNumberPrice && profitPercent > 0 ? "positive" : profitPercent < 0 ? "negative" : ""
-					}
-				>
-					{isNotNumberPrice ? "calculating" : profitPercent.toFixed(2) + "%"}
+				<td className={!isPriceZero && profitPercent > 0 ? "positive" : profitPercent < 0 ? "negative" : ""}>
+					{isPriceZero ? "calculating" : profitPercent.toFixed(2) + "%"}
 				</td>
 			</tr>
 		);

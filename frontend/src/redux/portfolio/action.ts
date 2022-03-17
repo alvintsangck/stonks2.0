@@ -1,3 +1,4 @@
+import { FinnhubTrade } from "../../components/Portfolio";
 import { UserPortfolio } from "./state";
 
 export const getPortfolioAction = (portfolio: UserPortfolio[]) => ({
@@ -5,4 +6,9 @@ export const getPortfolioAction = (portfolio: UserPortfolio[]) => ({
 	portfolio,
 });
 
-export type PortfolioAction = ReturnType<typeof getPortfolioAction>;
+export const getPortfolioPriceAction = (stocks: Array<FinnhubTrade>) => ({
+	type: "@@Portfolio/getPrice" as const,
+	stocks,
+});
+
+export type PortfolioAction = ReturnType<typeof getPortfolioAction> | ReturnType<typeof getPortfolioPriceAction>;
