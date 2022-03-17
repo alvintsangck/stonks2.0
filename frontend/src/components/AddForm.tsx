@@ -41,7 +41,7 @@ export default function AddForm({ name, placeholder, onAdd }: Props) {
 					<Form.Control
 						type="text"
 						placeholder={`add ${placeholder}`}
-						onChange={(e) => setContent(e.target.value.toUpperCase())}
+						onChange={(e) => setContent(e.target.value)}
 						value={content}
 					/>
 					<button className="submit-btn" type="submit">
