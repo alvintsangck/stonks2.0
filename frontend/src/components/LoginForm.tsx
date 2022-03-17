@@ -1,9 +1,8 @@
 import "../css/LoginForm.css";
 import { Form } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { loginFacebookThunk, loginThunk } from "../redux/auth/thunk";
-import { RootState } from "../redux/store/state";
 import { defaultErrorSwal } from "./ReactSwal";
 import { useLocation } from "react-router";
 import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
@@ -16,7 +15,6 @@ export type LoginFormState = {
 export default function LoginForm() {
 	const dispatch = useDispatch();
 	const location = useLocation<any>();
-	const error = useSelector((state: RootState) => state.auth.error);
 	const { register, handleSubmit } = useForm<LoginFormState>({ defaultValues: { username: "", password: "" } });
 	const signIn = "Sign in";
 
@@ -64,7 +62,6 @@ export default function LoginForm() {
 				placeholder="Password"
 			></Form.Control>
 			<button type="submit">{signIn}</button>
-			{error && defaultErrorSwal(error)}
 		</Form>
 	);
 }

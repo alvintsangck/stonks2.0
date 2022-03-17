@@ -32,7 +32,7 @@ export function registerThunk(data: RegisterFormState) {
 	return async (dispatch: RootDispatch) => {
 		const result = await callApi("/user/register", "POST", data);
 		if ("error" in result) {
-			dispatch(authApiFailedAction(result.error));
+			defaultErrorSwal(result.error);
 		} else {
 			const { token } = result;
 			localStorage.setItem("token", token);

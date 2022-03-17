@@ -3,6 +3,7 @@ import { Container } from "react-bootstrap";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 import { useState } from "react";
+import { defaultErrorSwal } from "./ReactSwal";
 
 export default function Login() {
 	const [isRight, setIsRight] = useState(false);
@@ -21,14 +22,29 @@ export default function Login() {
 						<div className="overlay-panel overlay-left">
 							<h1>Welcome Back!</h1>
 							<p>To keep connected with us please login with your personal info</p>
-							<button className="ghost" id="signIn" onClick={() => setIsRight(false)}>
+							<button
+								type="button"
+								form=""
+								className="ghost"
+								id="signIn"
+								onClick={() => setIsRight(false)}
+							>
 								Sign In
 							</button>
 						</div>
 						<div className="overlay-panel overlay-right">
 							<h1>Hello, Friend!</h1>
 							<p>Enter your personal details and start journey with us</p>
-							<button className="ghost" id="signUp" onClick={() => setIsRight(true)}>
+							<button
+								type="button"
+								form=""
+								className="ghost"
+								id="signUp"
+								onClick={() => {
+									setIsRight(true);
+									defaultErrorSwal("Register function is not opened");
+								}}
+							>
 								Sign Up
 							</button>
 						</div>
