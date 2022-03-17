@@ -39,6 +39,12 @@ export default function Watchlist() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [dispatch, watchlists]);
 
+	useEffect(() => {
+		if (watchlists.length === 1 && currentWatchlistId !== watchlists[0].id) {
+			dispatch(push(`/watchlist/${watchlists[0].id}`));
+		}
+	}, [dispatch, watchlists, currentWatchlistId]);
+
 	const addStock = (ticker: string) => {
 		return addStockThunk(currentWatchlistId, ticker.toUpperCase());
 	};

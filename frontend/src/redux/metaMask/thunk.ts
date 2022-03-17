@@ -84,7 +84,6 @@ export function getTokenThunk() {
 		try {
 			const balance = await contract.balanceOf(await signer.getAddress());
 			const calculatedBalance = ethers.utils.formatEther(balance);
-
 			dispatch(getTokenAction(Number(calculatedBalance)));
 		} catch (error: any) {
 			dispatch(apiFailedAction(error.message));
@@ -112,6 +111,9 @@ export function depositThunk(cash: number, reset: UseFormReset<DepositFormState>
 						dispatch(apiFailedAction(result.error));
 					} else {
 						reset();
+						const balance = await contract.balanceOf(await signer.getAddress());
+						const calculatedBalance = ethers.utils.formatEther(balance);
+						dispatch(getTokenAction(Number(calculatedBalance)));
 						dispatch(getCashAction(result.cash));
 						dispatch(endLoadingMetaMaskAction());
 						defaultSuccessSwal("Deposit successful");
@@ -150,6 +152,11 @@ export function withdrawalThunk(account: string, cash: string, reset: UseFormRes
 						dispatch(apiFailedAction(result.error));
 					} else {
 						reset();
+						const provider = new ethers.providers.Web3Provider(window.ethereum);
+						const signer = provider.getSigner();
+						const balance = await contract.balanceOf(await signer.getAddress());
+						const calculatedBalance = ethers.utils.formatEther(balance);
+						dispatch(getTokenAction(Number(calculatedBalance)));
 						dispatch(getCashAction(result.cash));
 						dispatch(endLoadingMetaMaskAction());
 						defaultSuccessSwal(`Withdraw successful`);

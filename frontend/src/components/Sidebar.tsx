@@ -20,6 +20,7 @@ function Sidebar({ lists, currentListId }: Props) {
 			dispatch(push(`/watchlist/${lists[0].id}`));
 		}
 	};
+
 	return (
 		<>
 			<AddForm name="My Lists" placeholder="watchlist" onAdd={addWatchlistThunk} />
@@ -31,7 +32,10 @@ function Sidebar({ lists, currentListId }: Props) {
 								<span>{list.name}</span>
 							</div>
 							<div>
-								<FontAwesomeIcon icon={faTimes as IconProp} onClick={() => deleteWatchlist(list.id, list.name)} />
+								<FontAwesomeIcon
+									icon={faTimes as IconProp}
+									onClick={() => deleteWatchlist(list.id, list.name)}
+								/>
 							</div>
 						</div>
 					))}

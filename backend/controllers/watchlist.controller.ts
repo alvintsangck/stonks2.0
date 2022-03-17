@@ -34,7 +34,7 @@ export class WatchlistController {
 	post = async (req: Request) => {
 		const user = getUser(req);
 		if (user.id <= 0) throw new HttpError(400, "User not exist");
-		
+
 		const name = String(req.body.name).replace(/\s+/g, "");
 		if (name === "") throw new HttpError(400, "Watchlist name cannot be empty");
 
