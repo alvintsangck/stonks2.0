@@ -45,27 +45,50 @@ export class UserService {
 	async getUserPortfolio(userId: number): Promise<Portfolio[]> {
 		const portfolioQuery = await this.queryPortfolio(userId);
 		if (portfolioQuery.length > 0) {
-			const portfolio = calcPortfolio(portfolioQuery);
+			const portfolio = this.calcPortfolio(portfolioQuery);
 			return portfolio.filter((stock) => stock.shares !== 0);
 		}
 		return [];
 	}
+
 	// get portfolio
 	private async queryPortfolio(userId: number): Promise<Portfolio[]> {
 		return camelCaseKeys(
 			(
 				await this.knex.raw(
 					/*sql*/
-					`select s.ticker, s.name ,p.position_size shares, p.unit_cost 
+					`select s.ticker, s.name ,p.position_size shares, p.unit_cost, se.name as sector_name
 					from portfolios p
 					join stocks s on p.stock_id = s.id
 					join users u on p.user_id = u.id 
+					join sectors se on s.sector_id = se.id
 					where u.id = ?
 					order by s.ticker asc;`,
 					[userId]
 				)
 			).rows
 		);
+	}
+
+	private calcPortfolio(rows: Portfolio[]): Portfolio[] {
+		const arr: any = [];
+		for (let row of rows) {
+			const { ticker, name, shares, unitCost, sectorName } = row;
+			let stock = arr.at(-1);
+			if (stock && stock.ticker === ticker) {
+				stock.shares += Number(row.shares);
+				stock.totalCost += Number(row.unitCost) * Number(shares);
+			} else {
+				arr.push({
+					ticker,
+					name,
+					sectorName,
+					shares: Number(shares),
+					totalCost: Number(unitCost) * Number(shares),
+				});
+			}
+		}
+		return arr;
 	}
 
 	async updateSetting(username: any, hashedPassword: any, filename: any, userId: number) {
@@ -94,19 +117,4 @@ export class UserService {
 		await this.knex("user_history").insert({ deposit, cash, user_id: userId });
 		return;
 	}
-}
-
-function calcPortfolio(rows: Portfolio[]): Portfolio[] {
-	const arr: any = [];
-	for (let row of rows) {
-		const { ticker, name, shares, unitCost } = row;
-		let stock = arr.at(-1);
-		if (stock && stock.ticker === ticker) {
-			stock.shares += Number(row.shares);
-			stock.totalCost += Number(row.unitCost);
-		} else {
-			arr.push({ ticker, name, shares: Number(shares), totalCost: Number(unitCost) });
-		}
-	}
-	return arr;
 }
