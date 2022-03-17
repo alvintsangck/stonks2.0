@@ -25,6 +25,8 @@ export type FinnhubTrade = {
 	c?: string;
 };
 
+let prevCalcPortfolio: CalcPortfolio[] = [];
+
 export default function Portfolio() {
 	const dispatch = useDispatch();
 	const portfolio = useSelector((state: RootState) => state.portfolio.portfolio);
@@ -83,7 +85,11 @@ export default function Portfolio() {
 		if (portfolio.length > 0) {
 			socket.addEventListener("open", (e) => {
 				for (let stock of portfolio) {
-					socket.send(JSON.stringify({ type: "subscribe", symbol: stock.ticker }));
+					if (stock?.sectorName?.toLowerCase() === "crypto".toLowerCase()) {
+						socket.send(JSON.stringify({ type: "subscribe", symbol: `BINANCE:${stock.ticker}USDT` }));
+					} else {
+						socket.send(JSON.stringify({ type: "subscribe", symbol: stock.ticker }));
+					}
 				}
 			});
 
@@ -91,53 +97,62 @@ export default function Portfolio() {
 				const data = JSON.parse(e.data);
 				if (data.data) {
 					const trades = data.data;
-					dispatch(getPortfolioPriceAction(trades));
+					if (prevCalcPortfolio.length > 0) {
+						// setTimeout(() => {
+							dispatch(getPortfolioPriceAction(trades));
+						// }, 3000);
+					}
 				}
 			});
 		}
 		return () => {
 			for (let stock of portfolio) {
 				socket.addEventListener("open", () => {
-					socket.send(JSON.stringify({ type: "unsubscribe", symbol: stock.ticker }));
+					if (stock?.sectorName?.toLowerCase() === "crypto".toLowerCase()) {
+						socket.send(JSON.stringify({ type: "unsubscribe", symbol: `BINANCE:${stock.ticker}USDT` }));
+					} else {
+						socket.send(JSON.stringify({ type: "unsubscribe", symbol: stock.ticker }));
+					}
 				});
 			}
 			socket.close();
 		};
 	}, [dispatch, portfolio]);
 
-	function mapPortfolio(stocks: UserPortfolio[]) {
+	function mapPortfolio(portfolio: UserPortfolio[]) {
 		let arr = [];
-		for (let i = 0; i < stocks.length; i++) {
-			const price = priceArr.find((stock) => stock?.s === stocks[i].ticker);
+		for (let i = 0; i < portfolio.length; i++) {
+			const price = priceArr.find((stock) => stock?.s.includes(portfolio[i].ticker));
+
 			if (price) {
-				const marketValue = Number(stocks[i].shares) * price.p;
-				const profit = marketValue - Number(stocks[i].totalCost);
+				const marketValue = Number(portfolio[i].shares) * price.p;
+				const profit = marketValue - Number(portfolio[i].totalCost);
 				arr.push({
-					ticker: stocks[i].ticker,
-					name: stocks[i].name,
-					shares: Number(stocks[i].shares),
+					ticker: portfolio[i].ticker,
+					name: portfolio[i].name,
+					shares: Number(portfolio[i].shares),
 					price: price.p,
-					avgCost: Number(stocks[i].totalCost) / Number(stocks[i].shares),
-					totalCost: stocks[i].totalCost,
+					avgCost: Number(portfolio[i].totalCost) / Number(portfolio[i].shares),
+					totalCost: portfolio[i].totalCost,
 					marketValue,
 					profit,
 				});
 			} else {
 				arr.push({
-					ticker: stocks[i].ticker,
-					name: stocks[i].name,
-					price: prevCalcPortfolio ? prevCalcPortfolio[i].price : null,
-					shares: Number(stocks[i].shares),
-					avgCost: Number(stocks[i].totalCost) / Number(stocks[i].shares),
-					totalCost: stocks[i].totalCost,
-					marketValue: prevCalcPortfolio ? prevCalcPortfolio[i].marketValue : null,
-					profit: prevCalcPortfolio ? prevCalcPortfolio[i].profit : null,
+					ticker: portfolio[i].ticker,
+					name: portfolio[i].name,
+					price: prevCalcPortfolio.length ? prevCalcPortfolio[i].price : null,
+					shares: Number(portfolio[i].shares),
+					avgCost: Number(portfolio[i].totalCost) / Number(portfolio[i].shares),
+					totalCost: portfolio[i].totalCost,
+					marketValue: prevCalcPortfolio.length ? prevCalcPortfolio[i].marketValue : null,
+					profit: prevCalcPortfolio.length ? prevCalcPortfolio[i].profit : null,
 				});
 			}
 		}
 		return arr;
 	}
-	let prevCalcPortfolio: CalcPortfolio[];
+
 	const calcPortfolio: CalcPortfolio[] = mapPortfolio(portfolio);
 	prevCalcPortfolio = calcPortfolio;
 	const profit = calcPortfolio.map((stock) => stock.profit).reduce((prev, next) => Number(prev) + Number(next), 0);
@@ -148,7 +163,7 @@ export default function Portfolio() {
 	function mapPortfolioTable(stock: CalcPortfolio, i: number) {
 		const { price, profit, marketValue, ticker, name, shares, avgCost, totalCost } = stock;
 		const profitPercent = (Number(stock.profit) / Number(marketValue)) * 100;
-		const isPriceZero = Number.isNaN(Number(price));
+		const isPriceZero = Number(price) === 0;
 
 		return (
 			<tr key={i} onClick={() => dispatch(push(`/stocks/${ticker}`))}>
@@ -159,12 +174,8 @@ export default function Portfolio() {
 				<td>{avgCost.toFixed(2)}</td>
 				<td>{totalCost.toFixed(2)}</td>
 				<td>{isPriceZero ? "calculating" : commaNumber(Number(marketValue))}</td>
-				<td className={!isPriceZero && Number(profit) > 0 ? "positive" : Number(profit) < 0 ? "negative" : ""}>
-					{isPriceZero ? "calculating" : commaNumber(Number(profit))}
-				</td>
-				<td className={!isPriceZero && profitPercent > 0 ? "positive" : profitPercent < 0 ? "negative" : ""}>
-					{isPriceZero ? "calculating" : profitPercent.toFixed(2) + "%"}
-				</td>
+				<td className={""}>{isPriceZero ? "calculating" : commaNumber(Number(profit))}</td>
+				<td className={""}>{isPriceZero ? "calculating" : profitPercent.toFixed(2) + "%"}</td>
 			</tr>
 		);
 	}

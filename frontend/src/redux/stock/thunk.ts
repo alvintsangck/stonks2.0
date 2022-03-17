@@ -68,7 +68,7 @@ export function buyStockThunk(ticker: string, shares: number, price: number) {
 		} else {
 			dispatch(getCashAction(Number(result.cash)));
 			dispatch(getSharesAction(Number(result.shares)));
-			defaultSuccessSwal(`Bought ${shares} share${shares > 1 ? "s" : ""} ${ticker}`);
+			defaultSuccessSwal(`Bought ${shares} ${ticker}`);
 		}
 	};
 }
@@ -81,7 +81,7 @@ export function sellStockThunk(ticker: string, shares: number, price: number) {
 		} else {
 			dispatch(getCashAction(Number(result.cash)));
 			dispatch(getSharesAction(Number(result.shares)));
-			defaultSuccessSwal(`Sold ${shares} share${shares > 1 ? "s" : ""} ${ticker}`);
+			defaultSuccessSwal(`Sold ${shares} ${ticker}`);
 		}
 	};
 }

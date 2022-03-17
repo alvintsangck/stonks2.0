@@ -5,6 +5,7 @@ export type UserPortfolio = {
 	name: string;
 	shares: string;
 	totalCost: number;
+	sectorName: string;
 };
 
 export type CalcPortfolio = {
