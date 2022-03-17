@@ -10,7 +10,6 @@ import { EarningTable } from "../redux/calendar/state";
 import EarningsTable from "./EarningsTable";
 import { push } from "connected-react-router";
 import { Helmet } from "react-helmet";
-import { faEnvelopeOpenText } from "@fortawesome/free-solid-svg-icons";
 
 export default function Calendar() {
 	const dispatch = useDispatch();
