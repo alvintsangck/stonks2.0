@@ -204,7 +204,7 @@ export default function Portfolio() {
 						<div className="accu-percent brief-info">
 							Total Account Value
 							<span className="accumulate-percentage brief-value">
-								{!marketValue ? "calculating" : "$" + commaNumber(cash + Number(marketValue))}
+								{"$" + commaNumber(cash + Number(marketValue))}
 							</span>
 						</div>
 						<div className="button-container">
