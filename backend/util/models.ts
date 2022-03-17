@@ -66,6 +66,7 @@ export type Portfolio = {
 	shares: string | number;
 	unitCost?: string | number;
 	totalCost?: string | number;
+	sectorName: string;
 };
 
 export enum Table {
