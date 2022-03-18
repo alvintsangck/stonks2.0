@@ -1,6 +1,4 @@
-import { config } from "dotenv";
-
-config();
+if (!process.env.REACT_APP_METAMASK) throw Error("no metamask account");
 
 export const env = {
 	url:
