@@ -1,3 +1,7 @@
+import { config } from "dotenv";
+
+config();
+
 export const env = {
 	url:
 		window.location.origin === "http://localhost:3000"
