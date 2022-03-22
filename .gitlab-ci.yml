@@ -65,7 +65,7 @@ server-build:
 #         - yarn build
 #     artifacts:
 #         paths:
-            - frontend/build
+#             - frontend/build
 
 server-deploy:
     before_script:
@@ -87,7 +87,6 @@ server-deploy:
           docker pull $REPOSITORY_URL:$IMAGE_TAG;
           docker-compose down;
           docker-compose up -d;"
-
 # react-deploy:
 #     image: "python:3.6"
 #     stage: react-deploy
