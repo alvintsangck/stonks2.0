@@ -40,7 +40,7 @@ export class WatchlistController {
 
 		return await this.watchlistService.createWatchlist(user.id, name);
 	};
-
+	//need to check userId
 	put = async (req: Request): Promise<{ message: string }> => {
 		const watchlistId = Number(req.params.watchlistId);
 		if (Number.isNaN(watchlistId) || watchlistId <= 0) throw new HttpError(400, "Watchlist not exist");
@@ -50,14 +50,14 @@ export class WatchlistController {
 
 		return await this.watchlistService.changeWatchlistName(watchlistId, name);
 	};
-
+	//need to check userId
 	delete = async (req: Request): Promise<{ message: string }> => {
 		const watchlistId = Number(req.params.watchlistId);
 		if (Number.isNaN(watchlistId) || watchlistId <= 0) throw new HttpError(400, "Watchlist not exist");
 
 		return await this.watchlistService.deleteWatchlist(watchlistId);
 	};
-
+	//need to check userId
 	addStock = async (req: Request): Promise<{ message: string }> => {
 		const watchlistId = Number(req.params.watchlistId);
 		const stockId = Number(req.params.stockId);
@@ -68,7 +68,7 @@ export class WatchlistController {
 
 		return await this.watchlistService.addStock(watchlistId, stockId);
 	};
-
+	//need to check userId
 	deleteStock = async (req: Request): Promise<{ message: string }> => {
 		const watchlistId = Number(req.params.watchlistId);
 		if (Number.isNaN(watchlistId) || watchlistId <= 0) throw new HttpError(400, "Watchlist not exist");

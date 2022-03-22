@@ -3,7 +3,6 @@ import { Container } from "react-bootstrap";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 import { useState } from "react";
-import { defaultErrorSwal } from "./ReactSwal";
 
 export default function Login() {
 	const [isRight, setIsRight] = useState(false);
@@ -40,10 +39,7 @@ export default function Login() {
 								form=""
 								className="ghost"
 								id="signUp"
-								onClick={() => {
-									setIsRight(true);
-									defaultErrorSwal("Register function is not opened");
-								}}
+								onClick={() => setIsRight(true)}
 							>
 								Sign Up
 							</button>

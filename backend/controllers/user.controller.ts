@@ -50,7 +50,7 @@ export class UserController {
 	};
 
 	register = async (req: Request) => {
-		throw new HttpError(503, "Register function is not opened.");
+		// throw new HttpError(503, "Register function is not opened.");
 
 		const error = await this.validateInput(req);
 		if (error) throw error;

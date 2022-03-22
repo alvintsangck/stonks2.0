@@ -97,7 +97,8 @@ export function depositThunk(cash: number, reset: UseFormReset<DepositFormState>
 		const account = env.metaMask;
 		const provider = new ethers.providers.Web3Provider(window.ethereum);
 		const signer = provider.getSigner();
-		const contract = new Contract("0x6baad065aa5173e16783d35f607265b5b2750264", abi, signer);
+		const contractAddress = "0x6baad065aa5173e16783d35f607265b5b2750264";
+		const contract = new Contract(contractAddress, abi, signer);
 		const calcAmount = ethers.utils.parseUnits(cash.toString(), "ether");
 
 		try {
@@ -115,7 +116,6 @@ export function depositThunk(cash: number, reset: UseFormReset<DepositFormState>
 						const calculatedBalance = ethers.utils.formatEther(balance);
 						dispatch(getTokenAction(Number(calculatedBalance)));
 						dispatch(getCashAction(result.cash));
-						dispatch(endLoadingMetaMaskAction());
 						defaultSuccessSwal("Deposit successful");
 					}
 				}
@@ -129,6 +129,7 @@ export function depositThunk(cash: number, reset: UseFormReset<DepositFormState>
 				console.log(error);
 			}
 		}
+		dispatch(endLoadingMetaMaskAction());
 	};
 }
 
@@ -158,7 +159,6 @@ export function withdrawalThunk(account: string, cash: string, reset: UseFormRes
 						const calculatedBalance = ethers.utils.formatEther(balance);
 						dispatch(getTokenAction(Number(calculatedBalance)));
 						dispatch(getCashAction(result.cash));
-						dispatch(endLoadingMetaMaskAction());
 						defaultSuccessSwal(`Withdraw successful`);
 					}
 				}
@@ -170,5 +170,6 @@ export function withdrawalThunk(account: string, cash: string, reset: UseFormRes
 				dispatch(apiFailedAction("Transaction denied"));
 			}
 		}
+		dispatch(endLoadingMetaMaskAction());
 	};
 }
