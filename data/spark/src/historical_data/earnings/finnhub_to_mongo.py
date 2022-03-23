@@ -31,7 +31,7 @@ def main():
     data2 = finnhub_client.earnings_calendar(_from="2022-02-25", to=ytd,symbol="", international=False)
     data3 = finnhub_client.earnings_calendar(_from=today, to=end,symbol="", international=False)
 
-    os.chdir("/opt/bitnami/spark/src/historical_data/earnings")
+    os.chdir("/opt/bitnami/spark/src/historical_data/earnings/")
     with open('sp500_constituent.csv') as f:
         reader = csv.DictReader(f)
         items = list(reader)
