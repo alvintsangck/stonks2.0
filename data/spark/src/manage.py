@@ -47,7 +47,7 @@ def get_today_earnings():
     daily_earnings.daily_finnhub_to_mongo.main()
     daily_earnings.finnhub_mongo_to_psql.main()
 
-@click.command(name='daily_sentiments')
+@click.command(name='weekly_sentiments')
 def get_today_sentiments():
     daily_sentiments.weekly_sentiment_to_mongo.main()
     daily_sentiments.sentiment_mongo_to_psql.main()
@@ -55,7 +55,7 @@ def get_today_sentiments():
 @click.command(name='daily_rates')
 def get_today_rates():
     daily_rates.daily_rates_to_mongo.main()
-    daily_earnings.rates_mongo_to_psql.main()
+    daily_rates.rates_mongo_to_psql.main()
 
 @click.command(name='daily_stock_prices')
 def get_today_stock_prices():
