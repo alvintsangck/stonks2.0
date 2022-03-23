@@ -2,6 +2,8 @@ from playwright.sync_api import Playwright, sync_playwright
 from pymongo import MongoClient
 import time
 from datetime import datetime
+from dotenv import load_dotenv
+import os
 
 
 def run(playwright: Playwright, type: str) -> list:
@@ -54,21 +56,26 @@ def run(playwright: Playwright, type: str) -> list:
     return data_list
 
 def sign_in(page):
+    load_dotenv()
+
+    YCHART_ACCOUNT = os.getenv('YCHART_ACCOUNT')
+    YCHART_PASSWORD = os.getenv('YCHART_PASSWORD')
+
     page.locator("text=Sign In").first.click()
 
     page.locator("[placeholder=\"name\\@company\\.com\"]").click()
 
-    page.locator("[placeholder=\"name\\@company\\.com\"]").fill("ftstonkstrading@gmail.com")
+    page.locator("[placeholder=\"name\\@company\\.com\"]").fill(YCHART_ACCOUNT)
 
     page.locator("[placeholder=\"Password\"]").click()
 
-    page.locator("[placeholder=\"Password\"]").fill("Stonkstrading")
+    page.locator("[placeholder=\"Password\"]").fill(YCHART_PASSWORD)
 
     page.locator("button:has-text(\"Sign In\")").click()
 
     print("Signed in, start scraping data...")
 
-    time.sleep(2)
+    time.sleep(3)
 
 def insertMongo(ls: list, collection_name):
     print(f"{len(ls)} data scraped, inserting into {str(collection_name)}")

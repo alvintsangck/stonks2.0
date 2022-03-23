@@ -1,11 +1,26 @@
+import yfinance as yf
 from dotenv import load_dotenv
 import os
 import pyspark.sql.functions as F   
 from pyspark.sql import SparkSession
 from pymongo import MongoClient
 import time
+from datetime import datetime, timedelta
 
 def main():
+
+    end = datetime.now()
+    start = end - timedelta(1)
+
+    is_market_open = yf.download("SPY", start=start, end=end, group_by='ticker', auto_adjust=True)
+
+    if is_market_open.empty:
+        print("market is closed")
+        exit()
+
+    print("starting")
+    date_for_mongo = str(start.strftime('%Y-%m-%d'))
+
     client = MongoClient('mongodb',27017)
 
     db = client.stonks
@@ -37,7 +52,7 @@ def main():
         "org.postgresql:postgresql:42.2.18"
     ]
 
-    spark = SparkSession.builder.appName("rates_data_to_psql")\
+    spark = SparkSession.builder.appName("Transform Recent change stream")\
             .master(f'spark://{SPARK_ADDRESS}:7077')\
             .config("spark.jars.packages",",".join(packages))\
             .config("spark.hadoop.fs.s3a.access.key",AWS_ACCESS_KEY)\
@@ -50,26 +65,31 @@ def main():
         
     print(f"initialized spark, time elapsed: {time.perf_counter() - start_time}")
 
-
     print("loading mongodb data")
-    df = spark.read.format('mongo').option('spark.mongodb.input.uri',f'mongodb://{MONGO_ADDRESS}/stonks.treasuryRates').load()
+    df = spark.read.format('mongo').option('spark.mongodb.input.uri',f'mongodb://{MONGO_ADDRESS}/stonks.stockPrices').load()
 
     print(f"finished loading from mongo, time elapsed: {time.perf_counter() - start_time}")
 
-    # df = df.filter(df.date == date_for_mongo)
-    # df.show()
-    df = df.withColumn('year', F.year(df['date']))
-    df = df.withColumn('month', F.month(df['date']))
-    df = df.withColumn('day', F.dayofmonth(df['date']))
-    df = df.withColumnRenamed('date', 'created_at')
-    df = df.drop('_id')
+    df = df.filter(df.Date == date_for_mongo)
+    df.show()
+    df = df.withColumnRenamed('Close', 'price')
+    df = df.withColumnRenamed('Ticker', 'ticker')
+    df = df.withColumn('year', F.year(df['Date']))
+    df = df.withColumn('month', F.month(df['Date']))
+    df = df.withColumn('day', F.dayofmonth(df['Date']))
+    df = df.drop('_id','High', 'Low', 'Open', 'Date', 'Volume')
     df.show(5)
+
+    print(f"finished joining dateframe, time elapsed: {time.perf_counter() - start_time}")
+
+    print("writing avro to S3")
+    df.write.format('avro').save(os.path.join(f's3a://{AWS_BUCKET_NAME}/stock_price_all.avro'),mode="overwrite")
 
     print("inserting data into psql")
     df.write.format('jdbc')\
     .format("jdbc") \
     .option("url", f"jdbc:postgresql://{POSTGRES_HOST}:5432/{POSTGRES_DB}") \
-    .option("dbtable", "staging_treasury_rates") \
+    .option("dbtable", "staging_stock_prices") \
     .option('user',POSTGRES_USER)\
     .option('password',POSTGRES_PASSWORD)\
     .option('driver','org.postgresql.Driver')\
@@ -79,9 +99,8 @@ def main():
 
     print(f"finsihed inserting time elapsed: {time.perf_counter() - start_time}")
 
-    print("writing avro to S3")
-    df.write.format('avro').save(os.path.join(f's3a://{AWS_BUCKET_NAME}/treasury_rates.avro'),mode="overwrite")
-    print(f"finsihed writing to S3. Time elapsed: {time.perf_counter() - start_time}")
+    print("removing data in mongodb")
+    db.stockPrices.drop()
 
     end_time = time.perf_counter()
 

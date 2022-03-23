@@ -1,6 +1,6 @@
 from configparser import ConfigParser
 
-def config(filename='/opt/bitnami/spark/src/psql_config/database.ini', section='postgresql'):
+def config(section='postgresql', filename='/opt/bitnami/spark/src/psql_config/database.ini'):
     # create a parser
     parser = ConfigParser()
     # read config file

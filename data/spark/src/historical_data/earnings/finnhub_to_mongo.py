@@ -33,7 +33,6 @@ def main():
 
     earnings = data1["earningsCalendar"] + data2["earningsCalendar"] + data3["earningsCalendar"]
 
-    # {"date":"2022-02-15","epsActual":0.18,"epsEstimate":0.1317,"hour":"amc","quarter":4,"revenueActual":224300000,"revenueEstimate":210803959,"symbol":"ZI","year":2021}
 
     result_list = []
     for earning in earnings:

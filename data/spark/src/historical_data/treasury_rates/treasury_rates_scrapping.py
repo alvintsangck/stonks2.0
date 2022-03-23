@@ -3,18 +3,9 @@ from pymongo import MongoClient
 import time
 from datetime import datetime
 import csv
+from dotenv import load_dotenv
+import os
 
-client = MongoClient('localhost',27017)
-
-db = client.stonks
-
-db.treasuryRates.drop()
-
-data_list = []
-
-indicator_list = ["1 Month", "3 Month", "6 Month", "1 Year", "2 Year", "3 Year", "5 Year", "7 Year", "10 Year", "20 Year", "30 Year"]
-
-url_list = ["1_month", "3_month", "6_month", "1_year", "2_year", "3_year", "5_year", "7_year", "10_year", "20_year", "30_year"]
 
 def run(playwright: Playwright, link: str, indicator: str):
     browser = playwright.chromium.launch(headless=True)
@@ -74,15 +65,20 @@ def run(playwright: Playwright, link: str, indicator: str):
 
 
 def sign_in(page):
+    load_dotenv()
+
+    YCHART_ACCOUNT = os.getenv('YCHART_ACCOUNT')
+    YCHART_PASSWORD = os.getenv('YCHART_PASSWORD')
+
     page.locator("text=Sign In").first.click()
 
     page.locator("[placeholder=\"name\\@company\\.com\"]").click()
 
-    page.locator("[placeholder=\"name\\@company\\.com\"]").fill("ftstonkstrading@gmail.com")
+    page.locator("[placeholder=\"name\\@company\\.com\"]").fill(YCHART_ACCOUNT)
 
     page.locator("[placeholder=\"Password\"]").click()
 
-    page.locator("[placeholder=\"Password\"]").fill("Stonkstrading")
+    page.locator("[placeholder=\"Password\"]").fill(YCHART_PASSWORD)
 
     page.locator("button:has-text(\"Sign In\")").click()
 
@@ -100,22 +96,28 @@ def check_duplicates_and_insert(data_list: list, individual_data_list: list):
     else:
         data_list += individual_data_list
 
+def main():
+    client = MongoClient('mongodb',27017)
 
-with sync_playwright() as playwright:
-    i = 1
-    for indicator, url in zip(indicator_list, url_list):
-            run(playwright, url, indicator)
-            print(f"{i} of 11 completed")
-            i += 1
-    print("data_list length:", len(data_list))
-    db.treasuryRates.insert_many(data_list)
+    db = client.stonks
+
+    db.treasuryRates.drop()
+
+    data_list = []
+
+    indicator_list = ["1 Month", "3 Month", "6 Month", "1 Year", "2 Year", "3 Year", "5 Year", "7 Year", "10 Year", "20 Year", "30 Year"]
+
+    url_list = ["1_month", "3_month", "6_month", "1_year", "2_year", "3_year", "5_year", "7_year", "10_year", "20_year", "30_year"]
 
 
-keys = data_list[0].keys()
+    with sync_playwright() as playwright:
+        i = 1
+        for indicator, url in zip(indicator_list, url_list):
+                run(playwright, url, indicator)
+                print(f"{i} of 11 completed")
+                i += 1
+        print("data_list length:", len(data_list))
+        db.treasuryRates.insert_many(data_list)
 
-with open('treasury_rates_checking2.csv', 'w', newline='') as output_file:
-    dict_writer = csv.DictWriter(output_file, keys)
-    dict_writer.writeheader()
-    dict_writer.writerows(data_list)
 
-print(f"total time used = {time.perf_counter() // 60} minutes, {time.perf_counter() % 60} seconds")
+    print(f"total time used = {time.perf_counter() // 60} minutes, {time.perf_counter() % 60} seconds")
