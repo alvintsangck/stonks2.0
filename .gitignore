@@ -17,3 +17,4 @@ pgdata
 tmp
 build
 database.ini
+__pycache__

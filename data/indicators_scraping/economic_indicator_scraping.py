@@ -111,9 +111,6 @@ def check_duplicates_and_insert(data_list: list, individual_data_list: list):
         data_list += individual_data_list
 
 
-# with sync_playwright() as playwright:
-#     run(playwright, "china_gdp_currencys", "indicator", "China")
-
 with sync_playwright() as playwright:
     i = 1
     for indicator, url in zip(indicator_list, url_list):
