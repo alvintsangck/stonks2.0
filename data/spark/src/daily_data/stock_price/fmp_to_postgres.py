@@ -1,11 +1,28 @@
+import yfinance as yf
 from dotenv import load_dotenv
 import os
 import pyspark.sql.functions as F   
 from pyspark.sql import SparkSession
 from pymongo import MongoClient
 import time
+from datetime import datetime, timedelta
 
 def main():
+
+    end = datetime.now()
+    start = end - timedelta(1)
+
+    is_market_open = yf.download("SPY", start=start, end=end, group_by='ticker', auto_adjust=True)
+
+    if is_market_open.empty:
+        print("market is closed")
+        exit()
+
+    print("starting")
+    date_for_mongo = str(start.strftime('%Y-%m-%d'))
+
+    print('processing stock prices on', date_for_mongo )
+
     client = MongoClient('mongodb',27017)
 
     db = client.stonks
@@ -22,7 +39,6 @@ def main():
     POSTGRES_PASSWORD=os.getenv("POSTGRES_PASSWORD")
     POSTGRES_HOST_1=os.getenv('AWS_PSQL_ADDRESS_1')
     POSTGRES_HOST_2=os.getenv('AWS_PSQL_ADDRESS_2')
-    # POSTGRES_HOST=os.getenv('POSTGRES_HOST')
 
     SPARK_ADDRESS=os.getenv('SPARK_ADDRESS')
     MONGO_ADDRESS=os.getenv('MONGO_ADDRESS')
@@ -53,37 +69,36 @@ def main():
 
 
     print("loading mongodb data")
-    df = spark.read.format('mongo').option('spark.mongodb.input.uri',f'mongodb://{MONGO_ADDRESS}/stonks.earningsToday').load()
+    df = spark.read.format('mongo').option('spark.mongodb.input.uri',f'mongodb://{MONGO_ADDRESS}/stonks.stockPricesToday').load()
 
     print(f"finished loading from mongo, time elapsed: {time.perf_counter() - start_time}")
 
-    # df = df.filter(df.date == date_for_mongo)
-    # df.show()
     df = df.withColumn('year', F.year(df['date']))
     df = df.withColumn('month', F.month(df['date']))
     df = df.withColumn('day', F.dayofmonth(df['date']))
-    df = df.withColumn('release_time', F.when(F.col('release_time')=="", "tbc").otherwise(F.col('release_time')))
     df = df.withColumnRenamed('date', 'created_at')
     df = df.drop('_id')
-    df.show()
+    df.show(5)
 
     print("inserting data into psql 1")
     df.write.format('jdbc')\
     .format("jdbc") \
     .option("url", f"jdbc:postgresql://{POSTGRES_HOST_1}:5432/{POSTGRES_DB}") \
-    .option("dbtable", "staging_stock_earnings") \
+    .option("dbtable", "staging_stock_prices") \
     .option('user',POSTGRES_USER)\
     .option('password',POSTGRES_PASSWORD)\
     .option('driver','org.postgresql.Driver')\
     .option("batchsize", 1000)\
     .mode('append')\
     .save()
+
+    print(f"finsihed inserting to psql 1 time elapsed: {time.perf_counter() - start_time}")
 
     print("inserting data into psql 2")
     df.write.format('jdbc')\
     .format("jdbc") \
     .option("url", f"jdbc:postgresql://{POSTGRES_HOST_2}:5432/{POSTGRES_DB}") \
-    .option("dbtable", "staging_stock_earnings") \
+    .option("dbtable", "staging_stock_prices") \
     .option('user',POSTGRES_USER)\
     .option('password',POSTGRES_PASSWORD)\
     .option('driver','org.postgresql.Driver')\
@@ -91,14 +106,14 @@ def main():
     .mode('append')\
     .save()
 
-    print(f"finsihed inserting time elapsed: {time.perf_counter() - start_time}")
+    print(f"finsihed inserting to psql 2 time elapsed: {time.perf_counter() - start_time}")
 
     print("writing avro to S3")
-    df.write.format('avro').save(os.path.join(f's3a://{AWS_BUCKET_NAME}/earnings_data.avro'),mode="append")
+    df.write.format('avro').save(os.path.join(f's3a://{AWS_BUCKET_NAME}/daily_stock_prices.avro'),mode="append")
     print(f"finsihed writing to S3. Time elapsed: {time.perf_counter() - start_time}")
 
     print("removing data in mongodb")
-    db.earningsToday.drop()
+    db.stockPricesToday.drop()
 
     end_time = time.perf_counter()
 

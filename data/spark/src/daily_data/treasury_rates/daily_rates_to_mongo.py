@@ -3,23 +3,7 @@ from pymongo import MongoClient
 import time
 from datetime import datetime
 
-print("start scraping daily treasury rates")
-
-start = time.perf_counter()
-
-client = MongoClient('mongodb',27017)
-
-db = client.stonks
-
-db.treasuryRatesToday.drop()
-
-data_list = []
-
-indicator_list = ["1 Month", "3 Month", "6 Month", "1 Year", "2 Year", "3 Year", "5 Year", "7 Year", "10 Year", "20 Year", "30 Year"]
-
-url_list = ["1_month", "3_month", "6_month", "1_year", "2_year", "3_year", "5_year", "7_year", "10_year", "20_year", "30_year"]
-
-def run(playwright: Playwright):
+def run(playwright: Playwright, indicator_list, url_list, data_list):
     browser = playwright.chromium.launch(headless=True)
     context = browser.new_context()
 
@@ -57,16 +41,35 @@ def run(playwright: Playwright):
     context.close()
     browser.close()
 
+def main():
 
-with sync_playwright() as playwright:
-    run(playwright)
+    print("start scraping daily treasury rates")
 
-    db.treasuryRatesToday.insert_many(data_list)
+    start = time.perf_counter()
 
-    print(f"inserted {len(data_list)} data into mongodb")
+    client = MongoClient('mongodb',27017)
 
+    db = client.stonks
 
-time_used = time.perf_counter() - start
+    db.treasuryRatesToday.drop()
 
-print(f"total time used = {time_used // 60} minutes, {time_used % 60} seconds")
+    data_list = []
+
+    indicator_list = ["1 Month", "3 Month", "6 Month", "1 Year", "2 Year", "3 Year", "5 Year", "7 Year", "10 Year", "20 Year", "30 Year"]
+
+    url_list = ["1_month", "3_month", "6_month", "1_year", "2_year", "3_year", "5_year", "7_year", "10_year", "20_year", "30_year"]
+
+    with sync_playwright() as playwright:
+        run(playwright, indicator_list, url_list, data_list)
+
+        db.treasuryRatesToday.insert_many(data_list)
+
+        print(f"inserted {len(data_list)} data into mongodb")
+
+    time_used = time.perf_counter() - start
+
+    print(f"total time used = {time_used // 60} minutes, {time_used % 60} seconds")
+
+if __name__ == '__main__':
+    main()
 

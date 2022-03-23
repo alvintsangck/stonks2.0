@@ -3,21 +3,7 @@ from pymongo import MongoClient
 import time
 from datetime import datetime
 
-print("start scraping weekly sentiment")
-
-start = time.perf_counter()
-
-client = MongoClient('mongodb',27017)
-
-db = client.stonks
-
-db.sentimentToday.drop()
-
-data_list = []
-
-sentiment_list = ["bullish", "bearish", "neutral"]
-
-def run(playwright: Playwright):
+def run(playwright: Playwright, sentiment_list, data_list):
     browser = playwright.chromium.launch(headless=True)
     context = browser.new_context()
 
@@ -53,17 +39,33 @@ def run(playwright: Playwright):
     context.close()
     browser.close()
 
+def main():
+    print("start scraping weekly sentiment")
 
-with sync_playwright() as playwright:
-    run(playwright)
+    start = time.perf_counter()
 
-    db.sentimentToday.insert_many(data_list)
+    client = MongoClient('mongodb',27017)
 
-    print(f"inserted {len(data_list)} data into mongodb")
+    db = client.stonks
+
+    db.sentimentToday.drop()
+
+    data_list = []
+
+    sentiment_list = ["bullish", "bearish", "neutral"]
+
+    with sync_playwright() as playwright:
+        run(playwright, sentiment_list, data_list)
+
+        db.sentimentToday.insert_many(data_list)
+
+        print(f"inserted {len(data_list)} data into mongodb")
+
+    time_used = time.perf_counter() - start
+
+    print(f"total time used = {time_used // 60} minutes, {time_used % 60} seconds")
 
     exit()
 
-
-time_used = time.perf_counter() - start
-
-print(f"total time used = {time_used // 60} minutes, {time_used % 60} seconds")
+if __name__ == '__main__':
+    main()

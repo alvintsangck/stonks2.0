@@ -4,15 +4,21 @@ import csv
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from pymongo import MongoClient
+from dotenv import load_dotenv
+import os
 
 def main():
+    load_dotenv()
+
+    FINNHUB_KEY = os.getenv('FINNHUB_KEY')
+
     client = MongoClient('mongodb',27017)
 
     db = client.stonks
 
     db.earnings.drop()
 
-    finnhub_client = finnhub.Client(api_key="c8avhnqad3ifo5nsedtg")
+    finnhub_client = finnhub.Client(api_key=FINNHUB_KEY)
 
     today = (datetime.now()).strftime('%Y-%m-%d')
     ytd = (datetime.now() - timedelta(1)).strftime('%Y-%m-%d')
