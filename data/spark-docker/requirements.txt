@@ -7,3 +7,5 @@ pyspark
 openpyxl
 finnhub-python
 psycopg2-binary
+playwright
+click
