@@ -3,10 +3,10 @@ image: node:lts
 stages:
     # - server-testing
     # - react-testing
-    - server-build
-    # - react-build
-    - server-deploy
-    # - react-deploy
+    # - server-build
+    - react-build
+    # - server-deploy
+    - react-deploy
 
 variables:
     POSTGRES_DB: stonks-test
@@ -39,63 +39,64 @@ variables:
 #     script:
 #         - CI=true yarn test
 
-server-build:
-    only:
-        - production
-    image: "docker:18.09"
-    stage: server-build
-    services:
-        - docker:18.09.7-dind
-    before_script:
-        - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
-    script:
-        - cd backend/
-        - docker build  -t tic-tac-toe:$IMAGE_TAG -f Dockerfile .
-        - docker tag tic-tac-toe:$IMAGE_TAG $REPOSITORY_URL:$IMAGE_TAG
-        - docker push $REPOSITORY_URL:$IMAGE_TAG
-
-# react-build:
+# server-build:
 #     only:
 #         - production
-#     stage: react-build
+#     image: "docker:18.09"
+#     stage: server-build
+#     services:
+#         - docker:18.09.7-dind
 #     before_script:
-#         - cd frontend/
+#         - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
 #     script:
-#         - yarn install
-#         - yarn build
-#     artifacts:
-#         paths:
-#             - frontend/build
+#         - cd backend/
+#         - docker build  -t tic-tac-toe:$IMAGE_TAG -f Dockerfile .
+#         - docker tag tic-tac-toe:$IMAGE_TAG $REPOSITORY_URL:$IMAGE_TAG
+#         - docker push $REPOSITORY_URL:$IMAGE_TAG
 
-server-deploy:
-    before_script:
-        - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
-        - eval $(ssh-agent -s)
-        - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > private.pem
-        - chmod 400 private.pem
-        - ssh-add private.pem > /dev/null
-        - mkdir -p ~/.ssh
-        - chmod 700 ~/.ssh
-        - ssh-keyscan -H ${SERVER_HOSTNAME} > ~/.ssh/known_hosts
-        - chmod 644 ~/.ssh/known_hosts
-    stage: server-deploy
+react-build:
     only:
         - production
+    stage: react-build
+    before_script:
+        - cd frontend/
     script:
-        - ssh ubuntu@${SERVER_HOSTNAME}
-          "docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD;
-          docker pull $REPOSITORY_URL:$IMAGE_TAG;
-          docker-compose down;
-          docker-compose up -d;"
-# react-deploy:
-#     image: "python:3.6"
-#     stage: react-deploy
+        - yarn install
+        - yarn build
+    artifacts:
+        paths:
+            - frontend/build
+
+# server-deploy:
 #     before_script:
-#         - pip install awscli
-#     dependencies:
-#         - react-build
+#         - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
+#         - eval $(ssh-agent -s)
+#         - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > private.pem
+#         - chmod 400 private.pem
+#         - ssh-add private.pem > /dev/null
+#         - mkdir -p ~/.ssh
+#         - chmod 700 ~/.ssh
+#         - ssh-keyscan -H ${SERVER_HOSTNAME} > ~/.ssh/known_hosts
+#         - chmod 644 ~/.ssh/known_hosts
+#     stage: server-deploy
 #     only:
 #         - production
 #     script:
-#         - aws s3 sync frontend/build s3://${BUCKET_NAME} --delete
-#         - aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION} --paths "/*"
+#         - ssh ubuntu@${SERVER_HOSTNAME}
+#           "docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD;
+#           docker pull $REPOSITORY_URL:$IMAGE_TAG;
+#           docker-compose down;
+#           docker-compose up -d;"
+
+react-deploy:
+    image: "python:3.6"
+    stage: react-deploy
+    before_script:
+        - pip install awscli
+    dependencies:
+        - react-build
+    only:
+        - production
+    script:
+        - aws s3 sync frontend/build s3://${BUCKET_NAME} --delete
+        - aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION} --paths "/*"
