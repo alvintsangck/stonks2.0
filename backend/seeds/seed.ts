@@ -33,11 +33,11 @@ export async function seed(knex: Knex): Promise<void> {
 	let maturityPeriodData = xlsx.utils.sheet_to_json(workbook.Sheets["maturity_periods"]);
 	let yearQuarterData = xlsx.utils.sheet_to_json(workbook.Sheets["year_quarters"]);
 
-	//for data engineering only
-	let backups = xlsx.readFile("./seeds/indicators_backup.xlsx");
-	let economicBackup =  xlsx.utils.sheet_to_json(backups.Sheets["economic"]);
-	let sentimentBackup = xlsx.utils.sheet_to_json(backups.Sheets["sentiment"]);
-	let ratesBackup: any = xlsx.utils.sheet_to_json(backups.Sheets["rates"]);
+	//for getting back-up data only
+	// let backups = xlsx.readFile("./seeds/backup/indicators_backup.xlsx");
+	// let economicBackup =  xlsx.utils.sheet_to_json(backups.Sheets["economic"]);
+	// let sentimentBackup = xlsx.utils.sheet_to_json(backups.Sheets["sentiment"]);
+	// let ratesBackup: any = xlsx.utils.sheet_to_json(backups.Sheets["rates"]);
 
 	for (let user of userData) {
 		user.password = await hashPassword(user.password!.toString());
@@ -201,10 +201,10 @@ export async function seed(knex: Knex): Promise<void> {
 		await txn("dim_maturity_periods").insert(maturityPeriodData);
 		await txn("dim_year_quarters").insert(yearQuarterData);
 		
-		//for data engineering only
-		await txn("economic_indicators").insert(economicBackup);
-		await txn("sentiment_indicators").insert(sentimentBackup);
-		await txn.batchInsert("treasury_rates", ratesBackup, 10000);
+		//for getting back-up data only
+		// await txn("economic_indicators").insert(economicBackup);
+		// await txn("sentiment_indicators").insert(sentimentBackup);
+		// await txn.batchInsert("treasury_rates", ratesBackup, 10000);
 
 		await txn.commit();
 

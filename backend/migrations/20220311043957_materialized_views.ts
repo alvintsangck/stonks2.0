@@ -2,10 +2,12 @@ import { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
 	await knex.schema.raw(/*sql*/ `create materialized view IF NOT EXISTS stock_historic_prices as
-		with table1 as (
+	with table1 as (
 		select s.id as "stock_id", s.ticker as "ticker", sp.price as "price1", sp.date_id, sp.created_at as "date1"
 		from stocks s join stock_prices sp on s.id = sp.stock_id 
 		where sp.created_at in (select created_at from stock_prices where created_at <= now() order by created_at desc limit 1)
+		and s.industry_id < 198
+		and sp.price > 0
 		order by s.ticker
 		),
 		table2 as (
@@ -45,7 +47,7 @@ export async function up(knex: Knex): Promise<void> {
 		group by s.ticker
 		order by s.ticker
 		)
-		select table1.date_id, table1.stock_id, table1.ticker, table0.year_high, table1.price1, table2.price2, table3.price3, table4.price4, table5.price5, table6.price6
+		select DISTINCT ON (table1.stock_id) table1.stock_id, table1.date_id, table1.ticker, table0.year_high, table1.price1, table2.price2, table3.price3, table4.price4, table5.price5, table6.price6
 		from table1 
 		join table2 on table1.ticker = table2.ticker
 		join table3 on table1.ticker = table3.ticker
@@ -63,6 +65,7 @@ export async function up(knex: Knex): Promise<void> {
 		join stock_market_caps smc on smc.stock_id = s.id
 		join industries i on i.id = s.industry_id
 		where rs.created_at in (select created_at from stock_rs order by created_at desc limit 1)
+		and i.id < 198
 		order by i.id;`);
 
 	await knex.schema.raw(/*sql*/ `create table if not exists temp_stock_rs (
@@ -73,14 +76,16 @@ export async function up(knex: Knex): Promise<void> {
 		relative_strength decimal(10,2));`)
 
 	await knex.schema.raw(/*sql*/ `create materialized view if not exists screeners as
-		with table1 as (
-		select s.id as "stock_id", s.ticker as "ticker", s."name" as "name", s.industry_id as "industry_id", sp.price as "price1", sp.created_at as "date1"
+		with table1 as 
+		(select s.id as "stock_id", s.ticker as "ticker", s."name" as "name", s.industry_id as "industry_id", sp.price as "price1", sp.created_at as "date1"
 		from stocks s join stock_prices sp on s.id = sp.stock_id
-		where sp.created_at in (select distinct created_at from stock_prices order by created_at desc limit 1)),
+		where sp.date_id in (select distinct date_id from stock_prices order by date_id desc limit 1)
+		and s.industry_id < 198),
 		table2 as (
 		select s.ticker as "ticker", sp.price as "price2", sp.created_at as "date2"
 		from stocks s join stock_prices sp on s.id = sp.stock_id
-		where sp.created_at in (select distinct created_at from stock_prices order by created_at desc limit 1 offset 1)),
+		where sp.date_id in (select distinct date_id from stock_prices order by date_id desc limit 1 offset 1)
+		and sp.price > 0 and s.industry_id < 198),
 		table0 as (
 		select s.ticker as "ticker", max(sp.price) as "year_high"
 		from stocks s join stock_prices sp on s.id = sp.stock_id

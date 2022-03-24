@@ -1,9 +1,11 @@
 FROM bitnami/spark:latest
 
-# RUN apt-get update && apt-get install -y curl vim wget software-properties-common ssh net-tools ca-certificates python3 python3-pip python3-numpy python3-matplotlib python3-scipy python3-pandas python3-simpy
-
 COPY ./requirements.txt ./requirements.txt
 
 USER root
 
+RUN apt-get update && apt-get install -y gstreamer1.0-libav libnss3-tools libatk-bridge2.0-0 libcups2-dev libxkbcommon-x11-0 libxcomposite-dev libxrandr2 libgbm-dev libgtk-3-0
+
 RUN pip install --no-cache-dir -r ./requirements.txt
+
+RUN playwright install

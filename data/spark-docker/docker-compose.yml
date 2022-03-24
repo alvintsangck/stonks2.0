@@ -65,27 +65,6 @@ services:
         build:
             context: ./
             dockerfile: ./Dockerfile
-    spark-worker-3:
-        image: fungting/stonks:latest
-        user: root
-        networks:
-            dae:
-                ipv4_address: 172.1.0.5
-        environment:
-            - SPARK_MODE=worker
-            - SPARK_MASTER_URL=spark://spark:7077
-            - SPARK_WORKER_MEMORY=1G
-            - SPARK_WORKER_CORES=1
-            - SPARK_RPC_AUTHENTICATION_ENABLED=no
-            - SPARK_RPC_ENCRYPTION_ENABLED=no
-            - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
-            - SPARK_SSL_ENABLED=no
-        volumes:
-            - ../spark/src:/opt/bitnami/spark/src
-            - ../tmp/streaming:/tmp/streaming
-        build:
-            context: ./
-            dockerfile: ./Dockerfile
     mongodb:
         image: mongo
         restart: always
