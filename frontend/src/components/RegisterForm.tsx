@@ -27,10 +27,10 @@ export default function RegisterForm() {
 		<Form id="register-form" onSubmit={handleSubmit(onSubmit)}>
 			<h1>Create Account</h1>
 			<img id="avatar-preview" src="/STONK.png" alt="avatar"></img>
-			<input type="text" {...register("username")} placeholder="Username" readOnly />
-			<input type="email" {...register("email")} placeholder="Email" readOnly />
-			<input type="password" {...register("password")} placeholder="Password" readOnly />
-			<input type="password" {...register("confirmPassword")} placeholder="Confirm Password" readOnly />
+			<input type="text" {...register("username")} placeholder="Username" />
+			<input type="email" {...register("email")} placeholder="Email" />
+			<input type="password" {...register("password")} placeholder="Password" />
+			<input type="password" {...register("confirmPassword")} placeholder="Confirm Password" />
 			{/* 
 			<Form.Group className="tos">
 				<input type="checkbox" name="terms" id="terms-checkbox" />
