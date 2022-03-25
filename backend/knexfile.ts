@@ -45,7 +45,7 @@ const knexConfigs = {
 		client: "pg",
 		connection: {
 			host: process.env.POSTGRES_HOST,
-			database: process.env.POSTGRES_DB,
+			database: process.env.TESTDB_NAME,
 			user: process.env.POSTGRES_USER,
 			password: process.env.POSTGRES_PASSWORD,
 		},
