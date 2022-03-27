@@ -23,9 +23,11 @@ export class UserService {
 	}
 
 	async addUser(username: string, password: string, email: string): Promise<Omit<User, "password">> {
-		const user = await this.knex("users")
-			.insert({ username, password, email })
-			.returning(["id", "username", "email", "avatar", "role"])[0];
+		const user = (
+			await this.knex("users")
+				.insert({ username, password, email })
+				.returning(["id", "username", "email", "avatar", "role"])
+		)[0];
 		await this.knex("user_history").insert({ user_id: user.id });
 		return user;
 	}

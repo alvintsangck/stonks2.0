@@ -50,15 +50,15 @@ export class UserController {
 	};
 
 	register = async (req: Request) => {
-		// throw new HttpError(503, "Register function is not opened.");
-
 		const error = await this.validateInput(req);
 		if (error) throw error;
 		const { username, email, password } = req.body;
 		const hashedPassword = await hashPassword(password.toString());
 
 		const user: Omit<User, "password"> = await this.userService.addUser(username, hashedPassword, email);
-		return { user };
+		const token = jwtSimple.encode(user, jwt.jwtSecret);
+
+		return { token };
 	};
 
 	private async validateInput(req: Request) {
@@ -123,7 +123,7 @@ export class UserController {
 			const token = jwtSimple.encode(payload, jwt.jwtSecret);
 			return { token };
 		} catch (e: any) {
-			throw e
+			throw e;
 		}
 	};
 
