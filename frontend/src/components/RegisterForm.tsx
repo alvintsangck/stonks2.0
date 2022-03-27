@@ -36,9 +36,7 @@ export default function RegisterForm() {
 				<input type="checkbox" name="terms" id="terms-checkbox" />
 				<Form.Label>I agree to the Terms of Services</Form.Label>
 			</Form.Group> */}
-			<button type="submit" disabled>
-				Sign Up
-			</button>
+			<button type="submit">Sign Up</button>
 		</Form>
 	);
 }
