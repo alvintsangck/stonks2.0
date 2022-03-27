@@ -60,6 +60,8 @@ export async function up(knex: Knex): Promise<void> {
 		});
 	}
 
+	await knex.schema.raw(`CREATE INDEX stock_idx on stocks(ticker); `);
+
 	if (!(await knex.schema.hasTable("comments"))) {
 		await knex.schema.createTable("comments", (table) => {
 			table.increments();
