@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { Switch, Route, Redirect } from "react-router";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { RootState } from "../redux/store/state";
 import Calendar from "./Calendar";
 import Footer from "./Footer";

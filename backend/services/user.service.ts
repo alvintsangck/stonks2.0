@@ -1,5 +1,5 @@
 import { Knex } from "knex";
-import fetch from "node-fetch";
+import fetch from "cross-fetch";
 import { camelCaseKeys } from "../util/helper";
 import { Portfolio, User } from "../util/models";
 

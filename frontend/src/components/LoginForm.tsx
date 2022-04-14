@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { loginFacebookThunk, loginThunk } from "../redux/auth/thunk";
 import { defaultErrorSwal } from "./ReactSwal";
-import { useLocation } from "react-router";
+import { useLocation } from "react-router-dom";
 import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
 
 export type LoginFormState = {

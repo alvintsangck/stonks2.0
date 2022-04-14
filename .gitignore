@@ -5,7 +5,6 @@ dataset
 .DS_Store
 venv
 uploads
-yarn.lock
 FT_draft
 backup
 *.ipynb

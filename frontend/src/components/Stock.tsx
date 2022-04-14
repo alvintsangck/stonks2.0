@@ -2,7 +2,7 @@ import "../css/Stock.css";
 import { Col, Container, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store/state";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import StockButtons from "./StockButtons";
 import { Helmet } from "react-helmet";
 import { useEffect } from "react";
