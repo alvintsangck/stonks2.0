@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { Redirect, Route, RouteProps } from "react-router";
+import { Redirect, Route, RouteProps } from "react-router-dom";
 import { RootState } from "../redux/store/state";
 
 export default function PrivateRoute({ component, ...rest }: RouteProps) {

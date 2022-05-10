@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Form, Offcanvas } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import { env } from "../env";
 import { getBalanceThunk } from "../redux/auth/thunk";
 import { getSharesThunk, sellStockThunk } from "../redux/stock/thunk";

@@ -6,7 +6,7 @@ import SwitchChianButton from "./SwitchChainButton";
 import DepositForm from "./DepositForm";
 import WithdrawalForm from "./WithdrawalForm";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import { RootState } from "../redux/store/state";
 import { OnboardingButton } from "./OnboardingButton";
 

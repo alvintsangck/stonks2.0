@@ -2,7 +2,7 @@ import "../css/WatchlistModal.css";
 import { useEffect, useState } from "react";
 import { ListGroup, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import { RootState } from "../redux/store/state";
 import { addStockThunk, getAllWatchlistsThunk } from "../redux/watchlist/thunk";
 

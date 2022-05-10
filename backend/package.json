@@ -10,12 +10,12 @@
 	},
 	"dependencies": {
 		"@types/bcryptjs": "^2.4.2",
+		"@types/cors": "^2.8.12",
 		"@types/express": "^4.17.13",
 		"@types/express-session": "^1.17.4",
 		"@types/jwt-simple": "^0.5.33",
 		"@types/multer": "^1.4.7",
 		"@types/node": "^17.0.18",
-		"@types/node-fetch": "^2.6.1",
 		"@types/permit": "^0.2.2",
 		"bcryptjs": "^2.4.3",
 		"camelcase-keys": "^7.0.2",

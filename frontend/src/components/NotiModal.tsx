@@ -1,6 +1,6 @@
 import { Modal } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 
 type Props = {
 	isShow: boolean;

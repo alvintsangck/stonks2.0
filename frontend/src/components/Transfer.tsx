@@ -7,7 +7,7 @@ import { RootState } from "../redux/store/state";
 import { getChainIdThunk } from "../redux/metaMask/thunk";
 import { getMetaMaskAction, getChainIdAction } from "../redux/metaMask/action";
 import { Helmet } from "react-helmet";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import { defaultErrorSwal } from "./ReactSwal";
 import TransferForm from "./TransferForm";
 
