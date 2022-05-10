@@ -56,10 +56,11 @@ function makeBigNewsElem(news: News, i: number) {
 	const rawContent = extractContent(news.attributes.content);
 	const index = "Getty Images ";
 	const content = rawContent?.slice(rawContent.indexOf(index) + index.length);
+	const image = news.attributes.gettyImageUrl || `${env.url}/stonk_bg.webp`;
 	return (
 		<Carousel.Item key={i}>
 			<a href={news.links.canonical}>
-				<img src={news.attributes.gettyImageUrl} alt=""></img>
+				<img src={image} alt="news"></img>
 				<Carousel.Caption>
 					<h2>{news.attributes.title}</h2>
 					<p>{content}</p>
