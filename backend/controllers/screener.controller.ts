@@ -47,7 +47,7 @@ export class ScreenerController {
 		let industryRank = [minIndustryRank, maxIndustryRank];
 
 		if (includedIndustry.length == 0) {
-			industryIds = Array.from({ length: 197 }, (_, i) => i + 1);
+			industryIds = Array.from({ length: 197 }, (_, i) => i + 1); //Return array [1, 2, ..., 197]
 		}
 
 		if (excludedIndustry) {
@@ -55,7 +55,7 @@ export class ScreenerController {
 		}
 
 		if (includedSector.length == 0) {
-			sectorIds = Array.from({ length: 33 }, (_, i) => i + 1);
+			sectorIds = Array.from({ length: 33 }, (_, i) => i + 1); //Return array [1, 2, ..., 33]
 		}
 
 		if (excludedSector) {
