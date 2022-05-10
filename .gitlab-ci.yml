@@ -23,21 +23,21 @@ server-testing:
         - postgres:latest
     before_script:
         - cd backend
-        - pnpm install
-        - pnpm knex migrate:latest --env test
+        - yarn install
+        - yarn knex migrate:latest --env test
     stage: server-testing
     script:
-        - pnpm test
+        - yarn test
 
 react-testing:
     only:
         - production
     before_script:
         - cd frontend
-        - pnpm install
+        - yarn install
     stage: react-testing
     script:
-        - CI=true pnpm test
+        - CI=true yarn test
 
 server-build:
     only:
@@ -61,8 +61,8 @@ react-build:
     before_script:
         - cd frontend/
     script:
-        - pnpm install
-        - pnpm build
+        - yarn install
+        - yarn build
     artifacts:
         paths:
             - frontend/build
