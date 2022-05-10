@@ -50,8 +50,8 @@ server-build:
         - docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
     script:
         - cd backend/
-        - docker build  -t tic-tac-toe:$IMAGE_TAG -f Dockerfile .
-        - docker tag tic-tac-toe:$IMAGE_TAG $REPOSITORY_URL:$IMAGE_TAG
+        - docker build  -t stonks:$IMAGE_TAG -f Dockerfile .
+        - docker tag stonks:$IMAGE_TAG $REPOSITORY_URL:$IMAGE_TAG
         - docker push $REPOSITORY_URL:$IMAGE_TAG
 
 react-build:
