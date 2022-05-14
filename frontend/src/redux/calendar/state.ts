@@ -24,3 +24,9 @@ export type CalendarState = {
 	past: EarningTable[];
 	next: EarningTable[];
 };
+
+export type EarningTables = {
+	today: EarningTable[];
+	past: EarningTable[];
+	next: EarningTable[];
+}
