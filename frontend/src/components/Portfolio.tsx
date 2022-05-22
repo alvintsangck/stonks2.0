@@ -8,12 +8,12 @@ import { RootState } from "../redux/store/state";
 import { useEffect } from "react";
 import { getPortfolioPriceThunk, getPortfolioThunk } from "../redux/portfolio/thunk";
 import StockTable from "./StockTable";
-import { getBalanceThunk } from "../redux/auth/thunk";
-import { push } from "connected-react-router";
+import { getBalanceThunk } from "../redux/auth/api";
 import { env } from "../env";
 import { CalcPortfolio, UserPortfolio } from "../redux/portfolio/state";
 import { commaNumber } from "../helper";
 import { getPortfolioPriceAction } from "../redux/portfolio/action";
+import { useNavigate } from "react-router-dom";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -29,6 +29,7 @@ let prevCalcPortfolio: CalcPortfolio[] = [];
 
 export default function Portfolio() {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const portfolio = useSelector((state: RootState) => state.portfolio.portfolio);
 	const deposit = useSelector((state: RootState) => state.auth.balance.deposit);
 	const cash = useSelector((state: RootState) => state.auth.balance.cash);
@@ -99,7 +100,7 @@ export default function Portfolio() {
 					const trades = data.data;
 					if (prevCalcPortfolio.length > 0) {
 						// setTimeout(() => {
-							dispatch(getPortfolioPriceAction(trades));
+						dispatch(getPortfolioPriceAction(trades));
 						// }, 3000);
 					}
 				}
@@ -166,7 +167,7 @@ export default function Portfolio() {
 		const isPriceZero = Number(price) === 0;
 
 		return (
-			<tr key={i} onClick={() => dispatch(push(`/stocks/${ticker}`))}>
+			<tr key={i} onClick={() => navigate(`/stocks/${ticker}`)}>
 				<td>{ticker}</td>
 				<td>{name}</td>
 				<td>{isPriceZero ? "calculating" : commaNumber(Number(price))}</td>

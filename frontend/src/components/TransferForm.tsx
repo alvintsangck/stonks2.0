@@ -1,17 +1,16 @@
 import "../css/TransferForm.css";
-import { push } from "connected-react-router";
 import { Container, Row, Col } from "react-bootstrap";
 import { env } from "../env";
 import SwitchChianButton from "./SwitchChainButton";
 import DepositForm from "./DepositForm";
 import WithdrawalForm from "./WithdrawalForm";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../redux/store/state";
 import { OnboardingButton } from "./OnboardingButton";
 
 export default function TransferForm() {
-	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const account = useSelector((state: RootState) => state.metaMask.account);
 	const chainId = useSelector((state: RootState) => state.metaMask.chainId);
 	const { method } = useParams<{ method: string }>();
@@ -43,14 +42,14 @@ export default function TransferForm() {
 				<Col
 					xs={3}
 					className={"form-btn" + (method === "deposit" ? " active" : "")}
-					onClick={() => dispatch(push("/transfer/deposit"))}
+					onClick={() => navigate("/transfer/deposit")}
 				>
 					Deposit
 				</Col>
 				<Col
 					xs={3}
 					className={"form-btn" + (method === "withdrawal" ? " active" : "")}
-					onClick={() => dispatch(push("/transfer/withdrawal"))}
+					onClick={() => navigate("/transfer/withdrawal")}
 				>
 					Withdraw
 				</Col>

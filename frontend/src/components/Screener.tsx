@@ -4,11 +4,13 @@ import StockTable from "./StockTable";
 import ScreenerForm from "./ScreenerForm";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store/state";
-import { push } from "connected-react-router";
+
 import { IScreener } from "../redux/screener/state";
+import { useNavigate } from "react-router-dom";
 
 export default function Screener() {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const stocks = useSelector((state: RootState) => state.screener.stocks);
 	const isLoading = useSelector((state: RootState) => state.screener.isLoading);
 	const tableHeadings: string[] = [
@@ -28,7 +30,7 @@ export default function Screener() {
 
 	function mapStockTable(stock: IScreener, i: number) {
 		return (
-			<tr key={i} onClick={() => dispatch(push(`/stocks/${stock.ticker}`))}>
+			<tr key={i} onClick={() => navigate(`/stocks/${stock.ticker}`)}>
 				<td>{stock.ticker}</td>
 				<td>{stock.name}</td>
 				<td>{stock.price}</td>

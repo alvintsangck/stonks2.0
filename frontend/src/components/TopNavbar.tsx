@@ -1,16 +1,17 @@
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { RootState } from "../redux/store/state";
 import "../css/NavBar.css";
 import { Col, Container, Dropdown, Nav, Navbar, Row } from "react-bootstrap";
 import { SearchForm } from "./SearchForm";
 import { env } from "../env";
-import { logoutThunk } from "../redux/auth/thunk";
+import { logoutThunk } from "../redux/auth/api";
 import { toggleThemeAction } from "../redux/theme/action";
-import { push } from "connected-react-router";
 
 export default function NavBar() {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
 	const user = useSelector((state: RootState) => state.auth.user);
 	const theme = useSelector((state: RootState) => state.theme.theme);
 
@@ -39,7 +40,7 @@ export default function NavBar() {
 									/>
 								</Dropdown.Toggle>
 								<Dropdown.Menu variant={theme}>
-									<Dropdown.Item onClick={() => dispatch(push(`/portfolio`))}>
+									<Dropdown.Item onClick={() => navigate(`/portfolio`)}>
 										{user.payload.username}
 									</Dropdown.Item>
 									{/* <Dropdown.Item>
@@ -70,22 +71,22 @@ export default function NavBar() {
 				<Navbar.Toggle aria-controls="responsive-navbar-nav" />
 				<Navbar.Collapse id="responsive-navbar-nav">
 					<Nav className="m-auto">
-						<Nav.Link href="#" onClick={() => dispatch(push("/"))}>
+						<Nav.Link href="#" onClick={() => navigate("/")}>
 							<span className="nav-item">Home</span>
 						</Nav.Link>
-						<Nav.Link href="#" onClick={() => dispatch(push("/watchlist"))}>
+						<Nav.Link href="#" onClick={() => navigate("/watchlist")}>
 							<span className="nav-item">Watchlist</span>
 						</Nav.Link>
-						<Nav.Link href="#" onClick={() => dispatch(push("/screener"))}>
+						<Nav.Link href="#" onClick={() => navigate("/screener")}>
 							<span className="nav-item">Screener</span>
 						</Nav.Link>
-						<Nav.Link href="#" onClick={() => dispatch(push("/portfolio"))}>
+						<Nav.Link href="#" onClick={() => navigate("/portfolio")}>
 							<span className="nav-item">Portfolio</span>
 						</Nav.Link>
-						<Nav.Link href="#" onClick={() => dispatch(push("/dashboard"))}>
+						<Nav.Link href="#" onClick={() => navigate("/dashboard")}>
 							<span className="nav-item">Dashboard</span>
 						</Nav.Link>
-						<Nav.Link href="#" onClick={() => dispatch(push("/calendar"))}>
+						<Nav.Link href="#" onClick={() => navigate("/calendar")}>
 							<span className="nav-item">Calendar</span>
 						</Nav.Link>
 					</Nav>

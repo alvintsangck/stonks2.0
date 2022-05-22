@@ -1,4 +1,4 @@
-import { RouterState } from "connected-react-router";
+
 import { AuthState } from "../auth/state";
 import { ThemeState } from "../theme/state";
 import { PortfolioState } from "../portfolio/state";
@@ -17,7 +17,6 @@ export type RootState = {
 	stock: StockState;
 	metaMask: MetaMaskState;
 	watchlist: WatchlistState;
-	router: RouterState;
 	portfolio: PortfolioState;
 	calendar: CalendarState;
 };

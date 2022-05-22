@@ -4,7 +4,7 @@ import { RootState } from "../redux/store/state";
 import { useForm } from "react-hook-form";
 import { depositThunk } from "../redux/metaMask/thunk";
 import { useEffect } from "react";
-import { getBalanceThunk } from "../redux/auth/thunk";
+import { getBalanceThunk } from "../redux/auth/api";
 
 export type DepositFormState = {
 	deposit: number;

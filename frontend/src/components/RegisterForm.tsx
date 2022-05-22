@@ -2,7 +2,7 @@ import "../css/RegisterForm.css";
 import { Form } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { registerThunk } from "../redux/auth/thunk";
+import { registerThunk } from "../redux/auth/api";
 import { defaultErrorSwal } from "./ReactSwal";
 
 export type RegisterFormState = {

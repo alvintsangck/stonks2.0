@@ -10,13 +10,14 @@ import { useEffect } from "react";
 import { addStockThunk, deleteStockThunk, getAllWatchlistsThunk, getWatchlistThunk } from "../redux/watchlist/thunk";
 import { RootState } from "../redux/store/state";
 import StockTable from "./StockTable";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Stock } from "../redux/stock/state";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { push } from "connected-react-router";
 
 export default function Watchlist() {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
 	const watchlists = useSelector((state: RootState) => state.watchlist.watchlists);
 	const stocks = useSelector((state: RootState) => state.watchlist.stocks);
 	const isLoading = useSelector((state: RootState) => state.watchlist.isLoading);
@@ -41,7 +42,7 @@ export default function Watchlist() {
 
 	useEffect(() => {
 		if (watchlists.length === 1 && currentWatchlistId !== watchlists[0].id) {
-			dispatch(push(`/watchlist/${watchlists[0].id}`));
+			navigate(`/watchlist/${watchlists[0].id}`);
 		}
 	}, [dispatch, watchlists, currentWatchlistId]);
 
@@ -49,7 +50,7 @@ export default function Watchlist() {
 		return addStockThunk(currentWatchlistId, ticker.toUpperCase());
 	};
 
-	const watchlistTable = mapWatchlistTable(stocks, currentWatchlistId, currentWatchlistName, dispatch);
+	const watchlistTable = mapWatchlistTable(stocks, currentWatchlistId, currentWatchlistName, dispatch, navigate);
 
 	return (
 		<>
@@ -71,7 +72,13 @@ export default function Watchlist() {
 	);
 }
 
-function mapWatchlistTable(stocks: Stock[], watchlistId: number, watchlistName: string, dispatch: Function) {
+function mapWatchlistTable(
+	stocks: Stock[],
+	watchlistId: number,
+	watchlistName: string,
+	dispatch: Function,
+	navigate: Function
+) {
 	return stocks.map((stock, i: number) => {
 		const deleteInfo = {
 			watchlistId,
@@ -82,11 +89,11 @@ function mapWatchlistTable(stocks: Stock[], watchlistId: number, watchlistName: 
 		const change = stock.price - stock.prevPrice!;
 		return (
 			<tr key={i}>
-				<td onClick={() => dispatch(push(`/stocks/${stock.ticker}`))}>{stock.ticker}</td>
-				<td onClick={() => dispatch(push(`/stocks/${stock.ticker}`))}>{stock.name}</td>
-				<td onClick={() => dispatch(push(`/stocks/${stock.ticker}`))}>{Number(stock.price).toFixed(2)}</td>
-				<td onClick={() => dispatch(push(`/stocks/${stock.ticker}`))}>{change.toFixed(2)}</td>
-				<td onClick={() => dispatch(push(`/stocks/${stock.ticker}`))}>
+				<td onClick={() => navigate(`/stocks/${stock.ticker}`)}>{stock.ticker}</td>
+				<td onClick={() => navigate(`/stocks/${stock.ticker}`)}>{stock.name}</td>
+				<td onClick={() => navigate(`/stocks/${stock.ticker}`)}>{Number(stock.price).toFixed(2)}</td>
+				<td onClick={() => navigate(`/stocks/${stock.ticker}`)}>{change.toFixed(2)}</td>
+				<td onClick={() => navigate(`/stocks/${stock.ticker}`)}>
 					{((change / stock.prevPrice!) * 100).toFixed(2) + "%"}
 				</td>
 				<td>

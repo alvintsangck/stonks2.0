@@ -1,4 +1,11 @@
 import { env } from "../env";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+
+export const emptyApi = createApi({
+	reducerPath: "api",
+	baseQuery: fetchBaseQuery({ baseUrl: env.url }),
+	endpoints: () => ({}),
+});
 
 export async function callApi(url: string, method: string = "GET", body?: any) {
 	try {
@@ -6,7 +13,7 @@ export async function callApi(url: string, method: string = "GET", body?: any) {
 			method,
 			headers: {
 				"Content-Type": body ? "application/json" : "text/plain",
-				Authorization: `Bearer ${localStorage.getItem("token") || ''}`,
+				Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
 			},
 			body: body ? JSON.stringify(body) : undefined,
 		});

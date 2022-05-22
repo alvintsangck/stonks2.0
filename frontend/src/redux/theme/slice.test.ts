@@ -1,5 +1,5 @@
-import { toggleThemeAction } from "./action";
-import { themeReducer } from "./reducer";
+import { themeSlice, toggleTheme } from "./slice";
+
 import { ThemeState } from "./state";
 
 describe("Theme Reducer", () => {
@@ -8,8 +8,8 @@ describe("Theme Reducer", () => {
 		initialState = { theme: "light" };
 	});
 
-	test("1 + 1 = 2", () => {
-		const newState = themeReducer(initialState, toggleThemeAction("dark"));
+	test("should change theme", () => {
+		const newState = themeSlice.reducer(initialState, toggleTheme());
 		expect(newState).toMatchObject({ theme: "dark" });
 	});
 });

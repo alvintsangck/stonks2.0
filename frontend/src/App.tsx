@@ -1,28 +1,25 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import { ConnectedRouter } from "connected-react-router";
-import { history } from "./redux/store/history";
-import { Route, Switch } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Login from "./components/Login";
 import DefaultContainer from "./components/DefaultContainer";
-import { useSelector } from "react-redux";
-import { RootState } from "./redux/store/state";
 import { TickerTape } from "react-tradingview-embed";
+import { useAppSelector } from "./hook/hooks";
 
 function App() {
-	const theme = useSelector((state: RootState) => state.theme.theme);
+  const theme = useAppSelector((state) => state.theme.theme);
 
-	return (
-		<ConnectedRouter history={history}>
-			<div className="tape-section">
-				<TickerTape widgetProps={{ colorTheme: theme, displayMode: "regular" }} />
-			</div>
-			<Switch>
-				<Route path="/login" exact component={Login} />
-				<Route component={DefaultContainer} />
-			</Switch>
-		</ConnectedRouter>
-	);
+  return (
+    <>
+      <div className="tape-section">
+        <TickerTape widgetProps={{ colorTheme: theme, displayMode: "regular" }} />
+      </div>
+      <Routes>
+        <Route path="/login" element={Login} />
+        <Route element={DefaultContainer} />
+      </Routes>
+    </>
+  );
 }
 
 export default App;

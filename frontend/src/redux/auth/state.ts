@@ -19,5 +19,4 @@ export type User = {
 export type AuthState = {
 	user: User | null;
 	balance: Balance;
-	error: string;
 };

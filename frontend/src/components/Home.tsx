@@ -6,7 +6,7 @@ import { MarketOverview } from "react-tradingview-embed";
 import "../css/Home.css";
 import { env } from "../env";
 import { News } from "../redux/news/state";
-import { getNewsThunk } from "../redux/news/thunk";
+import { getNewsThunk } from "../redux/news/api";
 import { RootState } from "../redux/store/state";
 import LoadingSpinner from "./LoadingSpinner";
 

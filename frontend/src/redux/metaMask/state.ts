@@ -1,7 +1,6 @@
 export type MetaMaskState = {
 	account: string;
 	chainId: number;
-	token: number | null;
+	token: number;
 	isLoading: boolean;
-	error: any;
 };

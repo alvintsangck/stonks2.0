@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { env } from "../env";
-import { getBalanceThunk } from "../redux/auth/thunk";
+import { getBalanceThunk } from "../redux/auth/api";
 import { getSharesThunk, sellStockThunk } from "../redux/stock/thunk";
 import { RootState } from "../redux/store/state";
 import { BuyFormState } from "./BuyModal";

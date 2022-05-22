@@ -20,6 +20,7 @@ export const calendarApi = emptyApi.injectEndpoints({
       transformResponse: (res: { earnings: EarningTable[] }) => res.earnings,
     }),
   }),
+  overrideExisting: false,
 });
 
 export const {

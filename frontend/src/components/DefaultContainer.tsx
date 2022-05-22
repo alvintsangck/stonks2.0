@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { RootState } from "../redux/store/state";
 import Calendar from "./Calendar";
 import Footer from "./Footer";
@@ -21,18 +21,18 @@ export default function DefaultContainer() {
 		<div className={theme} id="app">
 			<NavBar />
 			<main>
-				<Switch>
-					<Route path="/" exact component={Home} />
-					<Route path="/stocks/:ticker" component={Stock} />
-					<PrivateRoute path="/watchlist/:watchlistId?" component={Watchlist} />
-					<Route path="/screener" component={Screener} />
-					<PrivateRoute path="/portfolio" component={Portfolio} />
-					<PrivateRoute path="/transfer/:method" component={Transfer} />
-					<Route path="/dashboard" component={PowerBI} />
-					<Route path="/calendar" component={Calendar} />
-					<Redirect from="/transfer" to="/transfer/deposit" />
-					<Route component={NoMatch} />
-				</Switch>
+				<Routes>
+					<Route path="/" element={Home} />
+					<Route path="/stocks/:ticker" element={Stock} />
+					<PrivateRoute path="/watchlist/:watchlistId?" element={Watchlist} />
+					<Route path="/screener" element={Screener} />
+					<PrivateRoute path="/portfolio" element={Portfolio} />
+					<PrivateRoute path="/transfer/:method" element={Transfer} />
+					<Route path="/dashboard" element={PowerBI} />
+					<Route path="/calendar" element={Calendar} />
+					<Route path="/transfer" element={<Navigate replace to="/transfer/deposit" />} />
+					<Route element={NoMatch} />
+				</Routes>
 			</main>
 			<Footer />
 		</div>

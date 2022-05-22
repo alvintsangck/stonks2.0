@@ -3,16 +3,17 @@ import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Dispatch, SetStateAction, useState } from "react";
 import WatchlistModal from "./WatchlistModal";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../redux/store/state";
-import { push } from "connected-react-router";
 import BuyModal from "./BuyModal";
 import SellModal from "./SellModal";
 import NotiModal from "./NotiModal";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { useNavigate } from "react-router-dom";
 
 export default function StockButtons() {
-	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
 	const user = useSelector((state: RootState) => state.auth.user);
 	const [isShowBuy, setIsShowBuy] = useState(false);
 	const [isShowSell, setIsShowSell] = useState(false);
@@ -23,7 +24,7 @@ export default function StockButtons() {
 		if (user) {
 			fn(true);
 		} else {
-			dispatch(push("/login"));
+			navigate("/login");
 		}
 	}
 

@@ -2,7 +2,7 @@ import "../css/LoginForm.css";
 import { Form } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { loginFacebookThunk, loginThunk } from "../redux/auth/thunk";
+import { loginFacebookThunk, loginThunk } from "../redux/auth/api";
 import { defaultErrorSwal } from "./ReactSwal";
 import { useLocation } from "react-router-dom";
 import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";

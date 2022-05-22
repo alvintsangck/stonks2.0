@@ -4,8 +4,8 @@ import AddForm from "./AddForm";
 import "../css/Sidebar.css";
 import { useDispatch } from "react-redux";
 import { addWatchlistThunk, deleteWatchlistThunk, getWatchlistThunk } from "../redux/watchlist/thunk";
-import { push } from "connected-react-router";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
 	lists: any[];
@@ -14,10 +14,11 @@ type Props = {
 
 function Sidebar({ lists, currentListId }: Props) {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const deleteWatchlist = (listId: number, name: string) => {
 		dispatch(deleteWatchlistThunk(listId, name));
 		if (currentListId === listId) {
-			dispatch(push(`/watchlist/${lists[0].id}`));
+			navigate(`/watchlist/${lists[0].id}`);
 		}
 	};
 

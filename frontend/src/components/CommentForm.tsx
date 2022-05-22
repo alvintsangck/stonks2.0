@@ -6,11 +6,12 @@ import { Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { postCommentThunk } from "../redux/stock/thunk";
 import { RootState } from "../redux/store/state";
-import { push } from "connected-react-router";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { useNavigate } from "react-router-dom";
 
 export default function CommentForm() {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const stock = useSelector((state: RootState) => state.stock.stock);
 	const user = useSelector((state: RootState) => state.auth.user);
 	const [comment, setComment] = useState("");
@@ -33,7 +34,7 @@ export default function CommentForm() {
 				name="comment"
 				value={comment}
 				onChange={(e) => setComment(e.target.value)}
-				onClick={(e) => !user && dispatch(push("/login"))}
+				onClick={(e) => !user && navigate("/login")}
 				onKeyUp={(e) => e.key === "Enter" && onSubmit(e)}
 			/>
 			<Form.Group>
