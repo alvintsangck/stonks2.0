@@ -9,38 +9,38 @@ const ONBOARD_TEXT = "Click here to install MetaMask";
 const CONNECT_TEXT = "Connect";
 
 export function OnboardingButton() {
-	const dispatch = useDispatch();
-	const [buttonText, setButtonText] = useState(ONBOARD_TEXT);
+  const dispatch = useDispatch();
+  const [buttonText, setButtonText] = useState(ONBOARD_TEXT);
 
-	const account = useSelector((state: RootState) => state.metaMask.account);
-	const onboarding = useRef<MetaMaskOnboarding>();
+  const account = useSelector((state: RootState) => state.metaMask.account);
+  const onboarding = useRef<MetaMaskOnboarding>();
 
-	useEffect(() => {
-		if (!onboarding.current) {
-			onboarding.current = new MetaMaskOnboarding();
-		}
-	}, []);
+  useEffect(() => {
+    if (!onboarding.current) {
+      onboarding.current = new MetaMaskOnboarding();
+    }
+  }, []);
 
-	useEffect(() => {
-		if (MetaMaskOnboarding.isMetaMaskInstalled()) {
-			if (account !== "") {
-				onboarding.current!.stopOnboarding();
-			} else {
-				setButtonText(CONNECT_TEXT);
-			}
-		}
-	}, [account]);
+  useEffect(() => {
+    if (MetaMaskOnboarding.isMetaMaskInstalled()) {
+      if (account !== "") {
+        onboarding.current!.stopOnboarding();
+      } else {
+        setButtonText(CONNECT_TEXT);
+      }
+    }
+  }, [account]);
 
-	const onClick = async () => {
-		if (MetaMaskOnboarding.isMetaMaskInstalled()) {
-			dispatch(getMetaMaskThunk());
-		} else {
-			onboarding.current!.startOnboarding();
-		}
-	};
-	return (
-		<button className="stonk-btn" onClick={onClick}>
-			{buttonText}
-		</button>
-	);
+  const onClick = async () => {
+    if (MetaMaskOnboarding.isMetaMaskInstalled()) {
+      dispatch(getMetaMaskThunk() as any);
+    } else {
+      onboarding.current!.startOnboarding();
+    }
+  };
+  return (
+    <button className="stonk-btn" onClick={onClick}>
+      {buttonText}
+    </button>
+  );
 }

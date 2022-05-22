@@ -4,11 +4,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "../redux/store/state";
 
 export default function LoadingSpinner() {
-	const theme = useSelector((state: RootState) => state.theme.theme);
+  const theme = useSelector((state: RootState) => state.theme.theme);
 
-	return (
-		<div className="loading">
-			<RingLoader color={theme === "light" ? "#0000AC" : "rgba(255,255,255,0.8)"} />
-		</div>
-	);
+  return (
+    <div className="loading">
+      <RingLoader color={theme === "light" ? "#0000AC" : "rgba(255,255,255,0.8)"} />
+    </div>
+  );
 }

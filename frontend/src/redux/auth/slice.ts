@@ -28,14 +28,11 @@ export const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
     },
-    register: (state, action: PayloadAction<string>) => {
-      state.user = getUser(action.payload);
-    },
-    balance: (state, action: PayloadAction<Balance>) => {
+    getBalance: (state, action: PayloadAction<Balance>) => {
       state.balance.cash = action.payload.cash;
       state.balance.deposit = action.payload.deposit;
     },
-    cash: (state, action: PayloadAction<number>) => {
+    getCash: (state, action: PayloadAction<number>) => {
       state.balance.cash = action.payload;
     },
   },
@@ -49,12 +46,12 @@ export const authSlice = createSlice({
       })
       .addMatcher(authApi.endpoints.loginFacebook.matchFulfilled, (state, { payload }) => {
         state.user = getUser(payload);
+      })
+      .addMatcher(authApi.endpoints.getBalance.matchFulfilled, (state, { payload }) => {
+        state.balance.deposit = payload.deposit;
+        state.balance.cash = payload.cash;
       });
-    //   .addMatcher(authApi.endpoints.getBalance.matchFulfilled, (state, { payload }) => {
-    //     state.balance.deposit = payload.deposit;
-    //     state.balance.cash = payload.cash;
-    //   });
   },
 });
 
-export const { logout, register, balance, cash } = authSlice.actions;
+export const { logout, getBalance, getCash } = authSlice.actions;

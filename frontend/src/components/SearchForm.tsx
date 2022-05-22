@@ -7,27 +7,27 @@ import { useNavigate } from "react-router-dom";
 import "../css/SearchForm.css";
 
 export function SearchForm() {
-	const [ticker, setTicker] = useState("");
-	const navigate = useNavigate();
+  const [ticker, setTicker] = useState("");
+  const navigate = useNavigate();
 
-	const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		navigate(`/stocks/${ticker}`);
-		setTicker("");
-	};
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    navigate(`/stocks/${ticker}`);
+    setTicker("");
+  };
 
-	return (
-		<Form onSubmit={onSubmit} className="search-form">
-			<Form.Control
-				type="search"
-				placeholder="Enter a symbol"
-				name="tickerInput"
-				value={ticker}
-				onChange={(e) => setTicker(e.target.value.toUpperCase())}
-			/>
-			<button type="submit" className="search-btn">
-				<FontAwesomeIcon icon={faSearch as IconProp} className="" />
-			</button>
-		</Form>
-	);
+  return (
+    <Form onSubmit={onSubmit} className="search-form">
+      <Form.Control
+        type="search"
+        placeholder="Enter a symbol"
+        name="tickerInput"
+        value={ticker}
+        onChange={(e) => setTicker(e.target.value.toUpperCase())}
+      />
+      <button type="submit" className="search-btn">
+        <FontAwesomeIcon icon={faSearch as IconProp} className="" />
+      </button>
+    </Form>
+  );
 }

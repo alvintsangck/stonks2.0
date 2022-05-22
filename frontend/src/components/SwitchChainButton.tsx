@@ -1,16 +1,16 @@
 import { useDispatch } from "react-redux";
-import {  switchChainThunk } from "../redux/metaMask/thunk";
+import { switchChainThunk } from "../redux/metaMask/thunk";
 
 export default function SwitchChianButton() {
-	const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-	function switchChain() {
-		dispatch(switchChainThunk());
-	}
+  function switchChain() {
+    dispatch(switchChainThunk() as any);
+  }
 
-	return (
-		<button className="stonk-btn" onClick={switchChain}>
-			switch
-		</button>
-	);
+  return (
+    <button className="stonk-btn" onClick={switchChain}>
+      switch
+    </button>
+  );
 }

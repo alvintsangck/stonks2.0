@@ -24,10 +24,4 @@ export const authApi = emptyApi.injectEndpoints({
   overrideExisting: false,
 });
 
-// export function logoutThunk() {
-// 	return (dispatch: RootDispatch) => {
-// 		localStorage.removeItem("token");
-// 		dispatch(logoutAction());
-// 		dispatch(push("/"));
-// 	};
-// }
+export const { useGetBalanceQuery, useLoginMutation, useRegisterMutation, useLoginFacebookMutation } = authApi;

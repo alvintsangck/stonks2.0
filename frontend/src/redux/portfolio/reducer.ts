@@ -1,4 +1,3 @@
-import { PortfolioAction } from "./action";
 import { PortfolioState } from "./state";
 
 const initialState: PortfolioState = {
@@ -6,7 +5,7 @@ const initialState: PortfolioState = {
 	price: [],
 };
 
-export function portfolioReducer(state: PortfolioState = initialState, action: PortfolioAction): PortfolioState {
+export function portfolioReducer(state: PortfolioState = initialState, action: any): PortfolioState {
 	switch (action.type) {
 		case "@@Portfolio/get":
 			return { ...state, portfolio: action.portfolio };
