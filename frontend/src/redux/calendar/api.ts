@@ -12,7 +12,7 @@ export const calendarApi = emptyApi.injectEndpoints({
       transformResponse: (res: { earnings: EarningTable[] }) => res.earnings,
     }),
     getTodayEarningTables: build.query<EarningTable[], void>({
-      query: () => ({ url: `/calendar/earnings/today` }),
+      query: () => ({ url: `/calendar/earnings/now` }),
       transformResponse: (res: { earnings: EarningTable[] }) => res.earnings,
     }),
     getNextEarningTables: build.query<EarningTable[], void>({
