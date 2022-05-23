@@ -1,25 +1,28 @@
-import { FinnhubTrade } from "../../components/Portfolio";
-
 export type UserPortfolio = {
-	ticker: string;
-	name: string;
-	shares: string;
-	totalCost: number;
-	sectorName: string;
-};
-
-export type CalcPortfolio = {
-	ticker: string;
-	name: string;
-	price: number | null;
-	shares: number;
-	avgCost: number;
-	totalCost: number;
-	marketValue: number | null;
-	profit: number | null;
+  ticker: string;
+  name: string;
+  sectorName: string;
+  shares: string;
+  price?: number | null;
+  unitCost: number;
+  totalCost: number;
+  marketValue?: number | null;
+  profit?: number | null;
 };
 
 export type PortfolioState = {
-	portfolio: UserPortfolio[];
-	price: Array<FinnhubTrade>;
+  portfolio: UserPortfolio[];
+};
+
+export type FinnhubTrade = {
+  // symbol
+  s: string;
+  // price
+  p: number;
+  // timestamp
+  t?: number;
+  // volume
+  v?: number;
+  // trade conditions
+  c?: string;
 };

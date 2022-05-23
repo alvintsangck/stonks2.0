@@ -16,23 +16,23 @@ import { CalendarService } from "./services/calendar.service";
 import { CalendarController } from "./controllers/calendar.controller";
 
 export function attachApi(app: Express, io: SocketIO.Server) {
-	let userService = new UserService(knex);
-	let userController = new UserController(userService);
-	let stockService = new StockService(knex);
-	let stockController = new StockController(stockService);
-	let commentService = new CommentService(knex);
-	let commentController = new CommentController(commentService, io);
-	let screenerService = new ScreenerService(knex);
-	let screenerController = new ScreenerController(screenerService);
-	let watchlistService = new WatchlistService(knex);
-	let watchlistController = new WatchlistController(watchlistService);
-	let calendarService = new CalendarService(knex);
-	let calendarController = new CalendarController(calendarService);
+  let stockService = new StockService(knex);
+  let stockController = new StockController(stockService);
+  let userService = new UserService(knex);
+  let userController = new UserController(userService, stockService);
+  let commentService = new CommentService(knex);
+  let commentController = new CommentController(commentService, io);
+  let screenerService = new ScreenerService(knex);
+  let screenerController = new ScreenerController(screenerService);
+  let watchlistService = new WatchlistService(knex);
+  let watchlistController = new WatchlistController(watchlistService);
+  let calendarService = new CalendarService(knex);
+  let calendarController = new CalendarController(calendarService);
 
-	app.use(userController.router);
-	app.use(stockController.router);
-	app.use(commentController.router);
-	app.use(screenerController.router);
-	app.use(calendarController.router);
-	app.use(isLoggedIn, watchlistController.router);
+  app.use(userController.router);
+  app.use(stockController.router);
+  app.use(commentController.router);
+  app.use(screenerController.router);
+  app.use(calendarController.router);
+  app.use(isLoggedIn, watchlistController.router);
 }

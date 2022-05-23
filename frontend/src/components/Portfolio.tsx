@@ -3,36 +3,27 @@ import { Helmet } from "react-helmet";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { Col, Container, Row } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/store/state";
-import { useEffect } from "react";
-import { getPortfolioPriceThunk, getPortfolioThunk } from "../redux/portfolio/thunk";
+import { useEffect, useMemo } from "react";
 import StockTable from "./StockTable";
 import { env } from "../env";
-import { CalcPortfolio, UserPortfolio } from "../redux/portfolio/state";
+import { UserPortfolio } from "../redux/portfolio/state";
 import { commaNumber } from "../helper";
-import { getPortfolioPriceAction } from "../redux/portfolio/action";
 import { useNavigate } from "react-router-dom";
-
-ChartJS.register(ArcElement, Tooltip, Legend);
-
-export type FinnhubTrade = {
-  s: string;
-  p: number;
-  t?: number;
-  v?: number;
-  c?: string;
-};
-
-let prevCalcPortfolio: CalcPortfolio[] = [];
+import { useGetBalanceQuery } from "../redux/auth/api";
+import { updatePortfolioPrice } from "../redux/portfolio/slice";
+import { useAppDispatch, useAppSelector } from "../hook/hooks";
+import { useGetPortfolioQuery } from "../redux/portfolio/api";
 
 export default function Portfolio() {
-  const dispatch = useDispatch();
+  ChartJS.register(ArcElement, Tooltip, Legend);
   const navigate = useNavigate();
-  const portfolio = useSelector((state: RootState) => state.portfolio.portfolio);
-  const deposit = useSelector((state: RootState) => state.auth.balance.deposit);
-  const cash = useSelector((state: RootState) => state.auth.balance.cash);
-  const priceArr = useSelector((state: RootState) => state.portfolio.price);
+  const dispatch = useAppDispatch();
+  const portfolio = useAppSelector((state) => state.portfolio.portfolio);
+  const { data: balance } = useGetBalanceQuery();
+  const cash = balance?.cash ?? 0;
+  const deposit = balance?.deposit ?? 0;
+  useGetPortfolioQuery();
+
   const tableHeadings = [
     "ticker",
     "company",
@@ -45,11 +36,11 @@ export default function Portfolio() {
     "profit/loss%",
   ];
   const ChartData = {
-    labels: portfolio.map((stock) => stock.ticker),
+    labels: portfolio?.map((stock) => stock.ticker),
     datasets: [
       {
         label: "number of shares",
-        data: portfolio.map((stock) => stock.shares),
+        data: portfolio?.map((stock) => stock.shares),
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
           "rgba(54, 162, 235, 0.2)",
@@ -71,21 +62,13 @@ export default function Portfolio() {
     ],
   };
 
-  useEffect(() => {
-    dispatch(getPortfolioThunk() as any);
-    // dispatch(getBalanceThunk());
-  }, [dispatch]);
+  let socket = useMemo(() => new WebSocket(`wss://ws.finnhub.io?token=${env.finnhubKey}`), []);
 
   useEffect(() => {
-    dispatch(getPortfolioPriceThunk(portfolio) as any);
-  }, [dispatch, portfolio]);
-
-  useEffect(() => {
-    const socket = new WebSocket(`wss://ws.finnhub.io?token=${env.finnhubKey}`);
-    if (portfolio.length > 0) {
+    if (portfolio) {
       socket.addEventListener("open", (e) => {
         for (let stock of portfolio) {
-          if (stock?.sectorName?.toLowerCase() === "crypto".toLowerCase()) {
+          if (stock.sectorName.toLowerCase() === "crypto".toLowerCase()) {
             socket.send(JSON.stringify({ type: "subscribe", symbol: `BINANCE:${stock.ticker}USDT` }));
           } else {
             socket.send(JSON.stringify({ type: "subscribe", symbol: stock.ticker }));
@@ -97,71 +80,38 @@ export default function Portfolio() {
         const data = JSON.parse(e.data);
         if (data.data) {
           const trades = data.data;
-          if (prevCalcPortfolio.length > 0) {
-            // setTimeout(() => {
-            dispatch(getPortfolioPriceAction(trades));
-            // }, 3000);
-          }
+          dispatch(updatePortfolioPrice(trades));
         }
       });
+
+      socket.addEventListener("error", (e) => {});
     }
+
     return () => {
-      for (let stock of portfolio) {
-        socket.addEventListener("open", () => {
-          if (stock?.sectorName?.toLowerCase() === "crypto".toLowerCase()) {
-            socket.send(JSON.stringify({ type: "unsubscribe", symbol: `BINANCE:${stock.ticker}USDT` }));
-          } else {
-            socket.send(JSON.stringify({ type: "unsubscribe", symbol: stock.ticker }));
-          }
-        });
+      if (portfolio) {
+        for (let stock of portfolio) {
+          socket.addEventListener("open", () => {
+            if (stock?.sectorName?.toLowerCase() === "crypto".toLowerCase()) {
+              socket.send(JSON.stringify({ type: "unsubscribe", symbol: `BINANCE:${stock.ticker}USDT` }));
+            } else {
+              socket.send(JSON.stringify({ type: "unsubscribe", symbol: stock.ticker }));
+            }
+          });
+        }
+        if (socket.CONNECTING) {
+          socket.close();
+        }
       }
-      socket.close();
     };
-  }, [dispatch, portfolio]);
+  }, [dispatch, portfolio, socket]);
 
-  function mapPortfolio(portfolio: UserPortfolio[]) {
-    let arr = [];
-    for (let i = 0; i < portfolio.length; i++) {
-      const price = priceArr.find((stock) => stock?.s.includes(portfolio[i].ticker));
-
-      if (price) {
-        const marketValue = Number(portfolio[i].shares) * price.p;
-        const profit = marketValue - Number(portfolio[i].totalCost);
-        arr.push({
-          ticker: portfolio[i].ticker,
-          name: portfolio[i].name,
-          shares: Number(portfolio[i].shares),
-          price: price.p,
-          avgCost: Number(portfolio[i].totalCost) / Number(portfolio[i].shares),
-          totalCost: portfolio[i].totalCost,
-          marketValue,
-          profit,
-        });
-      } else {
-        arr.push({
-          ticker: portfolio[i].ticker,
-          name: portfolio[i].name,
-          price: prevCalcPortfolio.length ? prevCalcPortfolio[i].price : null,
-          shares: Number(portfolio[i].shares),
-          avgCost: Number(portfolio[i].totalCost) / Number(portfolio[i].shares),
-          totalCost: portfolio[i].totalCost,
-          marketValue: prevCalcPortfolio.length ? prevCalcPortfolio[i].marketValue : null,
-          profit: prevCalcPortfolio.length ? prevCalcPortfolio[i].profit : null,
-        });
-      }
-    }
-    return arr;
-  }
-
-  const calcPortfolio: CalcPortfolio[] = mapPortfolio(portfolio);
-  prevCalcPortfolio = calcPortfolio;
-  const profit = calcPortfolio.map((stock) => stock.profit).reduce((prev, next) => Number(prev) + Number(next), 0);
-  const marketValue = calcPortfolio
-    .map((stock) => stock.marketValue)
+  const profit = portfolio?.map((stock) => stock.profit).reduce((prev, next) => Number(prev) + Number(next), 0);
+  const marketValue = portfolio
+    ?.map((stock) => stock.marketValue)
     .reduce((prev, next) => Number(prev) + Number(next), 0);
 
-  function mapPortfolioTable(stock: CalcPortfolio, i: number) {
-    const { price, profit, marketValue, ticker, name, shares, avgCost, totalCost } = stock;
+  function mapPortfolioTable(stock: UserPortfolio, i: number) {
+    const { price, profit, marketValue, ticker, name, shares, unitCost, totalCost } = stock;
     const profitPercent = (Number(stock.profit) / Number(marketValue)) * 100;
     const isPriceZero = Number(price) === 0;
 
@@ -171,7 +121,7 @@ export default function Portfolio() {
         <td>{name}</td>
         <td>{isPriceZero ? "calculating" : commaNumber(Number(price))}</td>
         <td>{shares}</td>
-        <td>{avgCost.toFixed(2)}</td>
+        <td>{unitCost.toFixed(2)}</td>
         <td>{totalCost.toFixed(2)}</td>
         <td>{isPriceZero ? "calculating" : commaNumber(Number(marketValue))}</td>
         <td className={""}>{isPriceZero ? "calculating" : commaNumber(Number(profit))}</td>
@@ -179,7 +129,7 @@ export default function Portfolio() {
       </tr>
     );
   }
-  const portfolioTable = calcPortfolio.map(mapPortfolioTable);
+  const portfolioTable = portfolio?.map(mapPortfolioTable);
   return (
     <>
       <Helmet>
@@ -210,10 +160,6 @@ export default function Portfolio() {
               Cash
               <span className="accumulate-percentage brief-value">{"$" + commaNumber(cash)}</span>
             </div>
-            <div className="accu-percent brief-info">
-              Total Account Value
-              <span className="accumulate-percentage brief-value">{"$" + commaNumber(cash + Number(marketValue))}</span>
-            </div>
             <div className="button-container">
               <button className="stonk-btn" onClick={() => navigate("/transfer/deposit")}>
                 Deposit
@@ -231,7 +177,7 @@ export default function Portfolio() {
         <StockTable
           headings={tableHeadings}
           contents={
-            calcPortfolio.length > 0 ? (
+            portfolioTable ? (
               portfolioTable
             ) : (
               <tr className="loading-container">

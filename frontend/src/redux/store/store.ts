@@ -1,6 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { authSlice } from "../auth/slice";
-import { portfolioReducer } from "../portfolio/reducer";
 import { screenerReducer } from "../screener/reducer";
 import { stockReducer } from "../stock/reducer";
 import { watchlistReducer } from "../watchlist/reducer";
@@ -8,7 +7,7 @@ import { themeSlice } from "../theme/slice";
 import { metaMaskSlice } from "../metaMask/slice";
 import { newsApi } from "../news/api";
 import { emptyApi } from "../api";
-import { calendarApi } from "../calendar/api";
+import { portfolioSlice } from "../portfolio/slice";
 
 export const store = configureStore({
   reducer: {
@@ -20,8 +19,7 @@ export const store = configureStore({
     theme: themeSlice.reducer,
     metaMask: metaMaskSlice.reducer,
     watchlist: watchlistReducer,
-    portfolio: portfolioReducer,
-    [calendarApi.reducerPath]: calendarApi.reducer,
+    portfolio: portfolioSlice.reducer,
   },
   middleware: (getMiddleware) => getMiddleware().concat(emptyApi.middleware, newsApi.middleware),
 });
