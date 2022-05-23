@@ -2,11 +2,11 @@ image: node:lts
 
 stages:
     - server-testing
-    - react-testing
+    # - react-testing
     - server-build
-    - react-build
+    # - react-build
     - server-deploy
-    - react-deploy
+    # - react-deploy
 
 variables:
     POSTGRES_DB: stonks-test
@@ -29,15 +29,15 @@ server-testing:
     script:
         - yarn test
 
-react-testing:
-    only:
-        - production
-    before_script:
-        - cd frontend
-        - yarn install
-    stage: react-testing
-    script:
-        - CI=true yarn test
+# react-testing:
+#     only:
+#         - production
+#     before_script:
+#         - cd frontend
+#         - yarn install
+#     stage: react-testing
+#     script:
+#         - CI=true yarn test
 
 server-build:
     only:
@@ -54,18 +54,18 @@ server-build:
         - docker tag stonks:$IMAGE_TAG $REPOSITORY_URL:$IMAGE_TAG
         - docker push $REPOSITORY_URL:$IMAGE_TAG
 
-react-build:
-    only:
-        - production
-    stage: react-build
-    before_script:
-        - cd frontend/
-    script:
-        - yarn install
-        - yarn build
-    artifacts:
-        paths:
-            - frontend/build
+# react-build:
+#     only:
+#         - production
+#     stage: react-build
+#     before_script:
+#         - cd frontend/
+#     script:
+#         - yarn install
+#         - yarn build
+#     artifacts:
+#         paths:
+#             - frontend/build
 
 server-deploy:
     before_script:
@@ -88,15 +88,15 @@ server-deploy:
           docker-compose down;
           docker-compose up -d;"
 
-react-deploy:
-    image: "python:3.6"
-    stage: react-deploy
-    before_script:
-        - pip install awscli
-    dependencies:
-        - react-build
-    only:
-        - production
-    script:
-        - aws s3 sync frontend/build s3://${BUCKET_NAME} --delete
-        - aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION} --paths "/*"
+# react-deploy:
+#     image: "python:3.6"
+#     stage: react-deploy
+#     before_script:
+#         - pip install awscli
+#     dependencies:
+#         - react-build
+#     only:
+#         - production
+#     script:
+#         - aws s3 sync frontend/build s3://${BUCKET_NAME} --delete
+#         - aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION} --paths "/*"
