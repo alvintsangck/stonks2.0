@@ -37,8 +37,7 @@ export default function Watchlist() {
         dispatch(getWatchlistThunk(currentWatchlistId) as any);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, watchlists]);
+  }, [currentWatchlistId, dispatch, watchlists]);
 
   useEffect(() => {
     if (watchlists.length === 1 && currentWatchlistId !== watchlists[0].id) {

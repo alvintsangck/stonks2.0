@@ -22,6 +22,7 @@ export default function LoginForm() {
     if (data.username && data.password) {
       login({ username: data.username, password: data.password });
       if (result.isSuccess) {
+        localStorage.setItem('token', result.data)
         navigate("/portfolio");
       }
     } else {

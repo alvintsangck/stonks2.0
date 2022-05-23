@@ -27,7 +27,7 @@ export default function DefaultContainer() {
         <Routes>
           <Route path="stocks/:ticker" element={<Stock />} />
           <Route element={<PrivateRoute />}>
-            <Route path="watchlist/:watchlistId?" element={<Watchlist />} />
+            <Route path="watchlist/:watchlistId" element={<Watchlist />} />
             <Route path="portfolio" element={<Portfolio />} />
             <Route path="transfer/:method" element={<Transfer />} />
             <Route path="transfer" element={<Navigate replace to="/transfer/deposit" />} />
@@ -35,7 +35,7 @@ export default function DefaultContainer() {
           <Route path="screener" element={<Screener />} />
           <Route path="dashboard" element={<PowerBI />} />
           <Route path="calendar" element={<Calendar />} />
-          <Route path="" element={<Home />} />
+          <Route index element={<Home />} />
           <Route path="*" element={<NoMatch />} />
         </Routes>
       </main>

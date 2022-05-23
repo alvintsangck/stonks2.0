@@ -29,7 +29,11 @@ function Sidebar({ lists, currentListId }: Props) {
         {lists.length > 0 &&
           lists.map((list) => (
             <div key={list.id} className={list.id === currentListId ? "selected" : ""}>
-              <div onClick={() => dispatch(getWatchlistThunk(list.id) as any)}>
+              <div onClick={() => {
+                console.log(list.id);
+                
+                dispatch(getWatchlistThunk(list.id) as any)
+                navigate(`/wachlist/${list.id}`)}}>
                 <span>{list.name}</span>
               </div>
               <div>

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { Form, Offcanvas } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { env } from "../env";
-import { getSharesThunk } from "../redux/stock/thunk";
-import { RootState } from "../redux/store/state";
+import { useAppSelector } from "../hook/hooks";
+import { useGetBalanceQuery } from "../redux/auth/api";
+import { buyStockThunk, getSharesThunk } from "../redux/stock/thunk";
 import { defaultErrorSwal } from "./ReactSwal";
 
 type Props = {
@@ -18,19 +19,21 @@ export type BuyFormState = {
 
 export default function BuyOffcanvas({ setIsShow }: Props) {
   const dispatch = useDispatch();
-  const theme = useSelector((state: RootState) => state.theme.theme);
-  const user = useSelector((state: RootState) => state.auth.user);
-  const cash = useSelector((state: RootState) => state.auth.balance.cash);
-  const stock = useSelector((state: RootState) => state.stock.stock);
-  const shares = useSelector((state: RootState) => state.stock.shares);
+  const theme = useAppSelector((state) => state.theme.theme);
+  const user = useAppSelector((state) => state.auth.user);
+  const stock = useAppSelector((state) => state.stock.stock);
+  const shares = useAppSelector((state) => state.stock.shares);
   const { ticker } = useParams<{ ticker: string }>();
   const [price, setPrice] = useState(0);
   const { register, handleSubmit, setValue, watch, reset } = useForm<BuyFormState>({ defaultValues: { shares: 0 } });
   const hideOffcanvas = () => setIsShow(false);
+  const { data: balance } = useGetBalanceQuery();
+  const cash = balance?.cash ?? 0;
 
   function onSubmit(data: BuyFormState) {
     if (data.shares * price > cash) defaultErrorSwal("Not enough cash");
     if (data.shares > 0) {
+      dispatch(buyStockThunk(ticker ? ticker : "", data.shares, price) as any);
       reset();
     }
   }
@@ -107,7 +110,7 @@ export default function BuyOffcanvas({ setIsShow }: Props) {
           <span>{stock?.name}</span>
         </div>
         <h3>{price.toFixed(2)}</h3>
-        <div>Cash BP: ${cash.toFixed(2)}</div>
+        <div>Cash BP: ${cash}</div>
         <div>You own: {shares}</div>
         <span>QUANTITY</span>
         <div className="input-row">
