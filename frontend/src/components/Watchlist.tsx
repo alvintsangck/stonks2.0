@@ -1,26 +1,26 @@
+import "../css/Watchlist.css";
 import { Helmet } from "react-helmet";
 import { Col, Container, Row } from "react-bootstrap";
 import Sidebar from "./Sidebar";
 import AddForm from "./AddForm";
-import "../css/Watchlist.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { addStockThunk, deleteStockThunk, getAllWatchlistsThunk, getWatchlistThunk } from "../redux/watchlist/thunk";
-import { RootState } from "../redux/store/state";
 import StockTable from "./StockTable";
 import { useNavigate, useParams } from "react-router-dom";
 import { Stock } from "../redux/stock/state";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { useAppSelector } from "../hook/hooks";
 
 export default function Watchlist() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const watchlists = useSelector((state: RootState) => state.watchlist.watchlists);
-  const stocks = useSelector((state: RootState) => state.watchlist.stocks);
-  const isLoading = useSelector((state: RootState) => state.watchlist.isLoading);
+  const watchlists = useAppSelector((state) => state.watchlist.watchlists);
+  const stocks = useAppSelector((state) => state.watchlist.stocks);
+  const isLoading = useAppSelector((state) => state.watchlist.isLoading);
   const currentWatchlistId: number = Number(useParams<{ watchlistId: string }>().watchlistId);
   const currentWatchlistName = watchlists.find((watchlist) => watchlist.id === currentWatchlistId)?.name || "";
   const tableHeadings = ["Ticker", "Company Name", "Price", "Change", "Change %", ""];
@@ -33,11 +33,13 @@ export default function Watchlist() {
     if (watchlists.length > 0) {
       if (Number.isNaN(currentWatchlistId)) {
         dispatch(getWatchlistThunk(watchlists[0].id) as any);
+        navigate(`/watchlist/${watchlists[0].id}`)
       } else {
         dispatch(getWatchlistThunk(currentWatchlistId) as any);
       }
     }
-  }, [currentWatchlistId, dispatch, watchlists]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, watchlists]);
 
   useEffect(() => {
     if (watchlists.length === 1 && currentWatchlistId !== watchlists[0].id) {

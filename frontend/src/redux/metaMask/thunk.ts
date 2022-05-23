@@ -145,11 +145,13 @@ export function withdrawalThunk(account: string, cash: string, reset: UseFormRes
             // dispatch(apiFailedAction(result.error));
           } else {
             reset();
+
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             const balance = await contract.balanceOf(await signer.getAddress());
             const calculatedBalance = ethers.utils.formatEther(balance);
             dispatch(getToken(Number(calculatedBalance)));
+
             dispatch(getCash(result.cash));
             defaultSuccessSwal(`Withdraw successful`);
           }

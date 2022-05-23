@@ -27,6 +27,7 @@ export default function DefaultContainer() {
         <Routes>
           <Route path="stocks/:ticker" element={<Stock />} />
           <Route element={<PrivateRoute />}>
+            <Route path="watchlist" element={<Watchlist />} />
             <Route path="watchlist/:watchlistId" element={<Watchlist />} />
             <Route path="portfolio" element={<Portfolio />} />
             <Route path="transfer/:method" element={<Transfer />} />
