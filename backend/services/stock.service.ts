@@ -1,11 +1,11 @@
 import { Knex } from "knex";
 import { camelCaseKeys } from "../util/helper";
-import { HttpError, Stock } from "../util/models";
+import { Stock } from "../util/models";
 
 export class StockService {
   constructor(private knex: Knex) {}
 
-  async getStockInfo(ticker: string): Promise<Stock> {
+  async getStockInfo(ticker: string): Promise<Stock | undefined> {
     const stockArr: Stock[] = camelCaseKeys(
       await this.knex("stocks as s")
         .select("s.id", "s.ticker", "s.name", "sp.price", "se.name as sector_name", "i.name as industry_name")
@@ -18,7 +18,7 @@ export class StockService {
     );
 
     if (stockArr.length === 0) {
-      throw new HttpError(400, "Stock not found");
+      return;
     } else if (stockArr.length === 1) {
       return stockArr[0];
     }

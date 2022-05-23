@@ -22,7 +22,7 @@ export class StockController {
     if (!ticker.match(/[a-zA-z]/g)) throw new HttpError(400, "Invalid ticker");
     const stock = await this.stockService.getStockInfo(ticker);
 
-    if (stock === null) throw new HttpError(400, "Stock not found");
+    if (!stock) throw new HttpError(400, "Stock not found");
     return stock;
   };
 
@@ -57,6 +57,7 @@ export class StockController {
     if (!ticker.match(/[a-zA-z]/g)) throw new HttpError(400, "Invalid ticker");
 
     const stock = await this.stockService.getStockInfo(ticker);
+    if (!stock) throw new HttpError(400, "Stock not found");
 
     const shares = Number(req.body.shares);
     if (Number.isNaN(shares) || shares <= 0) throw new HttpError(400, "Share number must be positive");
@@ -85,6 +86,7 @@ export class StockController {
     if (!ticker.match(/[a-zA-z]/g)) throw new HttpError(400, "Invalid ticker");
 
     const stock = await this.stockService.getStockInfo(ticker);
+    if (!stock) throw new HttpError(400, "Stock not found");
 
     const shares = Number(req.body.shares);
     if (Number.isNaN(shares) || shares <= 0) throw new HttpError(400, "Share number must be positive");

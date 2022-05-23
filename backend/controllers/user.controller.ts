@@ -132,6 +132,8 @@ export class UserController {
     const portfolio = await this.userService.getUserPortfolio(user.id);
     for (let userStock of portfolio) {
       const stock = await this.stockService.getStockInfo(userStock.ticker);
+      if (!stock) throw new HttpError(400, "Stock not found");
+
       const shares = Number(userStock.shares);
       const totalCost = Number(userStock.totalCost);
       userStock.shares = shares;
