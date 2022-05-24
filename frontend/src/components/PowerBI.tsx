@@ -13,7 +13,7 @@ export default function PowerBI() {
           title="stonks dashboard - treasury rates"
           width="100%"
           height="800px"
-          src="https://app.powerbi.com/view?r=eyJrIjoiZDJjMmUwNDMtOGNiYi00ZjYxLThhOWMtYzBlNDIxNjM3ZWI2IiwidCI6IjFjZmJiZDYwLTI1ZjAtNDU1YS05NzZmLWRmYzRkMTcyYjViOSIsImMiOjEwfQ%3D%3D"
+          src="https://app.powerbi.com/view?r=eyJrIjoiMjVkYjE0ZjEtOTY0Yy00ZThkLWIyNTYtMDY0Njc4YzI0NzRmIiwidCI6ImNhYjQzNjA3LWI1MjEtNDZhZi04NTJkLWVkM2UxZDFkZDVjYSIsImMiOjEwfQ%3D%3D"
           frameBorder="0"
           allowFullScreen={true}
         />
