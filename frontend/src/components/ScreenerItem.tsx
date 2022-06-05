@@ -2,57 +2,50 @@ import "../css/ScreenerItem.css";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ButtonGroup, Col, Form, ListGroup, Row, ToggleButton } from "react-bootstrap";
-import { Dispatch, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/store/state";
-import { getIndustriesThunk, getSectorsThunk } from "../redux/screener/thunk";
-import { addItemAction, removeItemAction, resetItemAction } from "../redux/screener/action";
-import { Item } from "../redux/screener/state";
+import { Dispatch } from "react";
+import { Item, ScreenerItemOptions, ScreenerStateKey } from "../redux/screener/state";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { useGetIndustriesQuery, useGetSectorsQuery } from "../redux/screener/api";
+import { useAppDispatch, useAppSelector } from "../hook/hooks";
+import { addItem, removeItem, resetItem } from "../redux/screener/slice";
 
 type Props = {
-  radioIndustry: string;
-  radioSector: string;
-  setRadioIndustry: Dispatch<string>;
-  setRadioSector: Dispatch<string>;
+  radioIndustry: ScreenerItemOptions;
+  radioSector: ScreenerItemOptions;
+  setRadioIndustry: Dispatch<ScreenerItemOptions>;
+  setRadioSector: Dispatch<ScreenerItemOptions>;
 };
 
 export default function ScreenerItem({ radioIndustry, radioSector, setRadioIndustry, setRadioSector }: Props) {
-  const dispatch = useDispatch();
-  const sectors = useSelector((state: RootState) => state.screener.sectors);
-  const industries = useSelector((state: RootState) => state.screener.industries);
-  const addedSectors = useSelector((state: RootState) => state.screener.addedSectors);
-  const addedIndustries = useSelector((state: RootState) => state.screener.addedIndustries);
+  const dispatch = useAppDispatch();
+  const { data: sectors } = useGetSectorsQuery();
+  const { data: industries } = useGetIndustriesQuery();
+  const addedSectors = useAppSelector((state) => state.screener.addedSectors);
+  const addedIndustries = useAppSelector((state) => state.screener.addedIndustries);
   const radioButtons = [
-    { value: "include", className: "outline-success" },
-    { value: "exclude", className: "outline-danger" },
+    { value: ScreenerItemOptions.Include, className: "outline-success" },
+    { value: ScreenerItemOptions.Exclude, className: "outline-danger" },
   ];
 
   function addSector(sector: Item) {
     if (addedSectors.filter((addedSector) => addedSector.id === sector.id).length === 0)
-      dispatch(addItemAction("addedSectors", sector, radioSector));
+      dispatch(addItem({ key: ScreenerStateKey.AddedSectors, item: sector, value: radioSector }));
   }
 
   function addIndustry(industry: Item) {
     if (addedIndustries.filter((addedIndustry) => addedIndustry.id === industry.id).length === 0)
-      dispatch(addItemAction("addedIndustries", industry, radioIndustry));
+      dispatch(addItem({ key: ScreenerStateKey.AddedIndustries, item: industry, value: radioIndustry }));
   }
 
   function resetSector(e: any) {
-    setRadioSector("include");
-    dispatch(resetItemAction("addedSectors"));
+    setRadioSector(ScreenerItemOptions.Include);
+    dispatch(resetItem(ScreenerStateKey.AddedSectors));
   }
 
   function resetIndustry(e: any) {
-    setRadioIndustry("include");
-    dispatch(resetItemAction("addedIndustries"));
+    setRadioIndustry(ScreenerItemOptions.Include);
+    dispatch(resetItem(ScreenerStateKey.AddedIndustries));
   }
-
-  useEffect(() => {
-    dispatch(getIndustriesThunk() as any);
-    dispatch(getSectorsThunk() as any);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <Row>
@@ -80,7 +73,7 @@ export default function ScreenerItem({ radioIndustry, radioSector, setRadioIndus
         </div>
         <Form.Group className="screener-items">
           <ListGroup className="screen-list">
-            {sectors.map((sector) => (
+            {sectors?.map((sector) => (
               <ListGroup.Item key={sector.id} onClick={() => addSector(sector)}>
                 {sector.name}
               </ListGroup.Item>
@@ -92,7 +85,7 @@ export default function ScreenerItem({ radioIndustry, radioSector, setRadioIndus
               <ListGroup.Item
                 key={i}
                 variant={sector.isInclude ? "success" : "danger"}
-                onClick={() => dispatch(removeItemAction(sector, "addedSectors"))}
+                onClick={() => dispatch(removeItem({ key: ScreenerStateKey.AddedSectors, item: sector }))}
               >
                 {sector.name}
               </ListGroup.Item>
@@ -124,7 +117,7 @@ export default function ScreenerItem({ radioIndustry, radioSector, setRadioIndus
         </div>
         <Form.Group className="screener-items">
           <ListGroup className="screen-list">
-            {industries.map((industry) => (
+            {industries?.map((industry) => (
               <ListGroup.Item key={industry.id} onClick={() => addIndustry(industry)}>
                 {industry.name}
               </ListGroup.Item>
@@ -136,7 +129,7 @@ export default function ScreenerItem({ radioIndustry, radioSector, setRadioIndus
               <ListGroup.Item
                 key={i}
                 variant={industry.isInclude ? "success" : "danger"}
-                onClick={() => dispatch(removeItemAction(industry, "addedIndustries"))}
+                onClick={() => dispatch(removeItem({ key: ScreenerStateKey.AddedIndustries, item: industry }))}
               >
                 {industry.name}
               </ListGroup.Item>

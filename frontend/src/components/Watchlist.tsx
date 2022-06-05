@@ -17,10 +17,8 @@ import { useAppSelector } from "../hook/hooks";
 export default function Watchlist() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const watchlists = useAppSelector((state) => state.watchlist.watchlists);
   const stocks = useAppSelector((state) => state.watchlist.stocks);
-  const isLoading = useAppSelector((state) => state.watchlist.isLoading);
   const currentWatchlistId: number = Number(useParams<{ watchlistId: string }>().watchlistId);
   const currentWatchlistName = watchlists.find((watchlist) => watchlist.id === currentWatchlistId)?.name || "";
   const tableHeadings = ["Ticker", "Company Name", "Price", "Change", "Change %", ""];
@@ -65,7 +63,7 @@ export default function Watchlist() {
           </Col>
           <Col md={9}>
             <AddForm name={currentWatchlistName} placeholder="stock" onAdd={addStock} />
-            <StockTable headings={tableHeadings} contents={watchlistTable} isLoading={isLoading} />
+            <StockTable headings={tableHeadings} contents={watchlistTable} />
           </Col>
         </Row>
       </Container>

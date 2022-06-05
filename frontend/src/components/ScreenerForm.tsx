@@ -1,14 +1,13 @@
 import "../css/ScreenerForm.css";
 import { Form, Row, Col } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { loadScreenResultThunk } from "../redux/screener/thunk";
-import { RootState } from "../redux/store/state";
-import { resetScreenerAction } from "../redux/screener/action";
 import ScreenerItem from "./ScreenerItem";
 import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../hook/hooks";
+import { IScreener, ScreenerItemOptions } from "../redux/screener/state";
+import { resetScreenerForm } from "../redux/screener/slice";
 
-export type FormState = {
+export type ScreenerFormState = {
   minPrice: number;
   maxPrice: number;
   minWeekPercent: number;
@@ -30,13 +29,17 @@ type Input = {
   max: number;
 };
 
-export default function ScreenerForm() {
-  const dispatch = useDispatch();
-  const addedIndustries = useSelector((state: RootState) => state.screener.addedIndustries);
-  const addedSectors = useSelector((state: RootState) => state.screener.addedSectors);
-  const stocks = useSelector((state: RootState) => state.screener.stocks);
-  const [radioSector, setRadioSector] = useState("include");
-  const [radioIndustry, setRadioIndustry] = useState("include");
+type Props = {
+  loadScreener: Function;
+  stocks: IScreener[] | undefined;
+};
+
+export default function ScreenerForm({ loadScreener, stocks }: Props) {
+  const dispatch = useAppDispatch();
+  const addedIndustries = useAppSelector((state) => state.screener.addedIndustries);
+  const addedSectors = useAppSelector((state) => state.screener.addedSectors);
+  const [radioSector, setRadioSector] = useState(ScreenerItemOptions.Include);
+  const [radioIndustry, setRadioIndustry] = useState(ScreenerItemOptions.Include);
   const defaultValues = {
     minPrice: 0,
     maxPrice: 1000000,
@@ -51,7 +54,7 @@ export default function ScreenerForm() {
     minIndustryRank: 1,
     maxIndustryRank: 197,
   };
-  const { register, handleSubmit, reset, setValue, watch } = useForm<FormState>({ defaultValues });
+  const { register, handleSubmit, reset, setValue, watch } = useForm<ScreenerFormState>({ defaultValues });
   const inputsArr: Input[][] = [
     [
       { title: "Price ($)", name: "price", min: 0, max: 1000000 },
@@ -65,16 +68,23 @@ export default function ScreenerForm() {
     ],
   ];
 
-  function onSubmit(data: FormState) {
-    dispatch(loadScreenResultThunk(data, addedIndustries, addedSectors) as any);
+  function onSubmit(data: ScreenerFormState) {
+    const body = {
+      ...data,
+      includedIndustry: addedIndustries.filter((item) => item.isInclude).map((item) => item.id),
+      excludedIndustry: addedIndustries.filter((item) => !item.isInclude).map((item) => item.id),
+      includedSector: addedSectors.filter((item) => item.isInclude).map((item) => item.id),
+      excludedSector: addedSectors.filter((item) => !item.isInclude).map((item) => item.id),
+    };
+    loadScreener(body);
   }
 
   function validateValue(e: any) {
-    const name = e.target.name as keyof FormState;
+    const name = e.target.name as keyof ScreenerFormState;
     const value = Number(e.target.value);
     const key = name.substring(3);
-    const minKey = ("min" + key) as keyof FormState;
-    const maxKey = ("max" + key) as keyof FormState;
+    const minKey = ("min" + key) as keyof ScreenerFormState;
+    const maxKey = ("max" + key) as keyof ScreenerFormState;
     const minValue = watch(minKey);
     const maxValue = watch(maxKey);
     if (value <= defaultValues[minKey]) setValue(name, defaultValues[minKey]);
@@ -85,9 +95,9 @@ export default function ScreenerForm() {
 
   function resetForm() {
     reset();
-    dispatch(resetScreenerAction());
-    setRadioSector("include");
-    setRadioIndustry("include");
+    dispatch(resetScreenerForm());
+    setRadioSector(ScreenerItemOptions.Include);
+    setRadioIndustry(ScreenerItemOptions.Include);
   }
 
   return (
@@ -101,7 +111,7 @@ export default function ScreenerForm() {
                   <h4>{title}</h4>
                   <div>
                     <Form.Control
-                      {...register(`min${name[0].toUpperCase() + name.substring(1)}` as keyof FormState, {
+                      {...register(`min${name[0].toUpperCase() + name.substring(1)}` as keyof ScreenerFormState, {
                         valueAsNumber: true,
                       })}
                       type="number"
@@ -112,7 +122,7 @@ export default function ScreenerForm() {
                     />
                     <span>to</span>
                     <Form.Control
-                      {...register(`max${name[0].toUpperCase() + name.substring(1)}` as keyof FormState, {
+                      {...register(`max${name[0].toUpperCase() + name.substring(1)}` as keyof ScreenerFormState, {
                         valueAsNumber: true,
                       })}
                       type="number"
@@ -136,7 +146,7 @@ export default function ScreenerForm() {
       />
       <Row className="screen-result">
         <Col xs={6}>
-          <h4>Number of stocks found: {stocks.length}</h4>
+          <h4>Number of stocks found: {stocks ? stocks.length : 0}</h4>
         </Col>
         <Col xs={4}>
           <button type="submit" className="stonk-btn result-btn" form="screener-form">

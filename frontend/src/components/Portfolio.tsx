@@ -185,7 +185,6 @@ export default function Portfolio() {
               </tr>
             )
           }
-          isLoading={false}
         />
       </Container>
     </>

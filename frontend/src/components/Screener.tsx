@@ -4,12 +4,12 @@ import StockTable from "./StockTable";
 import ScreenerForm from "./ScreenerForm";
 import { IScreener } from "../redux/screener/state";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../hook/hooks";
+import { useLoadScreenerMutation } from "../redux/screener/api";
 
 export default function Screener() {
   const navigate = useNavigate();
-  const stocks = useAppSelector((state) => state.screener.stocks);
-  const isLoading = useAppSelector((state) => state.screener.isLoading);
+  const [loadScreener, result] = useLoadScreenerMutation();
+  const stocks = result.data;
   const tableHeadings: string[] = [
     "TICKER",
     "COMPANY",
@@ -47,17 +47,18 @@ export default function Screener() {
       </tr>
     );
   }
-  const screenerTable = stocks.map(mapStockTable);
+  const screenerTable = stocks ? stocks.map(mapStockTable) : <></>;
+
   return (
     <>
       <Helmet>
         <title>Screener | Stonks</title>
       </Helmet>
       <Container>
-        <ScreenerForm />
+        <ScreenerForm loadScreener={loadScreener} stocks={stocks} />
       </Container>
       <Container fluid>
-        <StockTable headings={tableHeadings} contents={screenerTable} isLoading={isLoading} />
+        <StockTable headings={tableHeadings} contents={screenerTable} />
       </Container>
     </>
   );
