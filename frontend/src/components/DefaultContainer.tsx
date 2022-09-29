@@ -9,10 +9,10 @@ import Portfolio from "./Portfolio";
 import PowerBI from "./PowerBI";
 import PrivateRoute from "./PrivateRoute";
 import Screener from "./Screener";
-import Stock from "./Stock";
+import Stock from "./stock/Stock";
 import NavBar from "./TopNavbar";
 import Transfer from "./Transfer";
-import Watchlist from "./Watchlist";
+import Watchlist from "./watchlist/Watchlist";
 
 export default function DefaultContainer() {
   const theme = useAppSelector((state) => state.theme.theme);

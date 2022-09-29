@@ -1,16 +1,16 @@
+import fetch from "cross-fetch";
+import crypto from "crypto";
 import express, { Request, Response } from "express";
+import jwtSimple from "jwt-simple";
+import { isLoggedIn } from "../middlewares/guard";
+import { StockService } from "../services/stock.service";
 import { UserService } from "../services/user.service";
 import { checkPassword, hashPassword } from "../util/hash";
-import { HttpError, Portfolio, User } from "../util/models";
-import { multerSingle } from "../util/multer";
-import { isLoggedIn } from "../middlewares/guard";
-import crypto from "crypto";
-import { logger } from "../util/logger";
 import { getUser, wrapControllerMethod } from "../util/helper";
 import jwt from "../util/jwt";
-import jwtSimple from "jwt-simple";
-import fetch from "cross-fetch";
-import { StockService } from "../services/stock.service";
+import { logger } from "../util/logger";
+import { HttpError, Portfolio, User } from "../util/models";
+import { multerSingle } from "../util/multer";
 
 export class UserController {
   constructor(private userService: UserService, private stockService: StockService) {
@@ -150,11 +150,12 @@ export class UserController {
     return { portfolio };
   };
 
-  getBalance = async (req: Request) => {
+  getBalance = async (req: Request): Promise<{ deposit: number; cash: number }> => {
     const user = getUser(req);
 
     const { deposit, cash } = await this.userService.getBalance(user.id);
-    return { deposit, cash };
+
+    return { deposit: Number(deposit), cash: Number(cash) };
   };
 
   deposit = async (req: Request) => {

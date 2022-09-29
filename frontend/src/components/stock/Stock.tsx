@@ -1,33 +1,19 @@
-import "../css/Stock.css";
 import { Col, Container, Row } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/store/state";
-import { useParams } from "react-router-dom";
-import StockButtons from "./StockButtons";
 import { Helmet } from "react-helmet";
-import { useEffect } from "react";
-import { getCommentsThunk, getStockNewsThunk, getStockThunk } from "../redux/stock/thunk";
-import { localTime } from "../helper";
-import Comments from "./Comments";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import { AdvancedChart, FundamentalData, SymbolInfo } from "react-tradingview-embed";
+import "../../css/Stock.css";
+import { localTime } from "../../helper";
+import { useGetStockNewsQuery } from "../../redux/stock/api";
+import { RootState } from "../../redux/store/state";
+import Comments from "../comment/Comments";
+import StockButtons from "./StockButtons";
 
 export default function Stock() {
-  const dispatch = useDispatch();
   const theme = useSelector((state: RootState) => state.theme.theme);
-  const stock = useSelector((state: RootState) => state.stock.stock);
-  const news = useSelector((state: RootState) => state.stock.news);
-  const { ticker } = useParams<{ ticker: string }>();
-
-  useEffect(() => {
-    dispatch(getStockThunk(ticker ? ticker : "") as any);
-    dispatch(getStockNewsThunk(ticker ? ticker : "") as any);
-  }, [dispatch, ticker]);
-
-  useEffect(() => {
-    if (stock) {
-      dispatch(getCommentsThunk(stock.id) as any);
-    }
-  }, [dispatch, stock]);
+  const ticker = useParams<{ ticker: string }>().ticker ?? "";
+  const { data: news } = useGetStockNewsQuery(ticker);
 
   return (
     <>
@@ -62,7 +48,7 @@ export default function Stock() {
             <div className="news-container">
               <h3>News</h3>
               <div className="news-section">
-                {news.map((news) => (
+                {news?.map((news) => (
                   <div className="news-wrap" key={news.uuid}>
                     <div className="news-title">
                       <a href={news.link}>{news.title}</a>

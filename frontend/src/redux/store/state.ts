@@ -1,21 +1,13 @@
 import { AuthState } from "../auth/state";
-import { ThemeState } from "../theme/state";
-import { PortfolioState } from "../portfolio/state";
-import { WatchlistState } from "../watchlist/state";
-import { NewsState } from "../news/state";
-import { ScreenerState } from "../screener/state";
-import { StockState } from "../stock/state";
 import { MetaMaskState } from "../metaMask/state";
-import { CalendarState } from "../calendar/state";
+import { PortfolioState } from "../portfolio/state";
+import { ScreenerState } from "../screener/state";
+import { ThemeState } from "../theme/state";
 
 export type RootState = {
   auth: AuthState;
   theme: ThemeState;
-  news: NewsState;
   screener: ScreenerState;
-  stock: StockState;
   metaMask: MetaMaskState;
-  watchlist: WatchlistState;
   portfolio: PortfolioState;
-  calendar: CalendarState;
 };

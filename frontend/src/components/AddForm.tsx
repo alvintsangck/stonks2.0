@@ -1,10 +1,9 @@
-import "../css/AddForm.css";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FormEvent, useState } from "react";
 import { Form } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import "../css/AddForm.css";
 
 type Props = {
   name: string;
@@ -15,11 +14,10 @@ type Props = {
 export default function AddForm({ name, placeholder, onAdd }: Props) {
   const [content, setContent] = useState("");
   const [isRotate, setIsRotate] = useState(false);
-  const dispatch = useDispatch();
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(onAdd(content));
+    onAdd(content);
     setContent("");
   };
 

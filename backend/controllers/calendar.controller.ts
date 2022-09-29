@@ -1,33 +1,38 @@
 import express, { Request } from "express";
+import { EarningCalendar, EarningTable } from "../models/enum/Calendar";
+import { EarningTimeFrame } from "../models/enum/earningTimeFrame";
 import { CalendarService } from "../services/calendar.service";
 import { wrapControllerMethod } from "../util/helper";
 
 export class CalendarController {
-	constructor(private calendarService: CalendarService) {
-		this.router.get("/calendar/earnings/all", wrapControllerMethod(this.getAllEarnings));
-		this.router.get("/calendar/earnings/now", wrapControllerMethod(this.getTodayEarnings));
-		this.router.get("/calendar/earnings/past", wrapControllerMethod(this.getPastTenDaysEarnings));
-		this.router.get("/calendar/earnings/next", wrapControllerMethod(this.getNextTenDaysEarnings));
-	}
+  constructor(private calendarService: CalendarService) {
+    this.router.get("/calendar/earnings/:timeFrame", wrapControllerMethod(this.getEarnings));
+  }
 
-	router = express.Router();
-	getAllEarnings = async (req: Request) => {
-		const earnings = await this.calendarService.getAllEarnings();
-		return { earnings };
-	};
+  router = express.Router();
 
-	getTodayEarnings = async (req: Request) => {
-		const earnings = await this.calendarService.getTodayEarnings();
-		return { earnings };
-	};
+  getEarnings = async (req: Request): Promise<{ earnings: Array<EarningCalendar | EarningTable> }> => {
+    const timeFrame = req.params.timeFrame;
 
-	getPastTenDaysEarnings = async (req: Request) => {
-		const earnings = await this.calendarService.getPastTenDaysEarnings();
-		return { earnings };
-	};
-
-	getNextTenDaysEarnings = async (req: Request) => {
-		const earnings = await this.calendarService.getNextTenDaysEarnings();
-		return { earnings };
-	};
+    switch (timeFrame) {
+      case EarningTimeFrame.ALL: {
+        const earnings = await this.calendarService.getAllEarnings();
+        return { earnings };
+      }
+      case EarningTimeFrame.PAST: {
+        const earnings = await this.calendarService.getTodayEarnings();
+        return { earnings };
+      }
+      case EarningTimeFrame.NOW: {
+        const earnings = await this.calendarService.getPastTenDaysEarnings();
+        return { earnings };
+      }
+      case EarningTimeFrame.NEXT: {
+        const earnings = await this.calendarService.getNextTenDaysEarnings();
+        return { earnings };
+      }
+      default:
+        return { earnings: [] };
+    }
+  };
 }

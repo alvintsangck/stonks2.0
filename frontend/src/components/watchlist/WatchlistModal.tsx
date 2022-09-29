@@ -1,10 +1,8 @@
-import "../css/WatchlistModal.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ListGroup, Modal } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { RootState } from "../redux/store/state";
-import { addStockThunk, getAllWatchlistsThunk } from "../redux/watchlist/thunk";
+import "../../css/WatchlistModal.css";
+import { useAddStockMutation, useGetWatchlistsQuery } from "../../redux/watchlist/api";
 
 type Props = {
   isShow: boolean;
@@ -12,23 +10,11 @@ type Props = {
 };
 
 export default function WatchlistModal({ isShow, setIsShow }: Props) {
-  const dispatch = useDispatch();
-  const watchlists = useSelector((state: RootState) => state.watchlist.watchlists);
-  const user = useSelector((state: RootState) => state.auth.user);
+  const { data: watchlists } = useGetWatchlistsQuery();
   const [watchlistId, setWatchlistId] = useState(0);
-  const { ticker } = useParams<{ ticker: string }>();
+  const [addStock] = useAddStockMutation();
   const hideModal = () => setIsShow(false);
-  const addStock = () => {
-    dispatch(addStockThunk(watchlistId, ticker ? ticker : "") as any);
-    setWatchlistId(0);
-    setIsShow(false);
-  };
-
-  useEffect(() => {
-    if (user) {
-      dispatch(getAllWatchlistsThunk() as any);
-    }
-  }, [dispatch, user]);
+  const { ticker } = useParams<{ ticker: string }>();
 
   return (
     <Modal show={isShow} onHide={hideModal} centered>
@@ -37,7 +23,8 @@ export default function WatchlistModal({ isShow, setIsShow }: Props) {
       </Modal.Header>
       <Modal.Body>
         <ListGroup>
-          {watchlists.length > 0 &&
+          {watchlists &&
+            watchlists?.length > 0 &&
             watchlists.map(({ id, name }) => (
               <ListGroup.Item
                 className={watchlistId === id ? "active" : ""}
@@ -50,7 +37,14 @@ export default function WatchlistModal({ isShow, setIsShow }: Props) {
         </ListGroup>
       </Modal.Body>
       <Modal.Footer>
-        <button className="stonk-btn trade-btn" onClick={addStock}>
+        <button
+          className="stonk-btn trade-btn"
+          onClick={() => {
+            addStock({ watchlistId, ticker: ticker ?? "" });
+            setWatchlistId(0);
+            setIsShow(false);
+          }}
+        >
           Add
         </button>
       </Modal.Footer>

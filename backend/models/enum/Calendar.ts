@@ -17,10 +17,3 @@ export type EarningTable = {
   revenueReported: string | null;
   revenueSurprise?: string | null;
 };
-
-export type CalendarState = {
-  all: EarningCalendar[];
-  today: EarningTable[];
-  past: EarningTable[];
-  next: EarningTable[];
-};

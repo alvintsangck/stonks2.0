@@ -1,40 +1,37 @@
 import { useEffect, useState } from "react";
 import { Form, Offcanvas } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { env } from "../env";
-import { useAppSelector } from "../hook/hooks";
-import { useGetBalanceQuery } from "../redux/auth/api";
-import { getSharesThunk, sellStockThunk } from "../redux/stock/thunk";
-import { BuyFormState } from "./BuyModal";
-import { defaultErrorSwal } from "./ReactSwal";
+import { env } from "../../env";
+import { useAppSelector } from "../../hook/hooks";
+import { useGetBalanceQuery } from "../../redux/auth/api";
+import { useBuyStockMutation, useLazyGetSharesQuery, useLazyGetStockQuery } from "../../redux/stock/api";
+import { defaultErrorSwal } from "../ReactSwal";
 
 type Props = {
   setIsShow: (isShow: boolean) => void;
 };
 
-export type SellFormState = {
+export type TradeFormState = {
   shares: number;
 };
 
-export default function BuyModal({ setIsShow }: Props) {
-  const dispatch = useDispatch();
+export default function BuyOffcanvas({ setIsShow }: Props) {
+  const { register, handleSubmit, setValue, watch, reset } = useForm<TradeFormState>({ defaultValues: { shares: 0 } });
   const theme = useAppSelector((state) => state.theme.theme);
-  const user = useAppSelector((state) => state.auth.user);
-  const stock = useAppSelector((state) => state.stock.stock);
-  const shares = useAppSelector((state) => state.stock.shares);
   const { ticker } = useParams<{ ticker: string }>();
-  const [price, setPrice] = useState(0);
-  const { register, handleSubmit, setValue, watch, reset } = useForm<SellFormState>({ defaultValues: { shares: 0 } });
-  const hideOffcanvas = () => setIsShow(false);
+  const [getStock, { data: stock }] = useLazyGetStockQuery();
+  const [getShares, { data: shares }] = useLazyGetSharesQuery();
   const { data: balance } = useGetBalanceQuery();
+  const [buyStock] = useBuyStockMutation();
+  const [price, setPrice] = useState(0);
+  const hideOffcanvas = () => setIsShow(false);
   const cash = balance?.cash ?? 0;
 
-  function onSubmit(data: BuyFormState) {
-    if (data.shares > shares) defaultErrorSwal("Not enough shares");
-    if (data.shares > 0) {
-      dispatch(sellStockThunk(ticker ? ticker : "", data.shares, price) as any);
+  function onSubmit(data: TradeFormState) {
+    if (data.shares * price > cash) defaultErrorSwal("Not enough cash");
+    if (data.shares > 0 && ticker) {
+      buyStock({ ticker, shares: data.shares, price });
       reset();
     }
   }
@@ -49,16 +46,17 @@ export default function BuyModal({ setIsShow }: Props) {
   }
 
   useEffect(() => {
+    if (ticker) {
+      getStock(ticker);
+      getShares(ticker);
+    }
+  }, [getShares, getStock, ticker]);
+
+  useEffect(() => {
     if (stock?.price) {
       setPrice(Number(stock?.price));
     }
   }, [stock]);
-
-  useEffect(() => {
-    if (user?.payload) {
-      dispatch(getSharesThunk(ticker ? ticker : "") as any);
-    }
-  }, [dispatch, user, ticker]);
 
   useEffect(() => {
     const socket = new WebSocket(`wss://ws.finnhub.io?token=${env.finnhubKey}`);
@@ -100,10 +98,10 @@ export default function BuyModal({ setIsShow }: Props) {
       placement="end"
       backdrop={false}
       scroll
-      className={"sell-order " + theme}
+      className={"buy-order " + theme}
     >
       <Offcanvas.Header closeButton className="order-header">
-        <Offcanvas.Title>SELL</Offcanvas.Title>
+        <Offcanvas.Title>BUY</Offcanvas.Title>
       </Offcanvas.Header>
       <Offcanvas.Body>
         <div className="title-row">
@@ -111,11 +109,11 @@ export default function BuyModal({ setIsShow }: Props) {
           <span>{stock?.name}</span>
         </div>
         <h3>{price.toFixed(2)}</h3>
-        <div>Cash BP: ${cash}</div>
+        <div>Cash BP: ${cash.toFixed(2)}</div>
         <div>You own: {shares}</div>
         <span>QUANTITY</span>
         <div className="input-row">
-          <Form onSubmit={handleSubmit(onSubmit)} id="sell-form">
+          <Form onSubmit={handleSubmit(onSubmit)} id="buy-form">
             <Form.Control
               {...register("shares", { valueAsNumber: true })}
               type="number"
@@ -127,8 +125,8 @@ export default function BuyModal({ setIsShow }: Props) {
           <div>Shares</div>
         </div>
         <div className="cost-row">{Number.isNaN(totalCost) ? "" : `Total: ${totalCost.toFixed(2)}`}</div>
-        <button type="submit" className="stonk-btn trade-btn" form="sell-form">
-          Sell
+        <button type="submit" className="stonk-btn trade-btn" form="buy-form">
+          Buy
         </button>
       </Offcanvas.Body>
     </Offcanvas>

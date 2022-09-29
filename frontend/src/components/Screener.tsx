@@ -1,15 +1,15 @@
 import { Container } from "react-bootstrap";
 import { Helmet } from "react-helmet";
-import StockTable from "./StockTable";
-import ScreenerForm from "./ScreenerForm";
-import { IScreener } from "../redux/screener/state";
 import { useNavigate } from "react-router-dom";
 import { useLoadScreenerMutation } from "../redux/screener/api";
+import { IScreener } from "../redux/screener/state";
+import ScreenerForm from "./ScreenerForm";
+import StockTable from "./stock/StockTable";
 
 export default function Screener() {
   const navigate = useNavigate();
-  const [loadScreener, result] = useLoadScreenerMutation();
-  const stocks = result.data;
+  const [loadScreener, { data: stocks }] = useLoadScreenerMutation();
+
   const tableHeadings: string[] = [
     "TICKER",
     "COMPANY",
@@ -47,7 +47,7 @@ export default function Screener() {
       </tr>
     );
   }
-  const screenerTable = stocks ? stocks.map(mapStockTable) : <></>;
+  const screenerTable = stocks?.map(mapStockTable) ;
 
   return (
     <>

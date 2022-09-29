@@ -1,10 +1,10 @@
 import express, { Request } from "express";
-import { StockService } from "../services/stock.service";
-import { HttpError } from "../util/models";
 import yahooFinance from "yahoo-finance2";
-import { getUser, wrapControllerMethod } from "../util/helper";
 import { isLoggedIn } from "../middlewares/guard";
+import { StockService } from "../services/stock.service";
+import { getUser, wrapControllerMethod } from "../util/helper";
 import { logger } from "../util/logger";
+import { HttpError, Stock } from "../util/models";
 
 export class StockController {
   constructor(private stockService: StockService) {
@@ -17,7 +17,7 @@ export class StockController {
 
   router = express.Router();
 
-  getStockInfo = async (req: Request) => {
+  getStockInfo = async (req: Request): Promise<Stock> => {
     const ticker = String(req.params.ticker).toUpperCase();
     if (!ticker.match(/[a-zA-z]/g)) throw new HttpError(400, "Invalid ticker");
     const stock = await this.stockService.getStockInfo(ticker);
@@ -28,7 +28,6 @@ export class StockController {
 
   getShares = async (req: Request) => {
     const user = getUser(req);
-    if (user.id <= 0) throw new HttpError(400, "User not exist");
 
     const ticker = String(req.params.ticker).toUpperCase();
     if (!ticker.match(/[a-zA-z]/g)) throw new HttpError(400, "Invalid ticker");
@@ -40,24 +39,22 @@ export class StockController {
   getStockNews = async (req: Request) => {
     const ticker = String(req.params.ticker).toUpperCase();
     if (!ticker.match(/[a-zA-z]/g)) throw new HttpError(400, "Invalid ticker");
+
     try {
       const news = (await yahooFinance.search(ticker, { newsCount: 10 })).news;
       return news;
     } catch (error) {
-      logger.info(error);
+      logger.error(error);
       return [];
     }
   };
 
-  buy = async (req: Request) => {
+  buy = async (req: Request): Promise<{ cash: number; shares: number }> => {
     const user = getUser(req);
-    if (user.id <= 0) throw new HttpError(400, "User not exist");
-
     const ticker = String(req.params.ticker).toUpperCase();
     if (!ticker.match(/[a-zA-z]/g)) throw new HttpError(400, "Invalid ticker");
 
-    const stock = await this.stockService.getStockInfo(ticker);
-    if (!stock) throw new HttpError(400, "Stock not found");
+    const stock = await this.getStockInfo(req);
 
     const shares = Number(req.body.shares);
     if (Number.isNaN(shares) || shares <= 0) throw new HttpError(400, "Share number must be positive");
@@ -78,15 +75,13 @@ export class StockController {
     return { cash: remainingCash, shares: ownedShares };
   };
 
-  sell = async (req: Request) => {
+  sell = async (req: Request): Promise<{ cash: number; shares: number }> => {
     const user = getUser(req);
-    if (user.id <= 0) throw new HttpError(400, "User not exist");
 
     const ticker = String(req.params.ticker).toUpperCase();
     if (!ticker.match(/[a-zA-z]/g)) throw new HttpError(400, "Invalid ticker");
 
-    const stock = await this.stockService.getStockInfo(ticker);
-    if (!stock) throw new HttpError(400, "Stock not found");
+    const stock = await this.getStockInfo(req);
 
     const shares = Number(req.body.shares);
     if (Number.isNaN(shares) || shares <= 0) throw new HttpError(400, "Share number must be positive");

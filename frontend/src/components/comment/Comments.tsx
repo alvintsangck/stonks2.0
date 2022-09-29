@@ -1,17 +1,32 @@
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { env } from "../../env";
+import { localTime } from "../../helper";
+import { useLazyGetCommentsQuery, useLazyGetStockQuery } from "../../redux/stock/api";
 import CommentForm from "./CommentForm";
-import { localTime } from "../helper";
-import { useSelector } from "react-redux";
-import { env } from "../env";
-import { RootState } from "../redux/store/state";
 
 export default function Comments() {
-  const comments = useSelector((state: RootState) => state.stock.comments);
+  const { ticker } = useParams<{ ticker: string }>();
+  const [getStock, { data: stock }] = useLazyGetStockQuery();
+  const [getComment, { data: comments }] = useLazyGetCommentsQuery();
+
+  useEffect(() => {
+    if (ticker) {
+      getStock(ticker);
+    }
+  }, [getStock, ticker]);
+
+  useEffect(() => {
+    if (stock && stock.id > 0) {
+      getComment(stock.id);
+    }
+  }, [getComment, stock]);
 
   return (
     <div className="comment-container">
       <h3>Comments</h3>
       <div className="comment-section">
-        {comments.map((comment, i) => (
+        {comments?.map((comment, i) => (
           <div className="comment-wrap" key={i}>
             <img className="avatar" src={`${env.url}/${comment.avatar}`} alt="avatar" />
             <div className="content">

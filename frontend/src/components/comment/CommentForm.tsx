@@ -1,28 +1,35 @@
-import "../css/CommentForm.css";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
-import { postCommentThunk } from "../redux/stock/thunk";
-import { RootState } from "../redux/store/state";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import "../../css/CommentForm.css";
+import { useLazyGetStockQuery, usePostCommentMutation } from "../../redux/stock/api";
+import { RootState } from "../../redux/store/state";
 
 export default function CommentForm() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const stock = useSelector((state: RootState) => state.stock.stock);
   const user = useSelector((state: RootState) => state.auth.user);
-  const [comment, setComment] = useState("");
+  const { ticker } = useParams<{ ticker: string }>();
+  const [getStock, { data: stock }] = useLazyGetStockQuery();
+  const [postComment] = usePostCommentMutation();
+  const [content, setContent] = useState("");
 
-  async function onSubmit(e: any) {
+  function onSubmit(e: any) {
     e.preventDefault();
     if (stock) {
-      dispatch(postCommentThunk(stock.id, comment) as any);
-      setComment("");
+      postComment({ stockId: stock.id, content });
+      setContent("");
     }
   }
+
+  useEffect(() => {
+    if (ticker) {
+      getStock(ticker);
+    }
+  }, [getStock, ticker]);
 
   return (
     <Form onSubmit={onSubmit} id="comment-form">
@@ -32,8 +39,8 @@ export default function CommentForm() {
         maxLength={200}
         readOnly={user === null}
         name="comment"
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
         onClick={(e) => !user && navigate("/login")}
         onKeyUp={(e) => e.key === "Enter" && onSubmit(e)}
       />

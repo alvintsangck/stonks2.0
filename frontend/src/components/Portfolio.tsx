@@ -4,7 +4,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { Col, Container, Row } from "react-bootstrap";
 import { useEffect, useMemo } from "react";
-import StockTable from "./StockTable";
+import StockTable from "./stock/StockTable";
 import { env } from "../env";
 import { UserPortfolio } from "../redux/portfolio/state";
 import { commaNumber } from "../helper";

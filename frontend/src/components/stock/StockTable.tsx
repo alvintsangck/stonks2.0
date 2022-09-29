@@ -1,9 +1,9 @@
-import "../css/StockTable.css";
 import { Table } from "react-bootstrap";
+import "../../css/StockTable.css";
 
 type Props = {
   headings: string[];
-  contents: JSX.Element[] | JSX.Element;
+  contents: JSX.Element[] | JSX.Element | undefined;
 };
 
 function StockTable({ headings, contents }: Props) {

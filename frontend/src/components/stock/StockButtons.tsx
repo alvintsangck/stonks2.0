@@ -1,15 +1,15 @@
-import "../css/StockButtons.css";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Dispatch, SetStateAction, useState } from "react";
-import WatchlistModal from "./WatchlistModal";
 import { useSelector } from "react-redux";
-import { RootState } from "../redux/store/state";
+import { useNavigate } from "react-router-dom";
+import "../../css/StockButtons.css";
+import { RootState } from "../../redux/store/state";
+import NotiModal from "../NotiModal";
+import WatchlistModal from "../watchlist/WatchlistModal";
 import BuyModal from "./BuyModal";
 import SellModal from "./SellModal";
-import NotiModal from "./NotiModal";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { useNavigate } from "react-router-dom";
 
 export default function StockButtons() {
   const navigate = useNavigate();

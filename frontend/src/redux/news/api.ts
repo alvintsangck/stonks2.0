@@ -1,5 +1,15 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
-import { News } from "./state";
+
+export type News = {
+  id: string;
+  links: { canonical: string };
+  attributes: {
+    gettyImageUrl: string;
+    title: string;
+    themes: any;
+    content: string;
+  };
+};
 
 export const newsApi = createApi({
   reducerPath: "newsApi",
