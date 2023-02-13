@@ -18,4 +18,3 @@
   },
   "exclude": ["node_modules", "build", "scripts", "index.js", "jest.config.js"]
 }
-
