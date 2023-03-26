@@ -1,13 +1,13 @@
-import { ethers, Contract, Wallet } from "ethers";
-import { defaultSuccessSwal } from "../../components/ReactSwal";
-import { env } from "../../env";
-import abi from "./abi";
-import { callApi } from "../api";
+import { Contract, ethers, Wallet } from "ethers";
 import { UseFormReset } from "react-hook-form";
-import { WithdrawalFormState } from "../../components/WithdrawalForm";
-import { DepositFormState } from "../../components/DepositForm";
-import { getChainId, getMetaMask, getToken } from "./slice";
+import { DepositFormState } from "../../components/transfer/DepositForm";
+import { WithdrawalFormState } from "../../components/transfer/WithdrawalForm";
+import { env } from "../../util/env";
+import { defaultSuccessSwal } from "../../util/ReactSwal";
+import { callApi } from "../api";
 import { getCash } from "../auth/slice";
+import abi from "./abi";
+import { getChainId, getMetaMask, getToken } from "./slice";
 
 const ethereum = window.ethereum;
 

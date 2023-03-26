@@ -1,4 +1,4 @@
-import { ScreenerFormState } from "../../components/ScreenerForm";
+import { ScreenerFormState } from "../../components/screener/ScreenerForm";
 
 export type Item = {
   id: number;

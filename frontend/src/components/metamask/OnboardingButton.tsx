@@ -1,9 +1,9 @@
 import MetaMaskOnboarding from "@metamask/onboarding";
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getMetaMaskThunk } from "../redux/metaMask/thunk";
+import { getMetaMaskThunk } from "../../redux/metaMask/thunk";
 
-import { RootState } from "../redux/store/state";
+import { RootState } from "../../redux/store/state";
 
 const ONBOARD_TEXT = "Click here to install MetaMask";
 const CONNECT_TEXT = "Connect";

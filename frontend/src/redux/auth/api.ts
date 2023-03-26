@@ -1,5 +1,5 @@
-import { LoginFormState } from "../../components/LoginForm";
-import { RegisterFormState } from "../../components/RegisterForm";
+import { LoginFormState } from "../../components/login/LoginForm";
+import { RegisterFormState } from "../../components/login/RegisterForm";
 import { emptyApi } from "../api";
 import { Balance } from "./state";
 

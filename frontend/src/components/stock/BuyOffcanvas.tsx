@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { Form, Offcanvas } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import { env } from "../../env";
 import { useAppSelector } from "../../hook/hooks";
 import { useGetBalanceQuery } from "../../redux/auth/api";
 import { useBuyStockMutation, useLazyGetSharesQuery, useLazyGetStockQuery } from "../../redux/stock/api";
-import { defaultErrorSwal } from "../ReactSwal";
+import { env } from "../../util/env";
+import { defaultErrorSwal } from "../../util/ReactSwal";
 
 type Props = {
   setIsShow: (isShow: boolean) => void;

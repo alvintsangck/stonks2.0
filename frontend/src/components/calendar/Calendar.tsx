@@ -1,16 +1,16 @@
-import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import FullCalendar from "@fullcalendar/react";
 import { Container } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
-import "../css/Calendar.css";
 import {
   EarningTable,
   useGetAllEarningsQuery,
   useGetNextEarningTablesQuery,
   useGetPastEarningTablesQuery,
-  useGetTodayEarningTablesQuery
-} from "../redux/calendar/api";
+  useGetTodayEarningTablesQuery,
+} from "../../redux/calendar/api";
+import "../css/Calendar.css";
 import EarningsTable from "./EarningsTable";
 
 export default function Calendar() {

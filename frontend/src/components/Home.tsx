@@ -2,7 +2,7 @@ import { Carousel, Col, Container, Row } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import { MarketOverview } from "react-tradingview-embed";
 import "../css/Home.css";
-import { env } from "../env";
+import { env } from "../util/env";
 
 import { useAppSelector } from "../hook/hooks";
 import { News, useGetNewsQuery } from "../redux/news/api";

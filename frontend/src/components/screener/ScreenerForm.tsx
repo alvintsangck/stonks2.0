@@ -1,11 +1,11 @@
-import "../css/ScreenerForm.css";
-import { Form, Row, Col } from "react-bootstrap";
-import { useForm } from "react-hook-form";
-import ScreenerItem from "./ScreenerItem";
 import { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../hook/hooks";
-import { IScreener, ScreenerItemOptions } from "../redux/screener/state";
-import { resetScreenerForm } from "../redux/screener/slice";
+import { Col, Form, Row } from "react-bootstrap";
+import { useForm } from "react-hook-form";
+import { useAppDispatch, useAppSelector } from "../../hook/hooks";
+import { resetScreenerForm } from "../../redux/screener/slice";
+import { IScreener, ScreenerItemOptions } from "../../redux/screener/state";
+import "../css/ScreenerForm.css";
+import ScreenerItem from "./ScreenerItem";
 
 export type ScreenerFormState = {
   minPrice: number;

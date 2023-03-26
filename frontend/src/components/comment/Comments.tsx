@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { env } from "../../env";
 import { localTime } from "../../helper";
 import { useLazyGetCommentsQuery, useLazyGetStockQuery } from "../../redux/stock/api";
+import { env } from "../../util/env";
 import CommentForm from "./CommentForm";
 
 export default function Comments() {

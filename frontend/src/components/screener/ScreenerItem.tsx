@@ -1,13 +1,13 @@
-import "../css/ScreenerItem.css";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ButtonGroup, Col, Form, ListGroup, Row, ToggleButton } from "react-bootstrap";
 import { Dispatch } from "react";
-import { Item, ScreenerItemOptions, ScreenerStateKey } from "../redux/screener/state";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { useGetIndustriesQuery, useGetSectorsQuery } from "../redux/screener/api";
-import { useAppDispatch, useAppSelector } from "../hook/hooks";
-import { addItem, removeItem, resetItem } from "../redux/screener/slice";
+import { ButtonGroup, Col, Form, ListGroup, Row, ToggleButton } from "react-bootstrap";
+import { useAppDispatch, useAppSelector } from "../../hook/hooks";
+import { useGetIndustriesQuery, useGetSectorsQuery } from "../../redux/screener/api";
+import { addItem, removeItem, resetItem } from "../../redux/screener/slice";
+import { Item, ScreenerItemOptions, ScreenerStateKey } from "../../redux/screener/state";
+import "../css/ScreenerItem.css";
 
 type Props = {
   radioIndustry: ScreenerItemOptions;

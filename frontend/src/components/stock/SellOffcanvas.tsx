@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { Form, Offcanvas } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import { env } from "../../env";
 import { useAppSelector } from "../../hook/hooks";
 import { useGetBalanceQuery } from "../../redux/auth/api";
 import { useLazyGetSharesQuery, useLazyGetStockQuery, useSellStockMutation } from "../../redux/stock/api";
-import { defaultErrorSwal } from "../ReactSwal";
-import { TradeFormState } from "./BuyModal";
+import { env } from "../../util/env";
+import { defaultErrorSwal } from "../../util/ReactSwal";
+import { TradeFormState } from "./BuyOffcanvas";
 
 type Props = {
   setIsShow: (isShow: boolean) => void;
@@ -17,7 +17,7 @@ export type SellFormState = {
   shares: number;
 };
 
-export default function BuyModal({ setIsShow }: Props) {
+export default function SellOffcanvas({ setIsShow }: Props) {
   const { register, handleSubmit, setValue, watch, reset } = useForm<SellFormState>({ defaultValues: { shares: 0 } });
   const theme = useAppSelector((state) => state.theme.theme);
   const { ticker } = useParams<{ ticker: string }>();

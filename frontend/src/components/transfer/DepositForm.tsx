@@ -1,9 +1,9 @@
 import { Col, Form, Row } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/store/state";
 import { useForm } from "react-hook-form";
-import { depositThunk } from "../redux/metaMask/thunk";
-import { useGetBalanceQuery } from "../redux/auth/api";
+import { useDispatch, useSelector } from "react-redux";
+import { useGetBalanceQuery } from "../../redux/auth/api";
+import { depositThunk } from "../../redux/metaMask/thunk";
+import { RootState } from "../../redux/store/state";
 
 export type DepositFormState = {
   deposit: number;

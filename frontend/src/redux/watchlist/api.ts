@@ -1,4 +1,4 @@
-import { defaultErrorSwal, defaultSuccessSwal } from "../../components/ReactSwal";
+import { defaultErrorSwal, defaultSuccessSwal } from "../../util/ReactSwal";
 import { emptyApi } from "../api";
 import { Stock } from "../stock/api";
 

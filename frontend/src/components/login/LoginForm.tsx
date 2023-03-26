@@ -1,10 +1,10 @@
-import "../css/LoginForm.css";
 import { Form } from "react-bootstrap";
-import { useForm } from "react-hook-form";
-import { useLoginMutation } from "../redux/auth/api";
-import { defaultErrorSwal } from "./ReactSwal";
 import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../../redux/auth/api";
+import { defaultErrorSwal } from "../../util/ReactSwal";
+import "../css/LoginForm.css";
 
 export type LoginFormState = {
   username: string;
@@ -22,7 +22,7 @@ export default function LoginForm() {
     if (data.username && data.password) {
       login({ username: data.username, password: data.password });
       if (result.isSuccess) {
-        localStorage.setItem('token', result.data)
+        localStorage.setItem("token", result.data);
         navigate("/portfolio");
       }
     } else {

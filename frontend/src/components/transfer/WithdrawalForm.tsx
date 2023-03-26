@@ -1,11 +1,11 @@
 import { Col, Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { useGetBalanceQuery } from "../redux/auth/api";
+import { useGetBalanceQuery } from "../../redux/auth/api";
 
-import { withdrawalThunk } from "../redux/metaMask/thunk";
-import { RootState } from "../redux/store/state";
-import { defaultErrorSwal } from "./ReactSwal";
+import { withdrawalThunk } from "../../redux/metaMask/thunk";
+import { RootState } from "../../redux/store/state";
+import { defaultErrorSwal } from "../../util/ReactSwal";
 
 export type WithdrawalFormState = {
   withdrawal: number;

@@ -6,10 +6,10 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import "../../css/StockButtons.css";
 import { RootState } from "../../redux/store/state";
-import NotiModal from "../NotiModal";
 import WatchlistModal from "../watchlist/WatchlistModal";
-import BuyModal from "./BuyModal";
-import SellModal from "./SellModal";
+import BuyOffcanvas from "./BuyOffcanvas";
+import NotiModal from "./NotiModal";
+import SellOffcanvas from "./SellOffcanvas";
 
 export default function StockButtons() {
   const navigate = useNavigate();
@@ -44,8 +44,8 @@ export default function StockButtons() {
           </button>
         ))}
       </div>
-      {isShowBuy && <BuyModal setIsShow={setIsShowBuy} />}
-      {isShowSell && <SellModal setIsShow={setIsShowSell} />}
+      {isShowBuy && <BuyOffcanvas setIsShow={setIsShowBuy} />}
+      {isShowSell && <SellOffcanvas setIsShow={setIsShowSell} />}
       <WatchlistModal isShow={isShowWatchlist} setIsShow={setIsShowWatchlist} />
       <NotiModal isShow={isShowNoti} setIsShow={setIsShowNoti} />
     </>
