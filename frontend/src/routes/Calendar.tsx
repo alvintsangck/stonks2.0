@@ -3,15 +3,15 @@ import FullCalendar from "@fullcalendar/react";
 import { Container } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
+import EarningsTable from "../components/calendar/EarningsTable";
+import "../css/Calendar.css";
 import {
   EarningTable,
   useGetAllEarningsQuery,
   useGetNextEarningTablesQuery,
   useGetPastEarningTablesQuery,
   useGetTodayEarningTablesQuery,
-} from "../../redux/calendar/api";
-import "../css/Calendar.css";
-import EarningsTable from "./EarningsTable";
+} from "../redux/calendar/api";
 
 export default function Calendar() {
   const navigate = useNavigate();

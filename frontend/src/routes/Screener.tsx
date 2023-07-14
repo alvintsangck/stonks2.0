@@ -1,10 +1,11 @@
 import { Container } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
-import { useLoadScreenerMutation } from "../../redux/screener/api";
-import { IScreener } from "../../redux/screener/state";
-import StockTable from "../stock/StockTable";
-import ScreenerForm from "./ScreenerForm";
+import ScreenerForm from "../components/screener/ScreenerForm";
+import StockTable from "../components/stock/StockTable";
+import { useLoadScreenerMutation } from "../redux/screener/api";
+import { IScreener } from "../redux/screener/state";
+
 
 export default function Screener() {
   const navigate = useNavigate();

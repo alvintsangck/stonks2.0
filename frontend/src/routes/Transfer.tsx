@@ -3,11 +3,11 @@ import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getChainId, getMetaMask } from "../../redux/metaMask/slice";
-import { getChainIdThunk, getTokenThunk } from "../../redux/metaMask/thunk";
-import { RootState } from "../../redux/store/state";
+import TransferForm from "../components/transfer/TransferForm";
 import "../css/Transfer.css";
-import TransferForm from "./TransferForm";
+import { getMetaMask, getChainId } from "../redux/metaMask/slice";
+import { getChainIdThunk, getTokenThunk } from "../redux/metaMask/thunk";
+import { RootState } from "../redux/store/state";
 
 export default function Transfer() {
   const dispatch = useDispatch();

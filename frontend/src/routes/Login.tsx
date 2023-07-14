@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Container } from "react-bootstrap";
+import LoginForm from "../components/login/LoginForm";
+import RegisterForm from "../components/login/RegisterForm";
 import "../css/Login.css";
-import LoginForm from "./LoginForm";
-import RegisterForm from "./RegisterForm";
 
 export default function Login() {
   const [isRight, setIsRight] = useState(false);

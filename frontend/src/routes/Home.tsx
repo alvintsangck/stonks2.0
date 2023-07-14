@@ -1,12 +1,11 @@
 import { Carousel, Col, Container, Row } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import { MarketOverview } from "react-tradingview-embed";
+import LoadingSpinner from "../components/LoadingSpinner";
 import "../css/Home.css";
-import { env } from "../util/env";
-
 import { useAppSelector } from "../hook/hooks";
 import { News, useGetNewsQuery } from "../redux/news/api";
-import LoadingSpinner from "./LoadingSpinner";
+import { env } from "../util/env";
 
 export default function Home() {
   const theme = useAppSelector((state) => state.theme.theme);

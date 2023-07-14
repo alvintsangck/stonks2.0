@@ -4,6 +4,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import { Doughnut } from "react-chartjs-2";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
+import StockTable from "../components/stock/StockTable";
 import "../css/Portfolio.css";
 import { commaNumber } from "../helper";
 import { useAppDispatch, useAppSelector } from "../hook/hooks";
@@ -12,7 +13,6 @@ import { useGetPortfolioQuery } from "../redux/portfolio/api";
 import { updatePortfolioPrice } from "../redux/portfolio/slice";
 import { UserPortfolio } from "../redux/portfolio/state";
 import { env } from "../util/env";
-import StockTable from "./stock/StockTable";
 
 export default function Portfolio() {
   ChartJS.register(ArcElement, Tooltip, Legend);

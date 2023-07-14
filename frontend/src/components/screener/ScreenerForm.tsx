@@ -113,23 +113,23 @@ export default function ScreenerForm({ loadScreener, stocks }: Props) {
                     <Form.Control
                       {...register(`min${name[0].toUpperCase() + name.substring(1)}` as keyof ScreenerFormState, {
                         valueAsNumber: true,
+                        min,
+                        max,
+                        onBlur: validateValue,
                       })}
                       type="number"
                       placeholder="min"
-                      min={min}
-                      max={max}
-                      onBlur={validateValue}
                     />
                     <span>to</span>
                     <Form.Control
                       {...register(`max${name[0].toUpperCase() + name.substring(1)}` as keyof ScreenerFormState, {
                         valueAsNumber: true,
+                        min,
+                        max,
+                        onBlur: validateValue,
                       })}
                       type="number"
                       placeholder="max"
-                      min={min}
-                      max={max}
-                      onBlur={validateValue}
                     />
                   </div>
                 </Form.Group>

@@ -6,15 +6,15 @@ import { Col, Container, Row } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import { useNavigate, useParams } from "react-router-dom";
 import "../../css/Watchlist.css";
+import AddForm from "../components/AddForm";
+import StockTable from "../components/stock/StockTable";
+import Sidebar from "../components/watchlist/Sidebar";
 import {
   useAddStockMutation,
   useDeleteStockMutation,
   useGetWatchlistsQuery,
   useLazyGetWatchlistByIdQuery,
-} from "../../redux/watchlist/api";
-import AddForm from "../AddForm";
-import StockTable from "../stock/StockTable";
-import Sidebar from "./Sidebar";
+} from "../redux/watchlist/api";
 
 export default function Watchlist() {
   const navigate = useNavigate();

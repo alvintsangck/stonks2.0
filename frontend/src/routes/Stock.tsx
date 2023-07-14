@@ -4,11 +4,11 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { AdvancedChart, FundamentalData, SymbolInfo } from "react-tradingview-embed";
 import "../../css/Stock.css";
-import { localTime } from "../../helper";
-import { useGetStockNewsQuery } from "../../redux/stock/api";
-import { RootState } from "../../redux/store/state";
-import Comments from "../comment/Comments";
-import StockButtons from "./StockButtons";
+import Comments from "../components/comment/Comments";
+import StockButtons from "../components/stock/StockButtons";
+import { localTime } from "../helper";
+import { useGetStockNewsQuery } from "../redux/stock/api";
+import { RootState } from "../redux/store/state";
 
 export default function Stock() {
   const theme = useSelector((state: RootState) => state.theme.theme);

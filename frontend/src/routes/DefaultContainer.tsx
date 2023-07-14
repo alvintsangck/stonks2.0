@@ -1,18 +1,18 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import TickerTape from "react-tradingview-embed/dist/components/TickerTape";
+import Footer from "../components/Footer";
+import NoMatch from "../components/NoMatch";
+import PrivateRoute from "../components/PrivateRoute";
+import NavBar from "../components/TopNavbar";
 import { useAppSelector } from "../hook/hooks";
 import Calendar from "./calendar/Calendar";
-import Footer from "./Footer";
 import Home from "./Home";
-import NoMatch from "./NoMatch";
 import Portfolio from "./Portfolio";
 import PowerBI from "./PowerBI";
-import PrivateRoute from "./PrivateRoute";
 import Screener from "./screener/Screener";
 import Stock from "./stock/Stock";
-import NavBar from "./TopNavbar";
 import Transfer from "./transfer/Transfer";
-import Watchlist from "./watchlist/Watchlist";
+import Watchlist from "./Watchlist";
 
 export default function DefaultContainer() {
   const theme = useAppSelector((state) => state.theme.theme);
