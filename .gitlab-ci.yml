@@ -95,7 +95,7 @@ server-deploy:
           "docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD;
           docker pull $REPOSITORY_URL:$IMAGE_TAG;
           docker-compose down;
-          echo 'AWS_HOST=$AWS_HOST' >> .env
+          echo 'AWS_HOST=$AWS_HOST' > .env
           echo 'AWS_PASSWORD=$AWS_PASSWORD' >> .env
           docker-compose up -d;"
 
