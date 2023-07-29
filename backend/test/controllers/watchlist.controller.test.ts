@@ -4,6 +4,7 @@ import { Knex } from "knex";
 import { WatchlistController } from "../../controllers/watchlist.controller";
 import { StockService } from "../../services/stock.service";
 import { WatchlistService } from "../../services/watchlist.service";
+import { Stock } from "../../util/models";
 import permit from "../../util/permit";
 
 jest.mock("../../services/watchlist.service");
@@ -18,7 +19,6 @@ describe("WatchlistController", () => {
 
   beforeEach(function () {
     watchlistService = new WatchlistService({} as Knex);
-    stockService = new StockService({} as Knex);
     watchlistService.getWatchlist = jest.fn((userId) => Promise.resolve([]));
     watchlistService.createWatchlist = jest.fn((userId, name) => Promise.resolve(1));
     watchlistService.changeWatchlistName = jest.fn((watchlistId, name, userId) => Promise.resolve());
@@ -26,6 +26,8 @@ describe("WatchlistController", () => {
     watchlistService.getAllWatchlistsName = jest.fn((userId) => Promise.resolve([{ id: 1, name: "a" }]));
     watchlistService.addStock = jest.fn((watchlistId, stockId) => Promise.resolve());
     watchlistService.deleteStock = jest.fn((watchlistId, stockId) => Promise.resolve());
+    stockService = new StockService({} as Knex);
+    stockService.getStockInfo = jest.fn((ticker) => Promise.resolve({} as Stock));
     controller = new WatchlistController(watchlistService, stockService);
     req = { body: {}, session: { user: { id: 1 } }, params: {} } as any as Request;
     permit.check as jest.Mock;
@@ -45,7 +47,7 @@ describe("WatchlistController", () => {
       req.params = { watchlistId: "1" };
       const result = await controller.get(req);
       expect(watchlistService.getWatchlist).toBeCalled;
-      expect(result).toMatchObject({ stocks: [] });
+      expect(result).toMatchObject([]);
     });
 
     test("throw error with string watchlistId", async () => {
@@ -69,7 +71,7 @@ describe("WatchlistController", () => {
       req.body = { name: "a" };
       const result = await controller.post(req);
       expect(watchlistService.createWatchlist).toBeCalled();
-      expect(result).toEqual(1);
+      expect(result).toMatchObject({ id: 1, name: "a" });
     });
 
     test("throw error with empty name", async () => {
@@ -84,7 +86,7 @@ describe("WatchlistController", () => {
       req.body = { name: "a" };
       const result = await controller.put(req);
       expect(watchlistService.changeWatchlistName).toBeCalled;
-      expect(result).toMatchObject({ message: "changed" });
+      expect(result).toMatchObject({ message: "watchlist name changed to a" });
     });
 
     test("throw error with wrong watchlistId", async () => {
@@ -105,7 +107,7 @@ describe("WatchlistController", () => {
       req.params = { watchlistId: "1" };
       const result = await controller.delete(req);
       expect(watchlistService.deleteWatchlist).toBeCalled;
-      expect(result).toMatchObject({ message: "deleted" });
+      expect(result).toMatchObject({ message: "watchlist deleted" });
     });
 
     test("throw error with wrong watchlistId", async () => {
@@ -119,7 +121,7 @@ describe("WatchlistController", () => {
       req.params = { watchlistId: "1", stockId: "1" };
       const result = await controller.addStock(req);
       expect(watchlistService.addStock).toBeCalled;
-      expect(result).toMatchObject({ message: "stock added" });
+      expect(result).toMatchObject({});
     });
 
     test("throw error with wrong watchlistId", async () => {
