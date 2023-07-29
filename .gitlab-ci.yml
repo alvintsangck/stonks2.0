@@ -63,18 +63,18 @@ server-build:
         - docker tag stonks:$IMAGE_TAG $REPOSITORY_URL:$IMAGE_TAG
         - docker push $REPOSITORY_URL:$IMAGE_TAG
 
-react-build:
-    only:
-        - production
-    stage: react-build
-    before_script:
-        - cd frontend/
-    script:
-        - yarn install
-        - yarn build
-    artifacts:
-        paths:
-            - frontend/build
+# react-build:
+#     only:
+#         - production
+#     stage: react-build
+#     before_script:
+#         - cd frontend/
+#     script:
+#         - yarn install
+#         - yarn build
+#     artifacts:
+#         paths:
+#             - frontend/build
 
 server-deploy:
     before_script:
@@ -99,15 +99,15 @@ server-deploy:
           echo "AWS_PASSWORD=$AWS_PASSWORD" >> .env
           docker-compose up -d;"
 
-react-deploy:
-    image: "python:3.11"
-    stage: react-deploy
-    before_script:
-        - pip install awscli
-    dependencies:
-        - react-build
-    only:
-        - production
-    script:
-        - aws s3 sync frontend/build s3://${BUCKET_NAME} --delete
-        - aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION} --paths "/*"
+# react-deploy:
+#     image: "python:3.11"
+#     stage: react-deploy
+#     before_script:
+#         - pip install awscli
+#     dependencies:
+#         - react-build
+#     only:
+#         - production
+#     script:
+#         - aws s3 sync frontend/build s3://${BUCKET_NAME} --delete
+#         - aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION} --paths "/*"
