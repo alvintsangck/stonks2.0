@@ -23,11 +23,20 @@ server-testing:
         - postgres:latest
     before_script:
         - cd backend
-        - yarn install
-        - yarn knex migrate:latest --env test
+        - corepack enable
+        - corepack prepare pnpm@latest-8 --activate
+        - pnpm config set store-dir .pnpm-store
+        - pnpm install
+        - pnpm knex migrate:latest --env test
     stage: server-testing
     script:
-        - yarn test
+        - pnpm test
+    cache:
+      key:
+        files:
+          - pnpm-lock.yaml
+      paths:
+        - .pnpm-store
 
 react-testing:
     only:
