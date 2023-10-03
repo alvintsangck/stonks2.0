@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
+import "../../css/ScreenerForm.css";
 import { useAppDispatch, useAppSelector } from "../../hook/hooks";
 import { resetScreenerForm } from "../../redux/screener/slice";
 import { IScreener, ScreenerItemOptions } from "../../redux/screener/state";
-import "../css/ScreenerForm.css";
 import ScreenerItem from "./ScreenerItem";
 
 export type ScreenerFormState = {

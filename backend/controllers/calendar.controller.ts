@@ -1,6 +1,6 @@
 import express, { Request } from "express";
 import { EarningCalendar, EarningTable } from "../models/enum/Calendar";
-import { EarningTimeFrame } from "../models/enum/earningTimeFrame";
+import { EarningTimeFrame } from "../models/enum/EarningTimeFrame";
 import { CalendarService } from "../services/calendar.service";
 import { wrapControllerMethod } from "../util/helper";
 

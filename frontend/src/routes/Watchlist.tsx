@@ -5,10 +5,10 @@ import { useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import { useNavigate, useParams } from "react-router-dom";
-import "../../css/Watchlist.css";
 import AddForm from "../components/AddForm";
 import StockTable from "../components/stock/StockTable";
 import Sidebar from "../components/watchlist/Sidebar";
+import "../css/Watchlist.css";
 import {
   useAddStockMutation,
   useDeleteStockMutation,
@@ -47,7 +47,7 @@ export default function Watchlist() {
   const watchlistTable = stocks?.map((stock, i: number) => {
     const change = stock.price - stock.prevPrice!;
     return (
-      <tr key={i}>
+      <tr key={stock.id}>
         <td onClick={() => navigate(`/stocks/${stock.ticker}`)}>{stock.ticker}</td>
         <td onClick={() => navigate(`/stocks/${stock.ticker}`)}>{stock.name}</td>
         <td onClick={() => navigate(`/stocks/${stock.ticker}`)}>{Number(stock.price).toFixed(2)}</td>

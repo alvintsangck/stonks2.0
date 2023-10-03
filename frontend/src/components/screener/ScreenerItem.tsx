@@ -3,11 +3,11 @@ import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Dispatch } from "react";
 import { ButtonGroup, Col, Form, ListGroup, Row, ToggleButton } from "react-bootstrap";
+import "../../css/ScreenerItem.css";
 import { useAppDispatch, useAppSelector } from "../../hook/hooks";
 import { useGetIndustriesQuery, useGetSectorsQuery } from "../../redux/screener/api";
 import { addItem, removeItem, resetItem } from "../../redux/screener/slice";
 import { Item, ScreenerItemOptions, ScreenerStateKey } from "../../redux/screener/state";
-import "../css/ScreenerItem.css";
 
 type Props = {
   radioIndustry: ScreenerItemOptions;

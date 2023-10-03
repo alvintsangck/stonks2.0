@@ -1,9 +1,9 @@
 import { Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import "../../css/RegisterForm.css";
 import { useRegisterMutation } from "../../redux/auth/api";
 import { defaultErrorSwal } from "../../util/ReactSwal";
-import "../css/RegisterForm.css";
 
 export type RegisterFormState = {
   username: string;

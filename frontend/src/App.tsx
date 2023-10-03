@@ -1,8 +1,8 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import Login from "./components/login/Login";
 import DefaultContainer from "./routes/DefaultContainer";
+import Login from "./routes/Login";
 
 function App() {
   return (

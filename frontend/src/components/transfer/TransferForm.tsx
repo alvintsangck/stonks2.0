@@ -1,9 +1,9 @@
 import { Col, Container, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import "../../css/TransferForm.css";
 import { RootState } from "../../redux/store/state";
 import { env } from "../../util/env";
-import "../css/TransferForm.css";
 import { OnboardingButton } from "../metamask/OnboardingButton";
 import SwitchChianButton from "../metamask/SwitchChainButton";
 import DepositForm from "./DepositForm";

@@ -5,13 +5,13 @@ import NoMatch from "../components/NoMatch";
 import PrivateRoute from "../components/PrivateRoute";
 import NavBar from "../components/TopNavbar";
 import { useAppSelector } from "../hook/hooks";
-import Calendar from "./calendar/Calendar";
+import Calendar from "./Calendar";
 import Home from "./Home";
 import Portfolio from "./Portfolio";
 import PowerBI from "./PowerBI";
-import Screener from "./screener/Screener";
-import Stock from "./stock/Stock";
-import Transfer from "./transfer/Transfer";
+import Screener from "./Screener";
+import Stock from "./Stock";
+import Transfer from "./Transfer";
 import Watchlist from "./Watchlist";
 
 export default function DefaultContainer() {
